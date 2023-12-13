@@ -1,0 +1,67 @@
+.dropdown {
+  outline: none;
+  border: none;
+  transform: all 5s;
+
+  label {
+    display: none;
+  }
+
+  select {
+    display: block;
+    outline: none;
+    border: none;
+    background: transparent;
+    width: 100%;
+    height: 40px;
+    border-radius: 0;
+    font-size: 18px;
+    font-style: italic;
+    line-height: normal;
+    min-width: 310px;
+
+    &:focus {
+      outline: none;
+      box-shadow: 0px 15px 20px -15px #00000028;
+      transform: all 0.3s;
+    }
+  }
+
+  &__white {
+    border-bottom: 1px solid white;
+    select {
+      color: white;
+    }
+
+    select::placeholder {
+      color: white;
+    }
+  }
+
+  &__black {
+    border-bottom: 1px solid #000000;
+    select {
+      color: #000000;
+    }
+
+    select::placeholder {
+      color: #000000;
+    }
+  }
+
+  &__options {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #000000;
+    padding: 10px;
+    list-style: none;
+    z-index: 1;
+
+    li {
+      cursor: pointer;
+    }
+  }
+}

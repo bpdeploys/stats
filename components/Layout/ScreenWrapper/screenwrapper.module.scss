@@ -1,0 +1,13 @@
+.screenWrapper {
+  position: absolute;
+  height: auto;
+  min-height: 100vh;
+  min-width: 100vw;
+  z-index: -1;
+
+  .lightning {
+    width: 100vw;
+    object-fit: cover;
+    z-index: -1;
+  }
+}

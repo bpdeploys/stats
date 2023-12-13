@@ -1,0 +1,37 @@
+.table {
+  border: 1px solid black;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  position: relative;
+  width: 350px;
+
+  &::before {
+    content: '';
+    height: 100%;
+    position: absolute;
+    border-left: 1px solid #000;
+    left: 65%;
+  }
+}
+
+.tableColumnCode,
+.tableColumnPlayer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 10px;
+  border-bottom: 1px solid black;
+}
+
+.tableColumnPlayer {
+  width: 65%;
+}
+
+.tableColumnCode {
+  width: 35%;
+}
+
+.tableHeading,
+.tableBody {
+  display: flex;
+}

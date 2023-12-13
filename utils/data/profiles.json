@@ -1,0 +1,38 @@
+{
+  "profiles": [
+    {
+      "title": "Create a Player Profile",
+      "available": true,
+      "color": "blue",
+      "type": "P",
+      "list": [
+        {
+          "description": "Play Matches"
+        },
+        {
+          "description": "Build a following"
+        },
+        {
+          "description": "Earn rewards"
+        }
+      ]
+    },
+    {
+      "title": "Create a Fantasy Manager",
+      "available": false,
+      "color": "red",
+      "type": "F",
+      "list": [
+        {
+          "description": "Build a squad"
+        },
+        {
+          "description": "Track performances"
+        },
+        {
+          "description": "Earn rewards"
+        }
+      ]
+    }
+  ]
+}

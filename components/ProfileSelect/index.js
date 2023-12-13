@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import Button from '../Common/Button';
 
 // Icons & Images
-import BlueShirtIcon from '../../public/assets/imgs/svgs/BlueShirt.svg';
+import BlueShirtIcon from '../../public/assets/imgs/svgs/blue-shirt.svg';
 
 // Styles
 import styles from './profileselect.module.scss';

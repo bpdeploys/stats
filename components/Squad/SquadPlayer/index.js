@@ -1,7 +1,7 @@
 // Styles
 import styles from './sportselect.module.scss';
-import blueShirt from '../../../public/assets/imgs/svgs/blueShirt.svg';
-import grayShirt from '../../../public/assets/imgs/svgs/grayShirt.svg';
+import blueShirt from '../../../public/assets/imgs/svgs/blue-shirt.svg';
+import grayShirt from '../../../public/assets/imgs/svgs/gray-shirt.svg';
 import Image from 'next/image';
 
 /**

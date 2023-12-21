@@ -29,7 +29,7 @@ export default function CreateTeammate() {
         <meta name="description" content="Baller App" key="desc" />
       </Head>
       <ScreenWrapper background="white" image="grayLightningFull">
-        <Header text="Create your Team" uppercase />
+        <Header text="Create your Team" textTransform="uppercase" />
         <form className={styles.createTeammate}>
           <div className={styles.createTeammate__inputs}>
             <h1>Create a Team and join your sports league</h1>

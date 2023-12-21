@@ -20,7 +20,7 @@ const HeaderButtons = ({ text, logo, active, links }) => {
   const inactiveColor = 'lightgray';
 
   return (
-    <Header text={text} logo={logo} shadow={false} uppercase>
+    <Header text={text} logo={logo} shadow={false} textTransform="uppercase">
       <div className={styles.headerButtons}>
         <Link
           className={styles.headerButtons__button}

@@ -8,6 +8,7 @@
   }
 
   select {
+    appearance: none;
     display: block;
     outline: none;
     border: none;
@@ -19,6 +20,10 @@
     font-style: italic;
     line-height: normal;
     min-width: 310px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="15" viewBox="0 0 18 15" fill="none"><path d="M9 15L0.339745 0L17.6603 0L9 15Z" fill="black"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 18px 15px;
 
     &:focus {
       outline: none;

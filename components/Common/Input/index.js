@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import styles from './input.module.scss';
-
 /**
  * Input component
  *
@@ -13,6 +12,7 @@ import styles from './input.module.scss';
  * @param {function} onChange The function to be called when the value of the input field changes
  * @param {function} onBlur The function to be called when the input field loses focus
  * @param {string} color The color of the input field (default: "black")
+ * @param {string} tooltipText The tooltip text of the input field
  *
  * @returns {React.Element} A fieldset element containing an input field
  */
@@ -27,14 +27,24 @@ const Input = React.forwardRef(
       onChange,
       onBlur,
       color = 'black',
+      tooltipText,
       ...props
     },
     ref
   ) => {
     const [showPassword, setShowPassword] = useState(false);
+    const [showTooltip, setShowTooltip] = useState(false);
 
     const handleTogglePassword = () => {
       setShowPassword(!showPassword);
+    };
+
+    const handleMouseEnter = () => {
+      setShowTooltip(true);
+    };
+
+    const handleMouseLeave = () => {
+      setShowTooltip(false);
     };
 
     const inputColorClass =
@@ -43,30 +53,45 @@ const Input = React.forwardRef(
     return (
       <fieldset className={`${styles.input} ${inputColorClass}`}>
         <label>{placeholder}</label>
-        <input
-          id={id}
-          name={name}
-          type={showPassword ? 'text' : type}
-          value={value}
-          ref={ref}
-          onChange={onChange}
-          onBlur={onBlur}
-          placeholder={placeholder}
-          {...props}
-        />
-        {type === 'password' && (
-          <Image
-            src={
-              showPassword
-                ? '/assets/imgs/svgs/eye.svg'
-                : '/assets/imgs/svgs/eye-off.svg'
-            }
-            width={20}
-            height={20}
-            className={styles.passwordToggleButton}
-            onClick={handleTogglePassword}
+        <div className={styles.inputWrapper}>
+          <input
+            id={id}
+            name={name}
+            type={showPassword ? 'text' : type}
+            value={value}
+            ref={ref}
+            onChange={onChange}
+            onBlur={onBlur}
+            placeholder={placeholder}
+            {...props}
           />
-        )}
+          {type === 'password' && (
+            <Image
+              src={
+                showPassword
+                  ? '/assets/imgs/svgs/eye.svg'
+                  : '/assets/imgs/svgs/eye-off.svg'
+              }
+              width={20}
+              height={20}
+              className={styles.passwordToggleButton}
+              onClick={handleTogglePassword}
+            />
+          )}
+          {tooltipText && (
+            <div
+              className={styles.tooltipIcon}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              aria-label={tooltipText}
+            >
+              ?
+              {showTooltip && (
+                <div className={styles.tooltip}>{tooltipText}</div>
+              )}
+            </div>
+          )}
+        </div>
       </fieldset>
     );
   }

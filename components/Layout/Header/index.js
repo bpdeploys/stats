@@ -17,7 +17,7 @@ import styles from './header.module.scss';
  *
  * @returns {React.Element} A header element
  */
-const Header = ({ text, uppercase, logo, shadow = true, children }) => {
+const Header = ({ text, textTransform, logo, shadow = true, children }) => {
   const router = useRouter();
 
   return (
@@ -41,8 +41,8 @@ const Header = ({ text, uppercase, logo, shadow = true, children }) => {
         <div
           className={styles.text}
           style={{
-            textTransform: uppercase ? 'uppercase' : 'none',
-            fontStyle: uppercase ? 'italic' : 'none',
+            textTransform: textTransform ? textTransform : 'none',
+            fontStyle: textTransform ? 'italic' : 'none',
           }}
         >
           {text}

@@ -63,7 +63,7 @@ export default function PlayerCodes() {
         <meta name="description" content="Baller App" key="desc" />
       </Head>
       <ScreenWrapper background="white" image="grayLightningFull">
-        <Header text="Player Codes" uppercase />
+        <Header text="Player Codes" textTransform="uppercase" />
         <div className={styles.playerCodes}>
           <h1>
             Take a screenshot and share the codes for your teammates to redeem

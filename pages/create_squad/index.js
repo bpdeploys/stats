@@ -72,7 +72,7 @@ export default function CreateSquad() {
         <meta name="description" content="Baller App" key="desc" />
       </Head>
       <ScreenWrapper background="white" image="grayLightningFull">
-        <Header text="Create your Squad" uppercase />
+        <Header text="Create your Squad" textTransform="uppercase" />
         <form className={styles.createSquad}>
           <h1>Create a squad of players to join your team.</h1>
           <div className={styles.createSquad__squadPlayers}>

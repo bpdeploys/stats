@@ -57,3 +57,42 @@
     }
   }
 }
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.tooltipIcon {
+  position: absolute;
+  right: 10px; // adjust as needed
+  cursor: pointer;
+  font-size: 16px; // adjust as needed
+  background-color: black;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  color: white;
+  text-align: center;
+}
+
+.tooltip {
+  position: absolute;
+  top: -35px;
+  right: 0;
+  min-width: 100px;
+  width: fit-content;
+  background-color: #616161;
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  z-index: 1000;
+  display: none;
+}
+
+.tooltipIcon:hover .tooltip {
+  display: block;
+}

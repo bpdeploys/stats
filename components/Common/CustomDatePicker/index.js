@@ -12,31 +12,57 @@ import Input from '../Input';
  * @param {string} placeholder The placeholder text of the input field
  * @param {string} value The initial value of the input field
  * @param {function} onChange The function to be called when the value of the input field changes
+ * @param {string} tooltipText The tooltip text of the input field
  * @param {string} color The color of the input field (default: "black")
  *
  * @returns {React.Element} A fieldset element containing a datepicker input field
  */
 const CustomDatePicker = React.forwardRef(
-  ({ id, placeholder, value, onChange, color = 'black', ...props }) => {
+  (
+    {
+      id,
+      placeholder,
+      value,
+      onChange,
+      tooltipText,
+      color = 'black',
+      ...props
+    },
+    ref
+  ) => {
     const CustomDatePickerInput = React.forwardRef(
-      ({ value, onClick }, ref) => (
-        <Input
-          onClick={onClick}
-          ref={ref}
-          value={value}
-          placeholder={placeholder}
-          onChange={onChange}
-          readOnly={true}
-          {...props}
-        />
-      )
+      ({ value, onClick }, inputRef) => {
+        // Determine display value - use placeholder if value is not set
+        const displayValue = value ? value : placeholder;
+
+        return (
+          <Input
+            id={id}
+            color={color}
+            onClick={onClick}
+            ref={inputRef}
+            value={displayValue}
+            placeholder={placeholder}
+            tooltipText={tooltipText}
+            onChange={onChange}
+            readOnly={true}
+            {...props}
+          />
+        );
+      }
     );
 
     return (
       <DatePicker
-        selected={value || new Date()}
+        selected={value || null} // Set to null when no value to ensure placeholder is displayed
         onChange={onChange}
-        customInput={<CustomDatePickerInput />}
+        customInput={
+          <CustomDatePickerInput
+            ref={ref}
+            placeholder={placeholder}
+            tooltipText={tooltipText}
+          />
+        }
       />
     );
   }

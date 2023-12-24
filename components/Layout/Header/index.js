@@ -17,7 +17,14 @@ import styles from './header.module.scss';
  *
  * @returns {React.Element} A header element
  */
-const Header = ({ text, textTransform, logo, shadow = true, children }) => {
+const Header = ({
+  text,
+  textTransform,
+  noItalic,
+  logo,
+  shadow = true,
+  children,
+}) => {
   const router = useRouter();
 
   return (
@@ -41,8 +48,12 @@ const Header = ({ text, textTransform, logo, shadow = true, children }) => {
         <div
           className={styles.text}
           style={{
-            textTransform: textTransform ? textTransform : 'none',
-            fontStyle: textTransform ? 'italic' : 'none',
+            textTransform: textTransform || 'none',
+            fontStyle: noItalic
+              ? 'normal'
+              : textTransform
+              ? 'italic'
+              : 'normal',
           }}
         >
           {text}

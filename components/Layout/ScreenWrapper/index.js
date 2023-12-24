@@ -1,5 +1,6 @@
 // Images
 import BlueLightning from '../../../public/assets/imgs/svgs/blueLightning.svg';
+import GrayLightning from '../../../public/assets/imgs/svgs/grayLightning.svg';
 import GrayLightningHalf from '../../../public/assets/imgs/svgs/grayLightningHalf.svg';
 import GrayLightningFull from '../../../public/assets/imgs/svgs/grayLightningFull.svg';
 import BlueLightningFull from '../../../public/assets/imgs/svgs/blueLightningFull.svg';
@@ -30,6 +31,7 @@ const ScreenWrapper = ({
 }) => {
   const images = {
     blueLightning: BlueLightning,
+    grayLightning: GrayLightning,
     grayLightningHalf: GrayLightningHalf,
     grayLightningFull: GrayLightningFull,
     blueLightningFull: BlueLightningFull,
@@ -38,27 +40,37 @@ const ScreenWrapper = ({
   const imageUrl = images[image];
 
   const BACKGROUND_COLOR_BLUE = '#144587';
-  const BACKGROUND_COLOR_GRAY = '#EFEFEF';
+  const BACKGROUND_COLOR_GRAY =
+    'linear-gradient(180deg, rgba(255, 255, 255, 0.20) 0%, rgba(172, 172, 172, 0.20) 45.92%), #FFF';
+  const BACKGROUND_COLOR_WHITE = '#FFFFFF';
+
+  const backgroundColor =
+    background === 'blue'
+      ? BACKGROUND_COLOR_BLUE
+      : background === 'white'
+      ? BACKGROUND_COLOR_WHITE
+      : BACKGROUND_COLOR_GRAY;
 
   return (
     <div
       className={styles.screenWrapper}
       style={{
-        backgroundColor:
-          background === 'blue' ? BACKGROUND_COLOR_BLUE : BACKGROUND_COLOR_GRAY,
+        background: backgroundColor,
       }}
     >
       {children}
-      <Image
-        src={imageUrl}
-        alt="Lightning"
-        className={styles.lightning}
-        style={{
-          position: 'absolute',
-          bottom: positionY || 0,
-          left: positionX || 0,
-        }}
-      />
+      {imageUrl && (
+        <Image
+          src={imageUrl}
+          alt="Lightning"
+          className={styles.lightning}
+          style={{
+            position: 'absolute',
+            bottom: positionY || 0,
+            left: positionX || 0,
+          }}
+        />
+      )}
     </div>
   );
 };

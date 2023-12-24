@@ -38,12 +38,12 @@ export default function SelectSport() {
         <title>Baller App</title>
         <meta name="description" content="Baller App" key="desc" />
       </Head>
-      <ScreenWrapper background="white" image="grayLightningHalf">
+      <ScreenWrapper image="grayLightningHalf">
         <section className={styles.sportSelection}>
           <div>
             <div className={styles.sportSelection__heading}>
               <Image src={BpLogo} alt="Logo" width={50} height={50} />
-              <h1>Welcome to BallerProfile</h1>
+              <h1>What sports is this account for?</h1>
             </div>
             <div className={styles.sportSelection__boxes}>
               <SportSelect

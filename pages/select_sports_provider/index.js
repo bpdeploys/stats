@@ -48,7 +48,6 @@ export default function SelectSportsProvider() {
           <div className={styles.providers}>
             {sportsList.map((sport) => (
               <SportsProviderBox
-                key={sport}
                 sport={sport}
                 selected={sportOption === sport}
                 onClick={() => handleSportOption(sport)}

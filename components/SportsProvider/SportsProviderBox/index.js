@@ -8,7 +8,7 @@ function SportsProviderBox({ selected, provider, onClick }) {
   }`;
 
   return (
-    <div className={sportProviderSelectClasses} key={key} onClick={onClick}>
+    <div className={sportProviderSelectClasses} onClick={onClick}>
       <header className={styles.mainHeader}>
         <div className={styles.imageWrapper}>
           <Image

@@ -1,6 +1,10 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
+// Context
+import { useContext } from 'react';
+import { SquadContext } from '../../context/SquadContext';
+
 // Components
 import Header from '../../components/Layout/Header';
 import ScreenWrapper from '../../components/Layout/ScreenWrapper';
@@ -11,6 +15,7 @@ import styles from './createsquad.module.scss';
 import SquadPlayer from '../../components/Squad/SquadPlayer';
 
 export default function CreateSquad() {
+  const { squadList } = useContext(SquadContext);
   const router = useRouter();
 
   const handleSubmit = (e) => {
@@ -19,51 +24,6 @@ export default function CreateSquad() {
 
   const getLength = ({ length }, minLength) =>
     minLength > length ? minLength : length;
-
-  const sampleList = [
-    {
-      firstName: 'John',
-      lastName: 'Doe',
-      playingPosition: 'M',
-      squadNumber: '1',
-    },
-    {
-      firstName: 'John',
-      lastName: 'Doe',
-      playingPosition: 'M',
-      squadNumber: '1',
-    },
-    {
-      firstName: 'John',
-      lastName: 'Doe',
-      playingPosition: 'M',
-      squadNumber: '1',
-    },
-    {
-      firstName: 'John',
-      lastName: 'Doe',
-      playingPosition: 'M',
-      squadNumber: '1',
-    },
-    {
-      firstName: 'John',
-      lastName: 'Doe',
-      playingPosition: 'M',
-      squadNumber: '1',
-    },
-    {
-      firstName: 'Panda',
-      lastName: 'Carrasco',
-      playingPosition: 'F',
-      squadNumber: '11',
-    },
-    {
-      firstName: 'Dimitri',
-      lastName: 'Gbo',
-      playingPosition: 'GK',
-      squadNumber: '11',
-    },
-  ];
 
   return (
     <>
@@ -76,18 +36,14 @@ export default function CreateSquad() {
         <form className={styles.createSquad}>
           <h1>Create a squad of players to join your team.</h1>
           <div className={styles.createSquad__squadPlayers}>
-            {Array.from(
-              { ...sampleList, length: getLength(sampleList, 12) },
-              (player) => (
-                <>
-                  {player === undefined ? (
-                    <SquadPlayer empty />
-                  ) : (
-                    <SquadPlayer data={player} />
-                  )}
-                </>
-              )
-            )}
+            {squadList
+              .map((player) => <SquadPlayer key={player.id} data={player} />)
+              .concat(
+                Array.from(
+                  { length: Math.max(0, 12 - squadList.length) },
+                  (_, index) => <SquadPlayer key={`empty-${index}`} empty />
+                )
+              )}
           </div>
           <div className={styles.createSquad__button}>
             <Button

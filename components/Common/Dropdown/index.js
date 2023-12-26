@@ -22,7 +22,6 @@ const Dropdown = React.forwardRef(
       id,
       name,
       placeholder,
-      value,
       onChange,
       onBlur,
       items,
@@ -31,6 +30,15 @@ const Dropdown = React.forwardRef(
     },
     ref
   ) => {
+    const [selectedValue, setSelectedValue] = useState('');
+
+    const handleDropdownChange = (e) => {
+      setSelectedValue(e.target.value);
+      if (onChange) {
+        onChange(e);
+      }
+    };
+
     const dropdownColorClass =
       color === 'white' ? styles.dropdown__white : styles.dropdown__black;
 
@@ -40,14 +48,13 @@ const Dropdown = React.forwardRef(
         <select
           id={id}
           name={name}
-          value={value}
-          onChange={onChange}
+          value={selectedValue}
+          onChange={handleDropdownChange}
           onBlur={onBlur}
-          defaultValue="DEFAULT"
           ref={ref}
           {...props}
         >
-          <option value="DEFAULT" disabled>
+          <option value="" disabled>
             {placeholder}
           </option>
           {items.map((item) => (

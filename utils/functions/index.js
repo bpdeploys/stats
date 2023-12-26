@@ -47,3 +47,14 @@ export function getUserData() {
 export function removeUserData() {
   localStorage.removeItem('user');
 }
+
+export function abbreviatePosition(position) {
+  const abbreviations = {
+    Goalkeeper: 'GK',
+    Defender: 'D',
+    Midfielder: 'M',
+    Forward: 'F',
+  };
+
+  return abbreviations[position] || 'F';
+}

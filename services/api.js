@@ -1,7 +1,7 @@
 // api.js
 import axios from 'axios';
 
-const BASE_URL = 'http://ec2-34-226-184-189.compute-1.amazonaws.com:8000/api';
+const BASE_URL = 'https://bp-prod-api.com/api';
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -36,5 +36,18 @@ export const loginRequest = async (credentials) => {
   } catch (error) {
     console.error(error);
     throw new Error('An error occurred while logging in');
+  }
+};
+
+export const createProxyPlayerSquad = async (proxyPlayersData) => {
+  try {
+    const response = await api.post(
+      '/players/proxy/bulk-create/',
+      proxyPlayersData
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while creating your squad');
   }
 };

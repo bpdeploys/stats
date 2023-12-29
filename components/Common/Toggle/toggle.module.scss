@@ -1,0 +1,66 @@
+.toggleSwitch {
+  position: relative;
+  width: fit-content;
+
+  &__checkbox {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+    display: none;
+  }
+
+  &__checked,
+  &__unchecked {
+    position: absolute;
+    top: 50%;
+    font-size: 12px;
+    cursor: pointer;
+    transform: translateY(-50%);
+  }
+
+  &__checked {
+    left: 30%;
+    color: white;
+  }
+
+  &__unchecked {
+    left: 60%;
+  }
+
+  &__label {
+    cursor: pointer;
+    text-indent: -9999px;
+    width: 77px;
+    height: 25px;
+    background: #acacac;
+    display: block;
+    border-radius: 100px;
+    position: relative;
+    transition: 0.3s;
+
+    &:after {
+      content: '';
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      width: 16px;
+      height: 16px;
+      background: #fff;
+      border-radius: 90px;
+      transition: 0.3s;
+    }
+
+    &:active:after {
+      width: 25px;
+    }
+  }
+
+  &__checkbox:checked + &__label {
+    background: #125b9f;
+
+    &:after {
+      left: calc(100% - 5px);
+      transform: translateX(-100%);
+    }
+  }
+}

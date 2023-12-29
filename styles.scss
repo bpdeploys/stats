@@ -12,6 +12,7 @@
 body {
   box-sizing: border-box;
   touch-action: pan-y;
+  user-select: none;
 }
 
 a {

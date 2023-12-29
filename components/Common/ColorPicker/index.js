@@ -17,7 +17,11 @@ export default function ColorPicker({ disabled, defaultColor }) {
     setTextColor(
       pickTextColorBasedOnBgColorAdvanced(color, '#FFFFFF', '#000000')
     );
-  }, [color]);
+
+    if (disabled) {
+      setColor('#ffffff');
+    }
+  }, [disabled, color]);
 
   const handleColorChange = (event) => {
     setColor(event.target.value);

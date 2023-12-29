@@ -65,7 +65,7 @@ export default function TeamKit() {
             />
           </div>
           <div className={styles.teamkit__teamColours}>
-            <h2>Pick Team Colours</h2>
+            <h2>Select Your Teams colours...</h2>
             <div className={styles.teamColourPicker}>
               <span>Primary colour</span>
               <ColorPicker />

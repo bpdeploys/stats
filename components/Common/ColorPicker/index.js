@@ -37,9 +37,11 @@ export default function ColorPicker({ disabled, defaultColor }) {
         ref={colorInputRef}
         disabled={disabled}
       />
-      <small onClick={handleTextClick} style={{ color: textColor }}>
-        pick colour
-      </small>
+      {!disabled && (
+        <small onClick={handleTextClick} style={{ color: textColor }}>
+          pick colour
+        </small>
+      )}
     </div>
   );
 }

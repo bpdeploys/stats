@@ -7,7 +7,7 @@ import { pickTextColorBasedOnBgColorAdvanced } from '../../../utils/functions';
  *
  * @returns {JSX.Element} The color picker component.
  */
-export default function ColorPicker({ disabled, defaultColor }) {
+export default function ColorPicker({ disabled, defaultColor, onChange }) {
   const [color, setColor] = useState(defaultColor || '#FFFFFF');
   const [textColor, setTextColor] = useState('#000000'); // Initial text color
   const colorInputRef = useRef(null);
@@ -25,6 +25,9 @@ export default function ColorPicker({ disabled, defaultColor }) {
 
   const handleColorChange = (event) => {
     setColor(event.target.value);
+    if (onChange) {
+      onChange(event.target.value);
+    }
   };
 
   const handleTextClick = () => {

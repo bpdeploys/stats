@@ -1,14 +1,20 @@
 .teamkit {
+  &__shirt {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+  }
   &__question {
-    margin: 54px 0 58px 30px;
+    margin: 44px 0 48px 30px;
     h3 {
       font-size: 15px;
-      margin-bottom: 33px;
+      margin-bottom: 20px;
     }
   }
 
   &__teamColours {
-    margin: 77px 23px 0 33px;
+    margin: 0px 23px 0 33px;
 
     h2 {
       font-size: 15px;

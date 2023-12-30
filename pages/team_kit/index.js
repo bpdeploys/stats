@@ -16,6 +16,7 @@ import constants from '../../utils/data/constants';
 import styles from './teamkit.module.scss';
 import Toggle from '../../components/Common/Toggle';
 import ColorPicker from '../../components/Common/ColorPicker';
+import CustomShirt from '../../components/Common/CustomShirt';
 
 export default function TeamKit() {
   const [toggleStates, setToggleStates] = useState({
@@ -23,6 +24,12 @@ export default function TeamKit() {
     kitSquadNumber: false,
     color2: true,
     color3: false,
+  });
+
+  const [colors, setColors] = useState({
+    primary: '#ffffff',
+    secondary: '#125B9F',
+    third: null,
   });
 
   const router = useRouter();
@@ -37,6 +44,10 @@ export default function TeamKit() {
     setToggleStates((prev) => ({ ...prev, [toggleId]: newState }));
   };
 
+  const handleColorChange = (colorId, colorValue) => {
+    setColors((prevColors) => ({ ...prevColors, [colorId]: colorValue }));
+  };
+
   return (
     <>
       <Head>
@@ -46,6 +57,14 @@ export default function TeamKit() {
       <ScreenWrapper background="white" image="grayLightning" positionY="450px">
         <Header text="Team Kit" textTransform="uppercase" noItalic />
         <div className={styles.teamkit}>
+          <div className={styles.teamkit__shirt}>
+            <CustomShirt
+              shirtColor={colors.primary}
+              backgroundColor={colors.secondary}
+              borderColor={colors.third}
+              number={toggleStates.kitSquadNumber ? '10' : null}
+            />
+          </div>
           <div className={styles.teamkit__question}>
             <h3>Does your team have a its own kit?</h3>
             <Toggle
@@ -68,7 +87,9 @@ export default function TeamKit() {
             <h2>Select Your Teams colours...</h2>
             <div className={styles.teamColourPicker}>
               <span>Primary colour</span>
-              <ColorPicker />
+              <ColorPicker
+                onChange={(color) => handleColorChange('primary', color)}
+              />
             </div>
             <div className={styles.teamColourPicker}>
               <Toggle
@@ -78,7 +99,10 @@ export default function TeamKit() {
                 label="Secondary colour"
               />
               <span>Secondary colour</span>
-              <ColorPicker disabled={!toggleStates.color2} />
+              <ColorPicker
+                onChange={(color) => handleColorChange('secondary', color)}
+                disabled={!toggleStates.color2}
+              />
             </div>
             <div className={styles.teamColourPicker}>
               <Toggle
@@ -88,7 +112,10 @@ export default function TeamKit() {
                 label="Third colour"
               />
               <span>Third colour</span>
-              <ColorPicker disabled={!toggleStates.color3} />
+              <ColorPicker
+                onChange={(color) => handleColorChange('third', color)}
+                disabled={!toggleStates.color3}
+              />
             </div>
           </div>
           <div className={styles.teamkit__button}>

@@ -5,43 +5,69 @@ import { useRouter } from 'next/router';
 // Components
 import Header from '../../components/Layout/Header';
 import ScreenWrapper from '../../components/Layout/ScreenWrapper';
-import Input from '../../components/Common/Input';
-import Dropdown from '../../components/Common/Dropdown';
 import Button from '../../components/Common/Button';
-
-// Data
-import constants from '../../utils/data/constants';
 
 // Styles
 import styles from './teamkit.module.scss';
 import Toggle from '../../components/Common/Toggle';
 import ColorPicker from '../../components/Common/ColorPicker';
 import CustomShirt from '../../components/Common/CustomShirt';
+import { useCreateTeamFormData } from '../../context/TeamContext';
+
+const DEFAULT_COLORS = {
+  primary: '#ffffff',
+  secondary: '#125B9F',
+  third: null,
+};
 
 export default function TeamKit() {
-  const [toggleStates, setToggleStates] = useState({
-    kitValidation: true,
-    kitSquadNumber: false,
-    color2: true,
-    color3: false,
-  });
-
-  const [colors, setColors] = useState({
-    primary: '#ffffff',
-    secondary: '#125B9F',
-    third: null,
-  });
-
   const router = useRouter();
+  const { data, setCreateTeamFormValues } = useCreateTeamFormData();
 
-  const handleSubmit = (e) => {
+  const initializeState = (data) => ({
+    kitValidation: data?.kitValidation ?? true,
+    kitSquadNumber: data?.kitSquadNumber ?? false,
+    color2: data?.enabledColors?.secondary ?? true,
+    color3: data?.enabledColors?.third ?? false,
+  });
+  
+
+  const [toggleStates, setToggleStates] = useState(initializeState(data));
+  const [colors, setColors] = useState({ ...DEFAULT_COLORS, ...data?.colors });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    router.push('/');
+    try {
+      setCreateTeamFormValues({
+        colors,
+        enabledColors: {
+          secondary: toggleStates.color2,
+          third: toggleStates.color3,
+        },
+        kitValidation: toggleStates.kitValidation,
+        kitSquadNumber: toggleStates.kitSquadNumber,
+      });
+      await router.push('/create_team');
+    } catch (error) {
+      console.error('Error saving data or navigating:', error);
+    }
   };
 
   const handleToggleChange = (toggleId, event) => {
     const newState = event.target.checked;
     setToggleStates((prev) => ({ ...prev, [toggleId]: newState }));
+
+    // Reset color to white when the toggle is turned off
+    if (!newState) {
+      setColors((prevColors) => {
+        if (toggleId === 'color2') {
+          return { ...prevColors, secondary: '#125B9F' };
+        } else if (toggleId === 'color3') {
+          return { ...prevColors, third: '#ffffff' };
+        }
+        return prevColors;
+      });
+    }
   };
 
   const handleColorChange = (colorId, colorValue) => {
@@ -61,7 +87,7 @@ export default function TeamKit() {
             <CustomShirt
               shirtColor={colors.primary}
               backgroundColor={colors.secondary}
-              borderColor={colors.third}
+              numberColor={colors.third}
               number={toggleStates.kitSquadNumber ? '10' : null}
             />
           </div>
@@ -88,6 +114,7 @@ export default function TeamKit() {
             <div className={styles.teamColourPicker}>
               <span>Primary colour</span>
               <ColorPicker
+                defaultColor={data?.colors?.primary || '#FFFFFF'}
                 onChange={(color) => handleColorChange('primary', color)}
               />
             </div>
@@ -100,6 +127,7 @@ export default function TeamKit() {
               />
               <span>Secondary colour</span>
               <ColorPicker
+                defaultColor={data?.colors?.secondary || '#125B9F'}
                 onChange={(color) => handleColorChange('secondary', color)}
                 disabled={!toggleStates.color2}
               />
@@ -113,6 +141,7 @@ export default function TeamKit() {
               />
               <span>Third colour</span>
               <ColorPicker
+                defaultColor={data?.colors?.third || '#FFFFFF'}
                 onChange={(color) => handleColorChange('third', color)}
                 disabled={!toggleStates.color3}
               />

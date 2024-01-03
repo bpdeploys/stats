@@ -31,11 +31,20 @@
 
       button {
         border-radius: 50px;
-        border: 1px solid #125b9f;
-        background: #125b9f;
         width: 77px;
         height: 25px;
+      }
+
+      .buttonTrue {
+        border: 1px solid #125b9f;
+        background: #125b9f;
         color: #fff;
+      }
+
+      .buttonFalse {
+        border: 1px solid #acacac;
+        background: #acacac;
+        color: #000;
       }
     }
   }

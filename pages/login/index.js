@@ -5,6 +5,9 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
+// Context
+import { useUserData } from '../../context/UserContext';
+
 // Components
 import Header from '../../components/Layout/Header';
 import Input from '../../components/Common/Input';
@@ -13,9 +16,6 @@ import Button from '../../components/Common/Button';
 
 // Hooks
 import useYupValidationResolver from '../../utils/hooks/useYupValidationResolver';
-
-// Icons & Images
-import BpLogo from '../../public/assets/imgs/svgs/homeLogo.svg';
 
 // Services
 import { loginRequest } from '../../services/api';
@@ -34,6 +34,7 @@ export default function Login() {
   const { register, handleSubmit } = useForm({
     resolver,
   });
+  const { updateUserData } = useUserData();
 
   const onSubmit = async (values) => {
     const loginCredentials = {
@@ -43,9 +44,25 @@ export default function Login() {
 
     try {
       const response = await loginRequest(loginCredentials);
-      if (response.success) {
-        saveUserToken(response.data.token);
-        router.push('/create_team');
+      if (response.key) {
+        // Check for each role and update user data if found
+        const roles = ['venue_manager', 'player', 'coach', 'referee'];
+        let userData = null;
+
+        for (let role of roles) {
+          if (response[role] && response[role].length > 0) {
+            userData = response[role][0].user;
+            break;
+          }
+        }
+
+        if (userData) {
+          updateUserData(userData); // Update global user data
+          localStorage.setItem('token', response.key); // Save token to local storage
+          router.push('/create_team');
+        } else {
+          toast.error('No user data found for any role');
+        }
       } else {
         toast.error('Something went wrong');
       }

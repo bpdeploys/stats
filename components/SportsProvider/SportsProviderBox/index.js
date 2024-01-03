@@ -21,7 +21,7 @@ function SportsProviderBox({ selected, provider, onClick }) {
         </div>
       </header>
       <div className={styles.content}>
-        <h2 className={styles.title}>Sports Provider</h2>
+        <h2 className={styles.title}>{provider?.name || 'Sport Provider'} </h2>
         <p className={styles.description}>230 players to select from!</p>
       </div>
     </div>

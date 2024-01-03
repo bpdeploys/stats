@@ -1,26 +1,57 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 // Components
 import Header from '../../components/Layout/Header';
 import ScreenWrapper from '../../components/Layout/ScreenWrapper';
 import Input from '../../components/Common/Input';
-import Dropdown from '../../components/Common/Dropdown';
 import Button from '../../components/Common/Button';
-
-// Data
-import constants from '../../utils/data/constants';
+import CreateTeamBox from '../../components/Team/CreateTeamBox';
 
 // Styles
 import styles from './createteam.module.scss';
-import CreateTeamBox from '../../components/Team/CreateTeamBox';
+
+// Context
+import { useUserData } from '../../context/UserContext';
+import { useCreateTeamFormData } from '../../context/TeamContext';
+
+// API
+import { createTeam } from '../../services/api';
 
 export default function CreateTeam() {
   const router = useRouter();
+  const { data } = useCreateTeamFormData();
+  const { userData } = useUserData();
+  const [teamName, setTeamName] = useState('');
 
-  const handleSubmit = (e) => {
+  console.log(data);
+
+  const getButtonClass = (condition) =>
+    condition ? styles.buttonTrue : styles.buttonFalse;
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    router.push('/select_profile');
+    const teamInformation = {
+      team_name: teamName,
+      sport_entity: data?.provider?.id,
+      venue: 1,
+      kit: data?.kitValidation,
+      sport: 'Football',
+      number: 42,
+    };
+
+    try {
+      const request = await createTeam(teamInformation);
+      if (request) {
+        toast.success('Your profile has been created!');
+        router.push('/create_team');
+      }
+      router.push('/select_profile');
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -34,22 +65,33 @@ export default function CreateTeam() {
         <form className={styles.createTeam}>
           <div className={styles.createTeam__inputs}>
             <h1>Create a Team and join your sports league</h1>
-            <Input placeholder="Choose a Team Name!" />
-            <CreateTeamBox title="Your Sports Provider">
+            <Input
+              placeholder="Choose a Team Name!"
+              value={teamName}
+              onChange={(e) => setTeamName(e.target.value)}
+            />
+            <CreateTeamBox
+              title="Your Sports Provider"
+              link="/select_sports_provider"
+            >
               <div className={styles.sportsProvider}>
-                <span>Provider: Powerleague</span>
+                <span>Provider: {data?.provider?.name}</span>
                 <span>Venue: Barnet</span>
               </div>
             </CreateTeamBox>
-            <CreateTeamBox title="Team Kit">
+            <CreateTeamBox title="Team Kit" link="team_kit">
               <div className={styles.teamKit}>
                 <div>
-                  <span>Provider: Powerleague</span>
-                  <button>Yes</button>
+                  <span>Kit</span>
+                  <button className={getButtonClass(data?.kitValidation)}>
+                    {data?.kitValidation ? 'Yes' : 'No'}
+                  </button>
                 </div>
                 <div>
-                  <span>Venue: Barnet</span>
-                  <button>Yes</button>
+                  <span>Shirt Numbers</span>
+                  <button className={getButtonClass(data?.kitSquadNumber)}>
+                    {data?.kitSquadNumber ? 'Yes' : 'No'}
+                  </button>
                 </div>
               </div>
             </CreateTeamBox>

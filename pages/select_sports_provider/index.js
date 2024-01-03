@@ -1,31 +1,54 @@
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 // Components
 import Header from '../../components/Layout/Header';
 import ScreenWrapper from '../../components/Layout/ScreenWrapper';
-import Input from '../../components/Common/Input';
-import Dropdown from '../../components/Common/Dropdown';
 import Button from '../../components/Common/Button';
-
-// Data
-import constants from '../../utils/data/constants';
 
 // Styles
 import styles from './selectsportsprovider.module.scss';
 import SportsProviderBox from '../../components/SportsProvider/SportsProviderBox';
-import { useState } from 'react';
+
+// API
+import { fetchAllLeagueProviders } from '../../services/api';
+
+// Context
+import { useCreateTeamFormData } from '../../context/TeamContext';
 
 export default function SelectSportsProvider() {
-  const [sportOption, setSportOption] = useState(null);
-  const [sportsList, setSportsList] = useState([
-    1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13,
-  ]);
   const router = useRouter();
+  const { setCreateTeamFormValues } = useCreateTeamFormData();
 
-  const handleSubmit = (e) => {
+  const [sportOption, setSportOption] = useState(null);
+  const [sportsList, setSportsList] = useState([]);
+
+  console.log('SELECTED PROVIDER:', sportOption);
+
+  useEffect(() => {
+    const fetchSportsProviders = async () => {
+      try {
+        const providers = await fetchAllLeagueProviders();
+        setSportsList(providers);
+      } catch (error) {
+        console.error('Error fetching sports providers:', error);
+      }
+    };
+
+    fetchSportsProviders();
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    router.push('/');
+    try {
+      setCreateTeamFormValues({
+        provider: sportOption,
+      });
+      await router.push('/create_team');
+    } catch (error) {
+      console.error('Error saving data or navigating:', error);
+    }
   };
 
   const handleSportOption = (item) => {
@@ -46,11 +69,11 @@ export default function SelectSportsProvider() {
         />
         <div className={styles.providersWrapper}>
           <div className={styles.providers}>
-            {sportsList.map((sport) => (
+            {sportsList.map((provider) => (
               <SportsProviderBox
-                sport={sport}
-                selected={sportOption === sport}
-                onClick={() => handleSportOption(sport)}
+                provider={provider}
+                selected={sportOption === provider}
+                onClick={() => handleSportOption(provider)}
               />
             ))}
           </div>

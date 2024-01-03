@@ -10,9 +10,7 @@ const api = axios.create({
 
 export const fetchAllLeagueProviders = async () => {
   try {
-    const response = await api.get(
-      '/sport-entities?filter_by=league_provider/'
-    );
+    const response = await api.get('/sport-entities?filter_by=league_provider');
     return response.data;
   } catch (error) {
     throw error;
@@ -49,5 +47,29 @@ export const createProxyPlayerSquad = async (proxyPlayersData) => {
   } catch (error) {
     console.error(error);
     throw new Error('An error occurred while creating your squad');
+  }
+};
+
+export const createTeam = async (teamInformation) => {
+  try {
+    // Retrieve the token from localStorage
+    const token = localStorage.getItem('token');
+
+    // Check if the token exists
+    if (!token) {
+      throw new Error('No token found');
+    }
+
+    // Set up the headers with the Authorization token
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    // Make the POST request with the headers
+    const response = await api.post('/teams/', teamInformation, { headers });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while creating the player profile');
   }
 };

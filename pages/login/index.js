@@ -34,7 +34,9 @@ export default function Login() {
   const { register, handleSubmit } = useForm({
     resolver,
   });
-  const { updateUserData } = useUserData();
+  const { userData, updateUserData } = useUserData();
+
+  console.log(userData);
 
   const onSubmit = async (values) => {
     const loginCredentials = {

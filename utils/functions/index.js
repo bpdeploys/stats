@@ -18,6 +18,10 @@ export function convertToPascalCase(input) {
   return pascalCaseText;
 }
 
+export function getRandomNumber() {
+  return Math.floor(Math.random() * (100000 - 1) + 1);
+}
+
 // Function to save token to local storage
 export function saveUserToken(token) {
   localStorage.setItem('token', token);
@@ -29,8 +33,8 @@ export function getUserToken() {
 }
 
 // Function to remove token from local storage
-export function handleLogout() {
-  localStorage.removeItem('token');
+export function handleLogoutStorage() {
+  localStorage.clear();
 }
 
 // Function to save user to local storage
@@ -41,11 +45,6 @@ export function saveUserData(user) {
 // Function to get user from local storage
 export function getUserData() {
   return JSON.parse(localStorage.getItem('user'));
-}
-
-// Function to remove user from local storage
-export function removeUserData() {
-  localStorage.removeItem('user');
 }
 
 //Function to abbreviate player positions

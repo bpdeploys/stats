@@ -11,13 +11,19 @@ import { abbreviatePosition } from '../../../utils/functions';
  *
  * @param {array} data An array of codes with their assigned players to display in the table
  * @param {boolean} empty Whether or not the element should be empty
+ *@param {boolean} disabled Whether or not the element should be disabled
  *
  * @returns {React.Element} A Squad teammate info element
  */
-const SquadPlayer = ({ data, empty }) => {
+const SquadPlayer = ({ data, empty, disabled }) => {
   return empty ? (
-    <Link href="/create_teammate">
-      <div className={styles.squadPlayer}>
+    <Link href={disabled ? '/create_squad' : '/create_teammate'}>
+      <div
+        className={styles.squadPlayer}
+        style={{
+          filter: disabled ? 'blur(2px)' : 'none',
+        }}
+      >
         <div className={styles.squadPlayer__imageWrapper}>
           <Image
             width={70}
@@ -44,7 +50,7 @@ const SquadPlayer = ({ data, empty }) => {
         <span className={styles.squadNumber}>{data?.squadNumber}</span>
         <span
           className={
-            data.playingPosition === 'GK'
+            data.playingPosition === 'Goalkeeper'
               ? styles.playingPositionGk
               : styles.playingPosition
           }

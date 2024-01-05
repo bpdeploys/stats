@@ -1,4 +1,4 @@
-.createSquad {
+.selectSquadNumber {
   min-height: 100%;
   width: 100%;
   display: flex;
@@ -6,37 +6,36 @@
   justify-content: space-between;
   align-items: center;
 
+  fieldset {
+    margin: 40px 0;
+  }
+
   h1 {
     color: #000;
     text-align: center;
-    font-size: 15px;
+    font-size: 18px;
     font-style: italic;
     width: 330px;
-    margin: 4vh 0 6vh 0;
+    margin: 4vh 0;
   }
 
-  &__squadPlayers {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
-    width: 100%;
+  &__shirt {
     min-height: 68vh;
     padding: 0 10vw;
-
-    &:first-child {
-      z-index: 500;
-
-      &:hover {
-        background: red;
-      }
-    }
   }
 
-  &__currentPlayer {
-    z-index: 10000;
-    cursor: pointer;
+  &__info {
+    text-align: center;
+    font-style: italic;
+    margin-top: 2vh;
+
+    span {
+      font-size: 18px;
+    }
+
+    h2 {
+      font-size: 40px;
+    }
   }
 
   &__button {

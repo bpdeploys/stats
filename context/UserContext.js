@@ -4,7 +4,7 @@ export const UserContext = createContext();
 
 export default function UserProvider({ children }) {
   const [userData, setUserData] = useState(() => {
-    // Check if window is defined (i.e. if we are on the client side)
+    // Check if window is defined
     if (typeof window !== 'undefined') {
       const savedUserData = localStorage.getItem('userData');
       return savedUserData ? JSON.parse(savedUserData) : null;
@@ -21,8 +21,11 @@ export default function UserProvider({ children }) {
     }
   }, [userData]);
 
-  const updateUserData = (data) => {
-    setUserData(data);
+  const updateUserData = (values) => {
+    setUserData((prevValues) => ({
+      ...prevValues,
+      ...values,
+    }));
   };
 
   return (

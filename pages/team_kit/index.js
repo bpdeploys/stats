@@ -30,7 +30,6 @@ export default function TeamKit() {
     color2: data?.enabledColors?.secondary ?? true,
     color3: data?.enabledColors?.third ?? false,
   });
-  
 
   const [toggleStates, setToggleStates] = useState(initializeState(data));
   const [colors, setColors] = useState({ ...DEFAULT_COLORS, ...data?.colors });

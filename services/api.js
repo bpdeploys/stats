@@ -8,6 +8,7 @@ const api = axios.create({
   timeout: 10000,
 });
 
+// GET MODEL
 export const fetchAllLeagueProviders = async () => {
   try {
     const response = await api.get('/sport-entities?filter_by=league_provider');
@@ -17,6 +18,7 @@ export const fetchAllLeagueProviders = async () => {
   }
 };
 
+// POST MODEL
 export const createPlayerProfile = async (playerProfile) => {
   try {
     const response = await api.post('/auth/register/', playerProfile);
@@ -24,6 +26,31 @@ export const createPlayerProfile = async (playerProfile) => {
   } catch (error) {
     console.error(error);
     throw new Error('An error occurred while creating the player profile');
+  }
+};
+
+// POST MODEL WITH TOKEN
+export const createTeam = async (teamInformation) => {
+  try {
+    // Retrieve the token from localStorage
+    const token = localStorage.getItem('token');
+
+    // Check if the token exists
+    if (!token) {
+      throw new Error('No token found');
+    }
+
+    // Set up the headers with the Authorization token
+    const headers = {
+      Authorization: `Token ${token}`,
+    };
+
+    // Make the POST request with the headers
+    const response = await api.post('/teams/', teamInformation, { headers });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while creating the team');
   }
 };
 
@@ -39,37 +66,24 @@ export const loginRequest = async (credentials) => {
 
 export const createProxyPlayerSquad = async (proxyPlayersData) => {
   try {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      throw new Error('No token found');
+    }
+
+    const headers = {
+      Authorization: `Token ${token}`,
+    };
+
     const response = await api.post(
       '/players/proxy/bulk-create/',
-      proxyPlayersData
+      proxyPlayersData,
+      { headers }
     );
     return response.data;
   } catch (error) {
     console.error(error);
     throw new Error('An error occurred while creating your squad');
-  }
-};
-
-export const createTeam = async (teamInformation) => {
-  try {
-    // Retrieve the token from localStorage
-    const token = localStorage.getItem('token');
-
-    // Check if the token exists
-    if (!token) {
-      throw new Error('No token found');
-    }
-
-    // Set up the headers with the Authorization token
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
-
-    // Make the POST request with the headers
-    const response = await api.post('/teams/', teamInformation, { headers });
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw new Error('An error occurred while creating the player profile');
   }
 };

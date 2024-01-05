@@ -1,6 +1,6 @@
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 // Components
@@ -22,37 +22,62 @@ import { createTeam } from '../../services/api';
 
 export default function CreateTeam() {
   const router = useRouter();
-  const { data } = useCreateTeamFormData();
+  const { data, setCreateTeamFormValues } = useCreateTeamFormData();
   const { userData } = useUserData();
-  const [teamName, setTeamName] = useState('');
-
-  console.log(data);
+  const [teamName, setTeamName] = useState(data.teamName || '');
 
   const getButtonClass = (condition) =>
     condition ? styles.buttonTrue : styles.buttonFalse;
+
+  // Save team name in context
+  useEffect(() => {
+    setCreateTeamFormValues({
+      teamName: teamName,
+    });
+  }, [teamName]);
+
+  // Avoid selecting provider without filling team name
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      if (!teamName) {
+        toast.error('Please fill your team name first.');
+      }
+    };
+
+    router.events.on('routeChangeStart', handleRouteChange);
+
+    // Cleanup function
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange);
+    };
+  }, [teamName, router.events]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const teamInformation = {
       team_name: teamName,
-      sport_entity: data?.provider?.id,
+      // sport_entity: data?.provider?.id,
+      sport_entity: 1,
       venue: 1,
       kit: data?.kitValidation,
       sport: 'Football',
-      number: 42,
+      number: data?.kitSquadNumber,
     };
 
     try {
       const request = await createTeam(teamInformation);
       if (request) {
-        toast.success('Your profile has been created!');
-        router.push('/create_team');
+        toast.success('Your team has been created!');
       }
-      router.push('/select_profile');
+      router.push('/create_squad');
     } catch (error) {
       toast.error(error.message);
     }
   };
+
+  useEffect(() => {
+    console.log(window.localStorage);
+  }, []);
 
   return (
     <>
@@ -72,14 +97,17 @@ export default function CreateTeam() {
             />
             <CreateTeamBox
               title="Your Sports Provider"
-              link="/select_sports_provider"
+              link={teamName ? '/select_sports_provider' : '/create_team'}
             >
               <div className={styles.sportsProvider}>
                 <span>Provider: {data?.provider?.name}</span>
                 <span>Venue: Barnet</span>
               </div>
             </CreateTeamBox>
-            <CreateTeamBox title="Team Kit" link="team_kit">
+            <CreateTeamBox
+              title="Team Kit"
+              link={teamName ? '/team_kit' : '/create_team'}
+            >
               <div className={styles.teamKit}>
                 <div>
                   <span>Kit</span>

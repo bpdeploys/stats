@@ -26,9 +26,6 @@ import useYupValidationResolver from '../../utils/hooks/useYupValidationResolver
 // Services
 import { createPlayerProfile } from '../../services/api';
 
-// Utils
-import { saveUserToken } from '../../utils/functions';
-
 const validationSchema = yup.object().shape({
   playingPosition: yup.string().required('Playing Position is required'),
   motive: yup.string().required('Motive is required'),
@@ -70,10 +67,10 @@ export default function CreatePlayerProfile() {
     };
 
     try {
-      const request = await createPlayerProfile(playerProfile);
-      if (request) {
+      const response = await createPlayerProfile(playerProfile);
+      if (response) {
         toast.success('Your profile has been created!');
-        // saveUserToken(request.data.token);
+        localStorage.setItem('token', response.token);
         router.push('/create_team');
       }
     } catch (error) {

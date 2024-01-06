@@ -65,8 +65,10 @@ export default function CreateSquad() {
 
     try {
       const response = await createProxyPlayerSquad(payload);
-      if (response.success) {
+      if (response) {
         console.log(response);
+        toast.success('Your squad has been created!');
+        router.push('/player_codes');
       } else {
         toast.error('Something went wrong');
       }

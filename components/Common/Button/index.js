@@ -22,6 +22,7 @@ const Button = ({
   color = '#FFF',
   size = 'large',
   disabled,
+  customClassName,
 }) => {
   const colors = {
     blue: '#125B9F',
@@ -40,7 +41,7 @@ const Button = ({
         color: color === 'white' ? '#000' : '#FFF',
         height: size === 'small' ? '40px' : '50px',
       }}
-      className={styles.button}
+      className={customClassName || styles.button}
     >
       {text}
     </Link>
@@ -54,7 +55,7 @@ const Button = ({
         color: disabled ? 'gray' : color === 'white' ? '#000' : '#FFF',
         height: size === 'small' ? '40px' : '50px',
       }}
-      className={styles.button}
+      className={customClassName || styles.button}
     >
       {text}
     </button>

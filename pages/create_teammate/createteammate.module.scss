@@ -28,6 +28,26 @@
     }
   }
 
+  &__phoneWrapper {
+    position: relative;
+
+    button {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+  }
+
+  &__buttonCustom {
+    background: #000;
+    outline: none;
+    border: none;
+    height: 30px !important;
+    font-size: 14px;
+    padding: 0 15px;
+    border-radius: 50px;
+  }
+
   &__button {
     margin-bottom: 5vh;
 

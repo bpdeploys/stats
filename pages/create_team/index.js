@@ -75,10 +75,6 @@ export default function CreateTeam() {
     }
   };
 
-  useEffect(() => {
-    console.log(window.localStorage);
-  }, []);
-
   return (
     <>
       <Head>
@@ -100,8 +96,8 @@ export default function CreateTeam() {
               link={teamName ? '/select_sports_provider' : '/create_team'}
             >
               <div className={styles.sportsProvider}>
-                <span>Provider: {data?.provider?.name}</span>
-                <span>Venue: Barnet</span>
+                <span>Provider: {data?.provider?.name || 'None'}</span>
+                <span>Venue: {data?.provider?.venues[0]?.name || 'None'}</span>
               </div>
             </CreateTeamBox>
             <CreateTeamBox

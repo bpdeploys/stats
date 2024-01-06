@@ -114,12 +114,6 @@ export default function CreateTeammate() {
               placeholder="Last name"
               {...register('lastName')}
             />
-            <Input
-              type="phoneNumber"
-              name="phoneNumber"
-              placeholder="Phone Number"
-              {...register('phoneNumber')}
-            />
             <Dropdown
               name="playingPosition"
               placeholder="Playing Position"
@@ -132,15 +126,26 @@ export default function CreateTeammate() {
               items={constants.SQUAD_NUMBERS}
               {...register('squadNumber')}
             />
+            <div className={styles.createTeammate__phoneWrapper}>
+              <Input
+                type="phoneNumber"
+                name="phoneNumber"
+                placeholder="Phone Number"
+                {...register('phoneNumber')}
+              />
+              {'contacts' in navigator && 'ContactsManager' in window && (
+                <Button
+                  type="button"
+                  onClick={pickContacts}
+                  text="Go to Contacts"
+                  color="green"
+                  uppercase
+                  customClassName={styles.createTeammate__buttonCustom}
+                />
+              )}
+            </div>
           </div>
           <div className={styles.createTeammate__button}>
-            <Button
-              type="button"
-              onClick={pickContacts}
-              text="Test import"
-              color="green"
-              uppercase
-            />
             <Button
               type="submit"
               text="Create Teammate"

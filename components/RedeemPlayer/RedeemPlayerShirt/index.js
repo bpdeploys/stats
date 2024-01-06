@@ -28,15 +28,17 @@ const RedeemPlayerShirt = ({ data, size }) => {
           alt={data?.id || 'Blue Player Shirt'}
         />
         <span className={styles.squadNumber}>{data?.squadNumber}</span>
-        <span
-          className={
-            data.playingPosition === 'GK'
-              ? styles.playingPositionGk
-              : styles.playingPosition
-          }
-        >
-          {data?.playingPosition}
-        </span>
+        {data?.playingPosition && (
+          <span
+            className={
+              data.playingPosition === 'GK'
+                ? styles.playingPositionGk
+                : styles.playingPosition
+            }
+          >
+            {data?.playingPosition}
+          </span>
+        )}
       </div>
     </div>
   );

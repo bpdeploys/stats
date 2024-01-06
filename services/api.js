@@ -54,6 +54,16 @@ export const createTeam = async (teamInformation) => {
   }
 };
 
+export const getProxyData = async (code) => {
+  try {
+    const response = await api.get(`/players/proxy/get-proxy?code=${code}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while fetching proxy data');
+  }
+};
+
 export const loginRequest = async (credentials) => {
   try {
     const response = await api.post('/auth/login/', credentials);

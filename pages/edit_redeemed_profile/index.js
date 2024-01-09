@@ -31,17 +31,33 @@ import { saveUserToken } from '../../utils/functions';
 import Header from '../../components/Layout/Header';
 import RedeemPlayerShirt from '../../components/RedeemPlayer/RedeemPlayerShirt';
 import FakeInput from '../../components/Common/FakeInput';
-import FakeSelect from '../../components/Common/FakeSelect';
+import { useUserData } from '../../context/UserContext';
 
 const validationSchema = yup.object().shape({
-  playingPosition: yup.string().required('Playing Position is required'),
-  motive: yup.string().required('Motive is required'),
-  postcode: yup.string().required('Postcode is required'),
+  playingPosition: yup
+    .string()
+    .required('Playing Position is required')
+    .oneOf(
+      constants.POSITIONS.map((position) => position.value),
+      'Invalid playing position'
+    ),
+  motive: yup
+    .string()
+    .required('Motive is required')
+    .oneOf(
+      constants.MOTIVES.map((motive) => motive.value),
+      'Invalid motive'
+    ),
+  postcode: yup
+    .string()
+    .required('Postcode is required')
+    .matches(/^[A-Za-z0-9 ]+$/, 'Invalid postcode format'), // Adjust regex as per your postcode format
 });
 
 export default function EditRedeemedProfile() {
   const router = useRouter();
   const { data, setFormValues } = useFormData();
+  const { userData } = useUserData();
   const resolver = useYupValidationResolver(validationSchema);
   const { register, handleSubmit } = useForm({
     resolver,
@@ -52,7 +68,9 @@ export default function EditRedeemedProfile() {
   // Format date to YYYY-MM-DD
   const formattedDate = date ? date.toISOString().split('T')[0] : '';
 
-  const onSubmit = async (values) => {};
+  const onSubmit = async (values) => {
+    toast.success('Profile updated successfully');
+  };
 
   const onError = (errors) => {
     Object.values(errors).forEach((error) => {
@@ -60,10 +78,13 @@ export default function EditRedeemedProfile() {
     });
   };
 
-  const sampleData = {
-    playingPosition: 'F',
-    squadNumber: '10',
+  const shirtData = {
+    squadNumber: userData?.squad_number[0]?.number || 10,
   };
+
+  if (!userData) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -79,7 +100,7 @@ export default function EditRedeemedProfile() {
         >
           <div className={styles.editRedeemedProfile__inputs}>
             <div className={styles.editRedeemedProfile__shirt}>
-              <RedeemPlayerShirt data={sampleData} />
+              <RedeemPlayerShirt data={shirtData} />
             </div>
             <Dropdown
               name="playingPosition"
@@ -106,15 +127,13 @@ export default function EditRedeemedProfile() {
               value={date}
               onChange={(date) => setDate(date)}
             />
-            <FakeInput placeholder="Squad number" />
+            <FakeInput
+              placeholder="Squad number"
+              staticValue={shirtData?.squadNumber || null}
+            />
           </div>
           <div className={styles.editRedeemedProfile__button}>
-            <Button
-              text="Go to Player Profile"
-              color="blue"
-              uppercase
-              type="submit"
-            />
+            <Button text="Go to Player Profile" color="blue" type="submit" />
           </div>
         </form>
       </ScreenWrapper>

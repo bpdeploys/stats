@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
 import styles from './input.module.scss';
 
-const FakeInput = ({ placeholder, name, color = 'black' }) => {
+const FakeInput = ({ placeholder, name, color = 'black', staticValue }) => {
   const displayRef = useRef(null);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(staticValue || '');
 
   const handleFakeInputClick = () => {
     if (displayRef.current) {
@@ -29,6 +29,7 @@ const FakeInput = ({ placeholder, name, color = 'black' }) => {
       <input
         type="text"
         name={name}
+        disabled={staticValue}
         value={inputValue}
         className={`${styles.displayText} ${inputColorClass}`}
         onChange={handleDisplayChange}

@@ -10,40 +10,34 @@ import ScreenWrapper from '../../components/Layout/ScreenWrapper';
 import Input from '../../components/Common/Input';
 import Dropdown from '../../components/Common/Dropdown';
 import Button from '../../components/Common/Button';
-import HeaderButtons from '../../components/Layout/HeaderButtons';
-import CustomDatePicker from '../../components/Common/CustomDatePicker';
+import Header from '../../components/Layout/Header';
 
 // Data
 import constants from '../../utils/data/constants';
 
-// Styles
-import styles from './keydetails.module.scss';
-
 // Hooks
-import { useFormData } from '../../services/context';
 import useYupValidationResolver from '../../utils/hooks/useYupValidationResolver';
 
 // Services
-import { keyDetails } from '../../services/api';
 
-// Utils
-import { saveUserToken } from '../../utils/functions';
-import Header from '../../components/Layout/Header';
 import RedeemPlayerShirt from '../../components/RedeemPlayer/RedeemPlayerShirt';
-import FakeInput from '../../components/Common/FakeInput';
-import FakeSelect from '../../components/Common/FakeSelect';
+
+// Context
 import { useUserData } from '../../context/UserContext';
 
+// Styles
+import styles from './keydetails.module.scss';
+
 const validationSchema = yup.object().shape({
-  playingPosition: yup.string().required('Playing Position is required'),
-  motive: yup.string().required('Motive is required'),
-  postcode: yup.string().required('Postcode is required'),
+  name: yup.string().required('Your name is required'),
+  lastName: yup.string().required('Your last name is required'),
+  emailAddress: yup.string().required('Your email is required'),
+  gender: yup.string().required('Your Gender is required'),
 });
 
 export default function KeyDetails() {
   const router = useRouter();
-  const { data, setFormValues } = useFormData();
-  const { userData, updateUserData } = useUserData();
+  const { userData } = useUserData();
   const resolver = useYupValidationResolver(validationSchema);
   const { register, setValue, handleSubmit } = useForm({
     resolver,
@@ -57,7 +51,9 @@ export default function KeyDetails() {
     }
   }, [userData, setValue]);
 
-  const onSubmit = async (values) => {};
+  const onSubmit = async (values) => {
+    router.push('edit_redeemed_profile');
+  };
 
   const onError = (errors) => {
     Object.values(errors).forEach((error) => {

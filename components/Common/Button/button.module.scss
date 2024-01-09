@@ -1,14 +1,63 @@
 .button {
   width: 290px;
-  height: 40px;
   display: flex;
-  padding: 20px 40px;
   justify-content: center;
   align-items: center;
   font-size: 20px;
   border-radius: 5px;
   text-align: center;
-  border: none;
+  border: 2px solid transparent;
   cursor: pointer;
   text-decoration: none;
+  transition: background-color 0.3s, color 0.3s;
+
+  &:focus {
+    outline: none;
+  }
+
+  &.disabled {
+    background-color: lightgray;
+    color: gray;
+    cursor: not-allowed;
+  }
+
+  &.uppercase {
+    text-transform: uppercase;
+  }
+
+  &.size-large {
+    height: 50px;
+    padding: 20px 40px;
+  }
+
+  &.size-small {
+    height: 40px;
+    padding: 10px 20px;
+  }
+
+  &.color-blue {
+    background-color: #125b9f;
+    color: #fff;
+  }
+
+  &.color-lightBlue {
+    background-color: #3280c8;
+    color: #fff;
+  }
+
+  &.color-white {
+    background-color: #fff;
+    color: #000;
+  }
+
+  &.color-green {
+    background-color: #299503;
+    color: #fff;
+  }
+
+  &.color-transparent {
+    background-color: transparent;
+    color: #828181;
+    border: 2px solid #828181;
+  }
 }

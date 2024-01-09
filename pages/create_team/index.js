@@ -23,7 +23,7 @@ import { createTeam } from '../../services/api';
 export default function CreateTeam() {
   const router = useRouter();
   const { data, setCreateTeamFormValues } = useCreateTeamFormData();
-  const { userData } = useUserData();
+  const { userData, updateUserData } = useUserData();
   const [teamName, setTeamName] = useState(data.teamName || '');
 
   const getButtonClass = (condition) =>
@@ -68,6 +68,9 @@ export default function CreateTeam() {
       const request = await createTeam(teamInformation);
       if (request) {
         toast.success('Your team has been created!');
+        if (!userData?.team?.id) {
+          updateUserData({ team: request });
+        }
       }
       router.push('/create_squad');
     } catch (error) {

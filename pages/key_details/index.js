@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -32,6 +32,7 @@ import Header from '../../components/Layout/Header';
 import RedeemPlayerShirt from '../../components/RedeemPlayer/RedeemPlayerShirt';
 import FakeInput from '../../components/Common/FakeInput';
 import FakeSelect from '../../components/Common/FakeSelect';
+import { useUserData } from '../../context/UserContext';
 
 const validationSchema = yup.object().shape({
   playingPosition: yup.string().required('Playing Position is required'),
@@ -42,15 +43,19 @@ const validationSchema = yup.object().shape({
 export default function KeyDetails() {
   const router = useRouter();
   const { data, setFormValues } = useFormData();
+  const { userData, updateUserData } = useUserData();
   const resolver = useYupValidationResolver(validationSchema);
-  const { register, handleSubmit } = useForm({
+  const { register, setValue, handleSubmit } = useForm({
     resolver,
   });
 
-  const [date, setDate] = useState(null);
-
-  // Format date to YYYY-MM-DD
-  const formattedDate = date ? date.toISOString().split('T')[0] : '';
+  useEffect(() => {
+    if (userData) {
+      setValue('name', userData.proxy_name);
+      setValue('lastName', userData.proxy_surname);
+      setValue('emailAddress', userData.email.toLowerCase());
+    }
+  }, [userData, setValue]);
 
   const onSubmit = async (values) => {};
 
@@ -58,6 +63,10 @@ export default function KeyDetails() {
     Object.values(errors).forEach((error) => {
       toast.error(error.message);
     });
+  };
+
+  const shirtData = {
+    squadNumber: userData?.squad_number[0]?.number || 10,
   };
 
   return (
@@ -74,7 +83,7 @@ export default function KeyDetails() {
         >
           <div className={styles.keyDetails__inputs}>
             <div className={styles.keyDetails__shirt}>
-              <h1>Your Squad Number</h1>
+              <RedeemPlayerShirt data={shirtData} />
               <h3>Details needed!</h3>
             </div>
             <Input name="name" placeholder="Name" {...register('name')} />
@@ -88,7 +97,12 @@ export default function KeyDetails() {
               placeholder="Email address"
               {...register('emailAddress')}
             />
-            <FakeInput placeholder="Gender" />
+            <Dropdown
+              name="gender"
+              placeholder="Gender"
+              {...register('gender')}
+              items={constants.GENDERS}
+            />
           </div>
           <div className={styles.keyDetails__button}>
             <Button text="Done" color="blue" uppercase type="submit" />

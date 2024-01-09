@@ -42,6 +42,7 @@ export default function RedeemAccount() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    router.push('/key_details');
   };
 
   const shirtData = {

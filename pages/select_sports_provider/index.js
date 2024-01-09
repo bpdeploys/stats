@@ -24,8 +24,6 @@ export default function SelectSportsProvider() {
   const [sportOption, setSportOption] = useState(null);
   const [sportsList, setSportsList] = useState([]);
 
-  console.log('SELECTED PROVIDER:', sportOption);
-
   useEffect(() => {
     const fetchSportsProviders = async () => {
       try {

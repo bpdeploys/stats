@@ -18,10 +18,13 @@ import { useFormData } from '../../services/context';
 import styles from './selectsport.module.scss';
 import { useUserData } from '../../context/UserContext';
 import { handleLogoutStorage } from '../../utils/functions';
+import SideMenu from '../../components/Layout/SideMenu';
+import useToggle from '../../utils/hooks/useToggle';
 
 export default function SelectSport() {
   const router = useRouter();
   const { updateUserData } = useUserData();
+  const [isMenuOpen, toggleMenu] = useToggle();
 
   const handleLogout = (item) => {
     updateUserData(null);
@@ -37,6 +40,7 @@ export default function SelectSport() {
         <title>Baller App</title>
         <meta name="description" content="Baller App" key="desc" />
       </Head>
+      <SideMenu isOpen={isMenuOpen} onClose={toggleMenu} />
       <ScreenWrapper image="grayLightningHalf">
         <section className={styles.sportSelection}>
           <div>
@@ -45,6 +49,7 @@ export default function SelectSport() {
               <h1>Logout temporal page</h1>
             </div>
           </div>
+          <Button text="Open Menu" color="blue" onClick={toggleMenu} />
           <Button text="Logout" color="blue" onClick={handleLogout} />
         </section>
       </ScreenWrapper>

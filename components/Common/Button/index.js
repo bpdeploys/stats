@@ -1,4 +1,3 @@
-// Styles
 import Link from 'next/link';
 import styles from './button.module.scss';
 
@@ -16,50 +15,44 @@ import styles from './button.module.scss';
  */
 const Button = ({
   text,
-  type,
+  type = 'button',
   onClick,
   href,
-  color = '#FFF',
+  color = 'white',
   size = 'large',
-  disabled,
+  disabled = false,
   customClassName,
+  uppercase,
+  ...props
 }) => {
-  const colors = {
-    blue: '#125B9F',
-    lightBlue: '#3280C8',
-    white: '#FFF',
-  };
+  const buttonClasses = [
+    styles.button,
+    styles[`color-${color}`],
+    styles[`size-${size}`],
+    customClassName,
+    disabled ? styles.disabled : '',
+    uppercase ? styles.uppercase : '',
+  ].join(' ');
 
-  const buttonColor = colors[color];
-
-  return href ? (
-    <Link
-      type={type}
-      href={href}
-      style={{
-        background: buttonColor,
-        color: color === 'white' ? '#000' : '#FFF',
-        height: size === 'small' ? '40px' : '50px',
-      }}
-      className={customClassName || styles.button}
-    >
-      {text}
-    </Link>
-  ) : (
-    <button
-      type={type}
-      onClick={onClick}
-      disabled={disabled}
-      style={{
-        background: disabled ? 'lightgray' : buttonColor,
-        color: disabled ? 'gray' : color === 'white' ? '#000' : '#FFF',
-        height: size === 'small' ? '40px' : '50px',
-      }}
-      className={customClassName || styles.button}
-    >
-      {text}
-    </button>
-  );
+  if (href) {
+    return (
+      <Link href={href} type={type} className={buttonClasses} {...props}>
+        {text}
+      </Link>
+    );
+  } else {
+    return (
+      <button
+        type={type}
+        onClick={onClick}
+        disabled={disabled}
+        className={buttonClasses}
+        {...props}
+      >
+        {text}
+      </button>
+    );
+  }
 };
 
 export default Button;

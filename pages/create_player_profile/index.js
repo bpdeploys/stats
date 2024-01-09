@@ -16,6 +16,9 @@ import CustomDatePicker from '../../components/Common/CustomDatePicker';
 // Data
 import constants from '../../utils/data/constants';
 
+// Context
+import { useUserData } from '../../context/UserContext';
+
 // Styles
 import styles from './createplayerprofile.module.scss';
 
@@ -35,6 +38,7 @@ const validationSchema = yup.object().shape({
 
 export default function CreatePlayerProfile() {
   const router = useRouter();
+  const { updateUserData } = useUserData();
   const { data, setFormValues } = useFormData();
   const resolver = useYupValidationResolver(validationSchema);
   const { register, handleSubmit } = useForm({
@@ -68,10 +72,30 @@ export default function CreatePlayerProfile() {
 
     try {
       const response = await createPlayerProfile(playerProfile);
-      if (response) {
-        toast.success('Your profile has been created!');
-        localStorage.setItem('token', response.token);
-        router.push('/create_team');
+      if (response.token) {
+        // Check for each role and update user data if found
+        const roles = ['venue_manager', 'player', 'coach', 'referee'];
+        let userData = null;
+
+        for (let role of roles) {
+          if (
+            response.extra_data[role] &&
+            response.extra_data[role].length > 0
+          ) {
+            userData = response.extra_data[role][0].user;
+            break;
+          }
+        }
+
+        if (userData) {
+          updateUserData(userData); // Update global user data
+          localStorage.setItem('token', response.token); // Save token to local storage
+          router.push('/create_team');
+        } else {
+          toast.error('No user data found for any role');
+        }
+      } else {
+        toast.error('Something went wrong');
       }
     } catch (error) {
       toast.error(error.message);

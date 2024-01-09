@@ -37,8 +37,6 @@ export default function CreateSquad() {
     false
   );
 
-  console.log('USER DATA:', userData);
-
   useEffect(() => {
     // Mark as client-side once the component is mounted
     setIsClient(true);
@@ -66,7 +64,6 @@ export default function CreateSquad() {
     try {
       const response = await createProxyPlayerSquad(payload);
       if (response) {
-        console.log(response);
         toast.success('Your squad has been created!');
         router.push('/player_codes');
       } else {
@@ -86,8 +83,6 @@ export default function CreateSquad() {
   if (!isClient) {
     return <div>Loading...</div>; // Or any other placeholder content
   }
-
-  console.log(tutorialCompleted);
 
   return (
     <>

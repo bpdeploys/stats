@@ -5,7 +5,7 @@ const BASE_URL = 'https://bp-prod-api.com/api';
 
 const api = axios.create({
   baseURL: BASE_URL,
-  timeout: 10000,
+  timeout: 30000,
 });
 
 // GET MODEL
@@ -61,6 +61,26 @@ export const getProxyData = async (code) => {
   } catch (error) {
     console.error(error);
     throw new Error('An error occurred while fetching proxy data');
+  }
+};
+
+export const getProxyCodes = async (teamId) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No token found');
+    }
+    const headers = {
+      Authorization: `Token ${token}`,
+    };
+
+    const response = await api.get(`/players/proxy?team_id=${teamId}`, {
+      headers,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while fetching squad codes data');
   }
 };
 

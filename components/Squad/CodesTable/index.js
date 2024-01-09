@@ -12,10 +12,10 @@ const CodesTable = ({ data }) => {
   return (
     <div className={styles.table}>
       <div className={styles.tableHeading}>
-        <div className={styles.tableColumnPlayer}>Player</div>
+        <div className={styles.tableColumnPlayer}>Player name</div>
         <div className={styles.tableColumnCode}>Code</div>
       </div>
-      {data.map((player) => (
+      {data?.map((player) => (
         <div key={player?.id} className={styles.tableBody}>
           <div className={styles.tableColumnPlayer}>
             {player?.firstName} {player?.lastName}

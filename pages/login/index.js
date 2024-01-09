@@ -36,8 +36,6 @@ export default function Login() {
   });
   const { userData, updateUserData } = useUserData();
 
-  console.log(userData);
-
   const onSubmit = async (values) => {
     const loginCredentials = {
       email: values.email,

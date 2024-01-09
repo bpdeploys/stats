@@ -1,13 +1,14 @@
 import Head from 'next/head';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
+import Image from 'next/image';
 
 // Context
 import { useContext } from 'react';
 import { SquadContext } from '../../context/SquadContext';
+import { useFormData } from '../../services/context';
 
 // Components
 import ScreenWrapper from '../../components/Layout/ScreenWrapper';
@@ -18,14 +19,15 @@ import Button from '../../components/Common/Button';
 // Icons & Images
 import BlueShirtIcon from '../../public/assets/imgs/svgs/blue-shirt.svg';
 
+// Hooks
+import { useHasMounted } from '../../utils/hooks/useHasMounted';
+import useYupValidationResolver from '../../utils/hooks/useYupValidationResolver';
+
 // Data
 import constants from '../../utils/data/constants';
 
 // Styles
 import styles from './createteammate.module.scss';
-import { useFormData } from '../../services/context';
-import useYupValidationResolver from '../../utils/hooks/useYupValidationResolver';
-import Image from 'next/image';
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().required('First name is required'),
@@ -38,6 +40,7 @@ const validationSchema = Yup.object().shape({
 export default function CreateTeammate() {
   const router = useRouter();
   const { setFormValues } = useFormData();
+  const hasMounted = useHasMounted();
   const { addTeammate } = useContext(SquadContext);
   const resolver = useYupValidationResolver(validationSchema);
   const { handleSubmit, register, setValue } = useForm({
@@ -133,16 +136,18 @@ export default function CreateTeammate() {
                 placeholder="Phone Number"
                 {...register('phoneNumber')}
               />
-              {'contacts' in navigator && 'ContactsManager' in window && (
-                <Button
-                  type="button"
-                  onClick={pickContacts}
-                  text="Go to Contacts"
-                  color="green"
-                  uppercase
-                  customClassName={styles.createTeammate__buttonCustom}
-                />
-              )}
+              {hasMounted &&
+                'contacts' in navigator &&
+                'ContactsManager' in window && (
+                  <Button
+                    type="button"
+                    onClick={pickContacts}
+                    text="Go to Contacts"
+                    color="green"
+                    uppercase
+                    customClassName={styles.createTeammate__buttonCustom}
+                  />
+                )}
             </div>
           </div>
           <div className={styles.createTeammate__button}>

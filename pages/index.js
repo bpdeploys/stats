@@ -32,7 +32,7 @@ export default function Home() {
             <Button
               text="Sign Up"
               size="small"
-              className={styles.home__button}
+              customClassName={styles.home__button}
               color="white"
               href="/register"
             />
@@ -40,7 +40,7 @@ export default function Home() {
             <Button
               text="Login"
               size="small"
-              className={styles.home__button}
+              customClassName={styles.home__button}
               color="blue"
               href="/login"
             />

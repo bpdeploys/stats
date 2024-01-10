@@ -1,7 +1,5 @@
 // Styles
-import Image from 'next/image';
 import styles from './tutorialmodal.module.scss';
-import TopLeftArrow from '../../../public/assets/imgs/svgs/TopLeftArrow.svg';
 
 /**
  * Squad creation tutorial modal
@@ -11,9 +9,9 @@ import TopLeftArrow from '../../../public/assets/imgs/svgs/TopLeftArrow.svg';
 const SquadCreationTutorial = () => {
   return (
     <div className={styles.modal}>
-      <Image
+      <img
         className={styles.modal__arrow}
-        src={TopLeftArrow}
+        src="/assets/imgs/svgs/TopLeftArrow.svg"
         width={70}
         height={70}
       />

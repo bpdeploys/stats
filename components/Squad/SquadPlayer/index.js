@@ -1,8 +1,5 @@
 // Styles
 import styles from './sportselect.module.scss';
-import blueShirt from '../../../public/assets/imgs/svgs/blue-shirt.svg';
-import grayShirt from '../../../public/assets/imgs/svgs/gray-shirt.svg';
-import Image from 'next/image';
 import Link from 'next/link';
 import { abbreviatePosition } from '../../../utils/functions';
 
@@ -25,12 +22,12 @@ const SquadPlayer = ({ data, empty, disabled }) => {
         }}
       >
         <div className={styles.squadPlayer__imageWrapper}>
-          <Image
+          <img
             width={70}
             height={80}
             priority
-            src={grayShirt}
-            alt={'Gray Player Shirt'}
+            src="/assets/imgs/svgs/gray-shirt.svg"
+            alt="Gray Player Shirt"
           />
         </div>
         <small>{data?.lastName}</small>
@@ -40,11 +37,11 @@ const SquadPlayer = ({ data, empty, disabled }) => {
   ) : (
     <div className={styles.squadPlayer}>
       <div className={styles.squadPlayer__imageWrapper}>
-        <Image
+        <img
           width={70}
           height={80}
           priority
-          src={blueShirt}
+          src="/assets/imgs/svgs/blue-shirt.svg"
           alt={data?.id || 'Blue Player Shirt'}
         />
         <span className={styles.squadNumber}>{data?.squadNumber}</span>

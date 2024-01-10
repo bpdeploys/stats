@@ -1,13 +1,8 @@
-import { useRouter } from 'next/router';
-import Image from 'next/image';
 import Head from 'next/head';
 
 // Components
 import ScreenWrapper from '../components/Layout/ScreenWrapper';
 import Button from '../components/Common/Button';
-
-// Icons & Images
-import BpLogo from '../public/assets/imgs/svgs/homeLogo.svg';
 
 // Styles
 import styles from './index.module.scss';
@@ -22,7 +17,12 @@ export default function Home() {
       <ScreenWrapper background="blue" image="blueLightningFull">
         <section className={styles.home}>
           <div className={styles.home__logo}>
-            <Image src={BpLogo} alt="Baller Logo" width={89} height={89} />
+            <img
+              src="/assets/imgs/home-logo.png"
+              alt="Baller Logo"
+              width={89}
+              height={89}
+            />
             <div className={styles.home__headings}>
               <h1>BallerProfile</h1>
               <h2>Baller App</h2>

@@ -1,8 +1,5 @@
 // Styles
 import styles from './sportselect.module.scss';
-import blueShirt from '../../../public/assets/imgs/svgs/blue-shirt.svg';
-import Image from 'next/image';
-import { abbreviatePosition } from '../../../utils/functions';
 
 /**
  * Squad teammate info component
@@ -16,11 +13,11 @@ const CurrentPlayer = ({ data, onClick }) => {
   return (
     <div className={styles.squadPlayer} onClick={onClick}>
       <div className={styles.squadPlayer__imageWrapper}>
-        <Image
+        <img
           width={70}
           height={80}
           priority
-          src={blueShirt}
+          src="/assets/imgs/svgs/blue-shirt.svg"
           alt={data?.id || 'Blue Player Shirt'}
         />
         <span className={styles.squadNumber}>{data?.squadNumber}</span>

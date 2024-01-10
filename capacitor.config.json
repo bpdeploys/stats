@@ -1,0 +1,8 @@
+{
+  "appId": "com.ballerprofile.app",
+  "appName": "Baller",
+  "webDir": "out",
+  "server": {
+    "androidScheme": "https"
+  }
+}

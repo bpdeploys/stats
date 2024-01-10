@@ -1,11 +1,5 @@
-import Image from 'next/image';
-import { useRouter } from 'next/router';
-
 // Components
 import Button from '../Common/Button';
-
-// Icons & Images
-import BlueShirtIcon from '../../public/assets/imgs/svgs/blue-shirt.svg';
 
 // Styles
 import styles from './profileselect.module.scss';
@@ -26,9 +20,9 @@ const ProfileSelect = ({ data, onClick }) => {
       className={styles.profileSelect}
       style={{ background: color === 'red' ? '#A91337' : '#1361A9' }}
     >
-      <Image
+      <img
         className={styles.profileSelect__image}
-        src={BlueShirtIcon}
+        src="/assets/imgs/svgs/blue-shirt.svg"
         alt="Player Shirt"
         width={60}
         height={68}

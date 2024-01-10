@@ -1,13 +1,9 @@
 import { useRouter } from 'next/router';
-import Image from 'next/image';
 import Head from 'next/head';
 
 // Components
 import ScreenWrapper from '../../components/Layout/ScreenWrapper';
 import ProfileSelect from '../../components/ProfileSelect';
-
-// Icons & Images
-import BpLogo from '../../public/assets/imgs/svgs/homeLogo.svg';
 
 // Data
 import profileData from '../../utils/data/profiles.json';
@@ -34,7 +30,12 @@ export default function SelectProfile() {
       <ScreenWrapper background="white" image="grayLightningHalf">
         <section className={styles.profileSelection}>
           <div className={styles.profileSelection__heading}>
-            <Image src={BpLogo} alt="Logo" width={50} height={50} />
+            <img
+              src="/assets/imgs/svgs/homeLogo.svg"
+              alt="Logo"
+              width={50}
+              height={50}
+            />
             <h1>Welcome to BallerProfile</h1>
           </div>
           <div className={styles.profileSelection__boxes}>

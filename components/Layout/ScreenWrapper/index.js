@@ -1,13 +1,5 @@
-// Images
-import BlueLightning from '../../../public/assets/imgs/svgs/blueLightning.svg';
-import GrayLightning from '../../../public/assets/imgs/svgs/grayLightning.svg';
-import GrayLightningHalf from '../../../public/assets/imgs/svgs/grayLightningHalf.svg';
-import GrayLightningFull from '../../../public/assets/imgs/svgs/grayLightningFull.svg';
-import BlueLightningFull from '../../../public/assets/imgs/svgs/blueLightningFull.svg';
-
 // Styles
 import styles from './screenwrapper.module.scss';
-import Image from 'next/image';
 
 /**
  * ScreenWrapper component
@@ -25,16 +17,16 @@ import Image from 'next/image';
 const ScreenWrapper = ({
   background,
   image,
-  positionX,
-  positionY,
+  positionX = 0,
+  positionY = 0,
   children,
 }) => {
   const images = {
-    blueLightning: BlueLightning,
-    grayLightning: GrayLightning,
-    grayLightningHalf: GrayLightningHalf,
-    grayLightningFull: GrayLightningFull,
-    blueLightningFull: BlueLightningFull,
+    blueLightning: '/assets/imgs/svgs/blueLightning.svg',
+    grayLightning: '/assets/imgs/svgs/grayLightning.svg',
+    grayLightningHalf: '/assets/imgs/svgs/grayLightningHalf.svg',
+    grayLightningFull: '/assets/imgs/svgs/grayLightningFull.svg',
+    blueLightningFull: '/assets/imgs/svgs/blueLightningFull.svg',
   };
 
   const imageUrl = images[image];
@@ -60,14 +52,14 @@ const ScreenWrapper = ({
     >
       {children}
       {imageUrl && (
-        <Image
+        <img
           src={imageUrl}
           alt="Lightning"
           className={styles.lightning}
           style={{
             position: 'absolute',
-            bottom: positionY || 0,
-            left: positionX || 0,
+            bottom: positionY,
+            left: positionX,
           }}
         />
       )}

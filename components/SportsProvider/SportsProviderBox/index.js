@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from './sportsproviderbox.module.scss';
-import Image from 'next/image';
 
 function SportsProviderBox({ selected, provider, onClick }) {
   const sportProviderSelectClasses = `${styles.mainContainer} ${
@@ -11,7 +10,7 @@ function SportsProviderBox({ selected, provider, onClick }) {
     <div className={sportProviderSelectClasses} onClick={onClick}>
       <header className={styles.mainHeader}>
         <div className={styles.imageWrapper}>
-          <Image
+          <img
             alt="Sports Provider Logo"
             className="logo"
             src="/assets/imgs/gray.png"

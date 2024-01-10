@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
-import Image from 'next/image';
 
 // Context
 import { useContext } from 'react';
@@ -15,9 +14,6 @@ import ScreenWrapper from '../../components/Layout/ScreenWrapper';
 import Input from '../../components/Common/Input';
 import Dropdown from '../../components/Common/Dropdown';
 import Button from '../../components/Common/Button';
-
-// Icons & Images
-import BlueShirtIcon from '../../public/assets/imgs/svgs/blue-shirt.svg';
 
 // Hooks
 import { useHasMounted } from '../../utils/hooks/useHasMounted';
@@ -93,8 +89,8 @@ export default function CreateTeammate() {
       <ScreenWrapper background="white">
         <div className={styles.heading}>
           <h1>CREATE YOUR TEAMMATE</h1>
-          <Image
-            src={BlueShirtIcon}
+          <img
+            src="/assets/imgs/svgs/blue-shirt.svg"
             alt="Player Shirt"
             width={60}
             height={68}
@@ -136,18 +132,15 @@ export default function CreateTeammate() {
                 placeholder="Phone Number"
                 {...register('phoneNumber')}
               />
-              {hasMounted &&
-                'contacts' in navigator &&
-                'ContactsManager' in window && (
-                  <Button
-                    type="button"
-                    onClick={pickContacts}
-                    text="Go to Contacts"
-                    color="green"
-                    uppercase
-                    customClassName={styles.createTeammate__buttonCustom}
-                  />
-                )}
+              {
+                <Button
+                  type="button"
+                  onClick={pickContacts}
+                  text="Go to Contacts"
+                  uppercase
+                  customClassName={styles.createTeammate__buttonCustom}
+                />
+              }
             </div>
           </div>
           <div className={styles.createTeammate__button}>

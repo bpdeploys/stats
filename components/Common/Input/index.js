@@ -66,7 +66,7 @@ const Input = React.forwardRef(
             {...props}
           />
           {type === 'password' && (
-            <Image
+            <img
               src={
                 showPassword
                   ? '/assets/imgs/svgs/eye.svg'

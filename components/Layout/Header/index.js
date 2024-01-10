@@ -1,8 +1,4 @@
-import Image from 'next/image';
 import { useRouter } from 'next/router';
-
-// Icons & Images
-import BpLogo from '../../../public/assets/imgs/svgs/homeLogo.svg';
 
 // Styles
 import styles from './header.module.scss';
@@ -36,9 +32,9 @@ const Header = ({
         }}
       >
         {logo && (
-          <Image
+          <img
             className={styles.logo}
-            src={BpLogo}
+            src="/assets/imgs/svgs/homeLogo.svg"
             alt="Baller Logo"
             width={50}
             height={50}

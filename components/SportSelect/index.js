@@ -1,9 +1,3 @@
-import Image from 'next/image';
-
-// Icons & Images
-import FootballIcon from '../../public/assets/imgs/svgs/FootballIcon.svg';
-import BasketballIcon from '../../public/assets/imgs/svgs/BasketballIcon.svg';
-
 // Styles
 import styles from './sportselect.module.scss';
 
@@ -23,11 +17,15 @@ const SportSelect = ({ sport, selected, onClick }) => {
 
   return (
     <div className={userSelectClasses} onClick={onClick}>
-      <Image
+      <img
         width={30}
         height={30}
         priority
-        src={sport === 'Football' ? FootballIcon : BasketballIcon}
+        src={
+          sport === 'Football'
+            ? '/assets/imgs/svgs/FootballIcon.svg'
+            : '/assets/imgs/svgs/BasketballIcon.svg'
+        }
         alt={sport}
       />
       <h3>{sport}</h3>

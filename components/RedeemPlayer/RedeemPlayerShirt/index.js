@@ -1,8 +1,5 @@
 // Styles
 import styles from './redeemplayershirt.module.scss';
-import blueShirt from '../../../public/assets/imgs/svgs/blue-shirt.svg';
-import grayShirt from '../../../public/assets/imgs/svgs/gray-shirt.svg';
-import Image from 'next/image';
 
 /**
  * Squad teammate info component
@@ -20,11 +17,11 @@ const RedeemPlayerShirt = ({ data, size }) => {
       }
     >
       <div className={styles.imageWrapper}>
-        <Image
+        <img
           width={size === 'big' ? 300 : 100}
           height={size === 'big' ? 350 : 116}
           priority
-          src={blueShirt}
+          src="/assets/imgs/svgs/blue-shirt.svg"
           alt={data?.id || 'Blue Player Shirt'}
         />
         <span className={styles.squadNumber}>{data?.squadNumber}</span>

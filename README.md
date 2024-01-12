@@ -1,4 +1,4 @@
-# Baller App
+# Stats App
 
 ## How to use
 

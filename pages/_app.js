@@ -1,30 +1,89 @@
-import { ToastContainer } from 'react-toastify';
-import FormProvider from '../services/context';
-import localFont from 'next/font/local';
-import '../styles.scss';
-import 'react-toastify/dist/ReactToastify.css';
-import { SquadProvider } from '../context/SquadContext';
-import TeamCreationProvider from '../context/TeamContext';
-import UserProvider from '../context/UserContext';
+import React, { useState, useEffect } from 'react';
+import { openDB } from 'idb';
+import { AuthProvider, AuthConsumer } from 'react-check-auth';
+import Login from '.';
+import { BASE_URL } from '../http';
+import ScreenLoading from '../components/ScreenLoading';
+import DynamicProvider from '../provider';
+import HeadApp from '../components/Head';
 
-// Font files can be colocated inside of `pages`
-const futuraBook = localFont({ src: '../public/assets/fonts/futura-book.ttf' });
+const MyApp = ({ Component, pageProps }) => {
+  const [db, setDb] = useState(null);
+  const [reqOptions, setReqOptions] = useState(null);
 
-function MyApp({ Component, pageProps }) {
+  useEffect(() => {
+    // Initialize db and set it to state
+    const initializeDB = async () => {
+      const db = await openDB('__REFEREE__', 1, {
+        upgrade(dbOpened) {
+          dbOpened.createObjectStore('MATCH_WAS_ENTERED_CODE', {
+            keyPath: 'id',
+            autoIncrement: true,
+          });
+        },
+      });
+      setDb(db);
+    };
+
+    initializeDB();
+
+    setReqOptions({
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token ${window.localStorage.getItem('TOKEN')}` || '',
+      },
+    });
+  }, []);
+
+  const refreshAuthState = (refreshAuthFunction) => {
+    setReqOptions({
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token ${window.localStorage.getItem('TOKEN')}` || '',
+      },
+    });
+    refreshAuthFunction();
+  };
+
   return (
-    <UserProvider>
-      <FormProvider>
-        <TeamCreationProvider>
-          <SquadProvider>
-            <ToastContainer />
-            <main className={futuraBook.className}>
-              <Component {...pageProps} />
-            </main>
-          </SquadProvider>
-        </TeamCreationProvider>
-      </FormProvider>
-    </UserProvider>
+    <div>
+      <HeadApp />
+      {reqOptions ? (
+        <AuthProvider
+          authUrl={`${BASE_URL}/current-user/`}
+          reqOptions={reqOptions}
+        >
+          <AuthConsumer>
+            {({ isLoading, userInfo, refreshAuth }) => {
+              if (isLoading || !db) {
+                return <ScreenLoading />;
+              } else if (!userInfo) {
+                return (
+                  <Login refreshAuth={() => refreshAuthState(refreshAuth)} />
+                );
+              } else {
+                return (
+                  <DynamicProvider db={db}>
+                    <Component
+                      {...{
+                        ...pageProps,
+                        userInfo,
+                        refreshAuth: () => refreshAuthState(refreshAuth),
+                      }}
+                    />
+                  </DynamicProvider>
+                );
+              }
+            }}
+          </AuthConsumer>
+        </AuthProvider>
+      ) : (
+        <ScreenLoading />
+      )}
+    </div>
   );
-}
+};
 
 export default MyApp;

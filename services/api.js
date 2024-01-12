@@ -1,24 +1,24 @@
 // api.js
 import axios from 'axios';
 
-const BASE_URL = 'https://bp-prod-api.com/api';
+const BASE_URL = 'http://ec2-34-226-184-189.compute-1.amazonaws.com:8000/api';
 
 const api = axios.create({
   baseURL: BASE_URL,
-  timeout: 30000,
+  timeout: 10000,
 });
 
-// GET MODEL
 export const fetchAllLeagueProviders = async () => {
   try {
-    const response = await api.get('/sport-entities?filter_by=league_provider');
+    const response = await api.get(
+      '/sport-entities?filter_by=league_provider/'
+    );
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-// POST MODEL
 export const createPlayerProfile = async (playerProfile) => {
   try {
     const response = await api.post('/auth/register/', playerProfile);
@@ -29,61 +29,6 @@ export const createPlayerProfile = async (playerProfile) => {
   }
 };
 
-// POST MODEL WITH TOKEN
-export const createTeam = async (teamInformation) => {
-  try {
-    // Retrieve the token from localStorage
-    const token = localStorage.getItem('token');
-
-    // Check if the token exists
-    if (!token) {
-      throw new Error('No token found');
-    }
-
-    // Set up the headers with the Authorization token
-    const headers = {
-      Authorization: `Token ${token}`,
-    };
-
-    // Make the POST request with the headers
-    const response = await api.post('/teams/', teamInformation, { headers });
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw new Error('An error occurred while creating the team');
-  }
-};
-
-export const getProxyData = async (code) => {
-  try {
-    const response = await api.get(`/players/proxy/get-proxy?code=${code}`);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw new Error('An error occurred while fetching proxy data');
-  }
-};
-
-export const getProxyCodes = async (teamId) => {
-  try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('No token found');
-    }
-    const headers = {
-      Authorization: `Token ${token}`,
-    };
-
-    const response = await api.get(`/players/proxy?team_id=${teamId}`, {
-      headers,
-    });
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw new Error('An error occurred while fetching squad codes data');
-  }
-};
-
 export const loginRequest = async (credentials) => {
   try {
     const response = await api.post('/auth/login/', credentials);
@@ -91,29 +36,5 @@ export const loginRequest = async (credentials) => {
   } catch (error) {
     console.error(error);
     throw new Error('An error occurred while logging in');
-  }
-};
-
-export const createProxyPlayerSquad = async (proxyPlayersData) => {
-  try {
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-      throw new Error('No token found');
-    }
-
-    const headers = {
-      Authorization: `Token ${token}`,
-    };
-
-    const response = await api.post(
-      '/players/proxy/bulk-create/',
-      proxyPlayersData,
-      { headers }
-    );
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw new Error('An error occurred while creating your squad');
   }
 };

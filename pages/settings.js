@@ -5,8 +5,10 @@ import userInfoPropTypes from '../proptypes/userInfo';
 import { fetchUpdateUserImage, fetchUpdateUserAttrs } from '../services';
 import SlotValueInput from '../components/SlotValueInput';
 import ScreenLoading from '../components/ScreenLoading';
+import { useAuth } from '../context/useAuth';
 
-const Settings = ({ userInfo, refreshAuth }) => {
+const Settings = () => {
+  const { userInfo, logout } = useAuth();
   // Check if userInfo.user is defined
   if (!userInfo || !userInfo.user) {
     return <ScreenLoading />;
@@ -92,14 +94,7 @@ const Settings = ({ userInfo, refreshAuth }) => {
         />
         <SlotValueInput title="Data Joined" value={created_at} noInput />
         <div className="logout-div">
-          <button
-            type="button"
-            className="logout"
-            onClick={() => {
-              window.localStorage.removeItem('TOKEN');
-              refreshAuth();
-            }}
-          >
+          <button type="button" className="logout" onClick={() => logout()}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -167,11 +162,6 @@ const Settings = ({ userInfo, refreshAuth }) => {
       `}</style>
     </div>
   );
-};
-
-Settings.propTypes = {
-  userInfo: PropTypes.shape(userInfoPropTypes).isRequired,
-  refreshAuth: PropTypes.func.isRequired,
 };
 
 export default Settings;

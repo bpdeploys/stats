@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Router from 'next/router';
 import Header from '../components/Header';
 import { Context, MATCH_ACTIVE_KEY } from '../provider';
@@ -8,111 +8,29 @@ import {
   fetchCreatePlayersStartMatch,
 } from '../services';
 import ScreenLoading from '../components/ScreenLoading';
-import Item from '../components/Item';
-
-/**
- * Represents a list of team players
- * @param {Object} props
- * @param {string} props.name - Name of the team
- * @param {string} props.color - Color of the team
- * @param {Array} props.players - List of players
- * @param {Function} props.onSwitch - Callback for switching players
- * @param {Array} props.playersSubs - List of substitute players
- */
-const TeamList = ({ name, color, players, onSwitch, playersSubs }) => (
-  <div className="TeamList">
-    <span>{name}</span>
-    <div className="content-wrapper">
-      {Array.isArray(players) &&
-        players.length > 0 &&
-        players.map((p) => {
-          const propsToItem = {
-            color,
-            onSwitch,
-            number: p.squad_number.length ? p.squad_number[0].number : 0,
-            start: !playersSubs.includes(p.id),
-            key: p.id,
-            id: p.id,
-          };
-
-          if (p.user && p.user.profile_pic) {
-            propsToItem.img = p.user.profile_pic;
-          }
-
-          return <Item {...propsToItem} />;
-        })}
-    </div>
-    <style jsx>
-      {`
-        .TeamList {
-          margin-top: 10px;
-
-          .content-wrapper {
-            padding: 0 10px 0;
-          }
-
-          > span {
-            width: 80%;
-            margin: auto;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e5e5e5;
-            display: block;
-            text-align: center;
-            font-family: Quicksand;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 28px;
-            line-height: 35px;
-            text-align: center;
-            color: #616060;
-          }
-        }
-      `}
-    </style>
-  </div>
-);
+import TeamList from '../components/Lineup/TeamList';
 
 const LineUp = () => {
-  // Context
-  const context = React.useContext(Context);
-  // eslint-disable-next-line react/destructuring-assignment
-  const idMatch = context[MATCH_ACTIVE_KEY].id;
-  const [loading, setLoading] = React.useState(true);
-  const [teamList, setTeamList] = React.useState(null);
-  const [team1, setTeam1] = React.useState([]);
-  const [team2, setTeam2] = React.useState([]);
-  const [subTeam1, setSubTeam1] = React.useState([]);
-  const [subTeam2, setSubTeam2] = React.useState([]);
+  const {
+    [MATCH_ACTIVE_KEY]: { id: idMatch },
+    showToast,
+  } = useContext(Context);
+  const [loading, setLoading] = useState(true);
+  const [teamList, setTeamList] = useState(null);
+  const [team1, setTeam1] = useState([]);
+  const [team2, setTeam2] = useState([]);
+  const [subTeam1, setSubTeam1] = useState([]);
+  const [subTeam2, setSubTeam2] = useState([]);
 
-  const handleSwitchTeam1 = (arg) => {
-    if (team1.includes(arg)) {
-      const newSubTeam1 = [...subTeam1];
-      newSubTeam1.push(arg);
-      setSubTeam1(newSubTeam1);
-      setTeam1([...team1.filter((id) => id !== arg)]);
+  const handleSwitchTeam = (team, setTeam, subTeam, setSubTeam, player) => {
+    if (team.includes(player)) {
+      setSubTeam([...subTeam, player]);
+      setTeam(team.filter((id) => id !== player));
     } else {
-      const newTeam1 = [...team1];
-      newTeam1.push(arg);
-      setTeam1(newTeam1);
-      setSubTeam1([...subTeam1.filter((id) => id !== arg)]);
+      setTeam([...team, player]);
+      setSubTeam(subTeam.filter((id) => id !== player));
     }
   };
-
-  const handleSwitchTeam2 = (arg) => {
-    if (team2.includes(arg)) {
-      const newSubTeam2 = [...subTeam2];
-      newSubTeam2.push(arg);
-      setSubTeam2(newSubTeam2);
-      setTeam2([...team2.filter((id) => id !== arg)]);
-    } else {
-      const newTeam2 = [...team2];
-      newTeam2.push(arg);
-      setTeam2(newTeam2);
-      setSubTeam2([...subTeam2.filter((id) => id !== arg)]);
-    }
-  };
-
-  console.log(teamList, 'TEAM LIST');
 
   const handleSubmit = async () => {
     const maxStarPlayers = Number(teamList.match_id.match_format[0]);
@@ -125,80 +43,71 @@ const LineUp = () => {
         subs2: subTeam2,
         game_id: idMatch,
       });
-      // const responseCreatePlayersStartMatch =
+
       await fetchCreatePlayersStartMatch(
         [...team1, ...team2, ...subTeam1, ...subTeam2],
         idMatch
       );
-      // console.log(responseCreatePlayersStartMatch)
       setLoading(false);
+
       if ('id' in responseCreation) {
-        const msg = `Starting Line created`;
-        context.showToast(msg);
+        showToast('Starting Line created');
         Router.push('/match');
       } else {
-        const msg = 'Something went wrong';
-        context.showToast(msg);
+        showToast('Something went wrong');
       }
     } else {
-      const msg = `You must choose ${maxStarPlayers} players in each team`;
-      context.showToast(msg);
+      showToast(`You must choose ${maxStarPlayers} players in each team`);
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const responseTeamList = await fetchTeamList(idMatch);
-        setSubTeam1([...responseTeamList.team1.players.map((p) => p.id)]);
-        setSubTeam2([...responseTeamList.team2.players.map((p) => p.id)]);
+        setSubTeam1(responseTeamList.team1.players.map((p) => p.id));
+        setSubTeam2(responseTeamList.team2.players.map((p) => p.id));
         setTeamList(responseTeamList);
-        setLoading(false);
       } catch (error) {
-        // console.log(error);
-        const msg = 'Something went wrong';
-        context.showToast(msg);
+        showToast('Something went wrong');
         Router.push('/itinerary');
+      } finally {
+        setLoading(false);
       }
     };
-
     fetchData();
-  }, []);
+  }, [idMatch, showToast]);
 
   return (
     <div className="LineUp">
       <Header name="Create Starting Lineups" />
-      {!teamList && loading ? <ScreenLoading height="90vh" /> : null}
-      {teamList ? (
-        <>
-          <TeamList
-            name={teamList.team1.team_info.team_name}
-            color="red"
-            players={teamList.team1.players}
-            playersSubs={subTeam1}
-            onSwitch={handleSwitchTeam1}
-          />
-          <TeamList
-            name={teamList.team2.team_info.team_name}
-            color="blue"
-            players={teamList.team2.players}
-            onSwitch={handleSwitchTeam2}
-            playersSubs={subTeam2}
-          />
-          <button className="button" onClick={handleSubmit} type="button">
-            {!loading ? 'Go to Match' : 'Creating...'}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path fill="none" d="M0 0h24v24H0z" />
-              <path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z" />
-            </svg>
-          </button>
-        </>
-      ) : null}
+      {loading && !teamList ? (
+        <ScreenLoading height="90vh" />
+      ) : (
+        teamList && (
+          <>
+            <TeamList
+              name={teamList.team1.team_info.team_name}
+              color="red"
+              players={teamList.team1.players}
+              playersSubs={subTeam1}
+              onSwitch={(player) =>
+                handleSwitchTeam(team1, setTeam1, subTeam1, setSubTeam1, player)
+              }
+            />
+            <TeamList
+              name={teamList.team2.team_info.team_name}
+              color="blue"
+              players={teamList.team2.players}
+              onSwitch={(player) =>
+                handleSwitchTeam(team2, setTeam2, subTeam2, setSubTeam2, player)
+              }
+              playersSubs={subTeam2}
+            />
+            <SubmitButton loading={loading} handleSubmit={handleSubmit} />
+          </>
+        )
+      )}
       <style jsx>
         {`
           .LineUp {
@@ -233,5 +142,20 @@ const LineUp = () => {
     </div>
   );
 };
+
+const SubmitButton = ({ loading, handleSubmit }) => (
+  <button className="button" onClick={handleSubmit} type="button">
+    {!loading ? 'Go to Match' : 'Creating...'}
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+    >
+      <path fill="none" d="M0 0h24v24H0z" />
+      <path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z" />
+    </svg>
+  </button>
+);
 
 export default LineUp;

@@ -1,51 +1,38 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Router from 'next/router';
-import { BASE_URL } from '../http';
+import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import ScreenLoading from '../components/ScreenLoading';
-import userInfoPropTypes from '../proptypes/userInfo';
+import { useAuth } from '../context/useAuth';
 
-const Login = ({ refreshAuth, userInfo }) => {
+const Login = () => {
+  const { login } = useAuth();
+  const router = useRouter();
   const isDev = process.env.NODE_ENV === 'development';
-  const [email, setEmail] = React.useState(
-    isDev ? 'refereetest@gmail.com' : ''
-  );
-  const [password, setPassword] = React.useState(isDev ? 'referee1' : '');
+  const [email, setEmail] = useState(isDev ? 'refereetest@gmail.com' : '');
+  const [password, setPassword] = useState(isDev ? 'referee1' : '');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  if ('id' in userInfo) {
-    Router.push('/real_profile');
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    try {
+      await login({ email, password });
+      router.replace('/real_profile');
+    } catch (err) {
+      setError(err.message || 'An error occurred. Please try again later.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
     return <ScreenLoading />;
   }
-  const submitForm = (event) => {
-    event.preventDefault();
-    fetch(`${BASE_URL}/auth/login/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        if ('key' in res && 'referee' in res && res.referee.length === 1) {
-          window.localStorage.setItem('TOKEN', res.key);
-          refreshAuth();
-          Router.replace('/real_profile');
-        } else {
-          console.log(res);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
 
   return (
     <div className="Login">
-      <form onSubmit={submitForm}>
+      <form onSubmit={handleSubmit}>
         <img
           src="/static/logo.svg"
           alt="baller profile logo"
@@ -69,6 +56,7 @@ const Login = ({ refreshAuth, userInfo }) => {
             onChange={(event) => setPassword(event.target.value)}
           />
         </div>
+        {error && <p className="error">{error}</p>}
         <div>
           <button type="submit">Login</button>
         </div>
@@ -161,15 +149,6 @@ const Login = ({ refreshAuth, userInfo }) => {
       `}</style>
     </div>
   );
-};
-
-Login.defaultProps = {
-  userInfo: {},
-};
-
-Login.propTypes = {
-  refreshAuth: PropTypes.func.isRequired,
-  userInfo: PropTypes.shape(userInfoPropTypes),
 };
 
 export default Login;

@@ -7,8 +7,10 @@ import {
 } from '../services';
 import userInfoPropTypes from '../proptypes/userInfo';
 import ScreenLoading from '../components/ScreenLoading';
+import { useAuth } from '../context/useAuth';
 
-const RealProfile = ({ userInfo }) => {
+const RealProfile = () => {
+  const { userInfo } = useAuth();
   const [matchesOfficiated, setMatchesOfficiated] = React.useState(0);
   const [matchesForOfficiate, setMatchesForOfficiate] = React.useState(0);
 

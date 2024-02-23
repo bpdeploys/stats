@@ -1,19 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { openDB } from 'idb';
-import { AuthProvider, AuthConsumer } from 'react-check-auth';
+import { AuthProvider, useAuth } from '../context/useAuth'; // Import your custom AuthProvider
 import Login from '.';
 import { BASE_URL } from '../http';
 import ScreenLoading from '../components/ScreenLoading';
 import DynamicProvider from '../provider';
 import HeadApp from '../components/Head';
 
+const AuthContent = ({ db, Component, pageProps }) => {
+  const { userInfo, isLoading, refreshAuth } = useAuth(); // Moved inside a component that's a child of AuthProvider
+
+  if (!db) {
+    return <ScreenLoading />;
+  }
+
+  if (!userInfo) {
+    return <Login refreshAuth={refreshAuth} />;
+  }
+
+  return (
+    <DynamicProvider db={db}>
+      <Component userInfo={userInfo} refreshAuth={refreshAuth} {...pageProps} />
+    </DynamicProvider>
+  );
+};
+
 const MyApp = ({ Component, pageProps }) => {
   const [db, setDb] = useState(null);
-  const [reqOptions, setReqOptions] = useState(null);
 
   useEffect(() => {
-    // Initialize db and set it to state
-    const initializeDB = async () => {
+    initializeDB();
+  }, []);
+
+  const initializeDB = async () => {
+    try {
       const db = await openDB('__REFEREE__', 1, {
         upgrade(dbOpened) {
           dbOpened.createObjectStore('MATCH_WAS_ENTERED_CODE', {
@@ -23,65 +43,17 @@ const MyApp = ({ Component, pageProps }) => {
         },
       });
       setDb(db);
-    };
-
-    initializeDB();
-
-    setReqOptions({
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${window.localStorage.getItem('TOKEN')}` || '',
-      },
-    });
-  }, []);
-
-  const refreshAuthState = (refreshAuthFunction) => {
-    setReqOptions({
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${window.localStorage.getItem('TOKEN')}` || '',
-      },
-    });
-    refreshAuthFunction();
+    } catch (error) {
+      console.error('Error initializing DB:', error);
+    }
   };
 
   return (
     <div>
       <HeadApp />
-      {reqOptions ? (
-        <AuthProvider
-          authUrl={`${BASE_URL}/current-user/`}
-          reqOptions={reqOptions}
-        >
-          <AuthConsumer>
-            {({ isLoading, userInfo, refreshAuth }) => {
-              if (isLoading || !db) {
-                return <ScreenLoading />;
-              } else if (!userInfo) {
-                return (
-                  <Login refreshAuth={() => refreshAuthState(refreshAuth)} />
-                );
-              } else {
-                return (
-                  <DynamicProvider db={db}>
-                    <Component
-                      {...{
-                        ...pageProps,
-                        userInfo,
-                        refreshAuth: () => refreshAuthState(refreshAuth),
-                      }}
-                    />
-                  </DynamicProvider>
-                );
-              }
-            }}
-          </AuthConsumer>
-        </AuthProvider>
-      ) : (
-        <ScreenLoading />
-      )}
+      <AuthProvider>
+        <AuthContent db={db} Component={Component} pageProps={pageProps} />
+      </AuthProvider>
     </div>
   );
 };

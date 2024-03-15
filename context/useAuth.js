@@ -80,7 +80,7 @@ export const AuthProvider = ({ children }) => {
             })
             .finally(() => {
               setIsLoading(false);
-              Router.push('/dashboard');
+              Router.push('/real_profile');
             });
         } else {
           // Handle login failure

@@ -33,11 +33,14 @@ const Login = () => {
   return (
     <div className="Login">
       <form onSubmit={handleSubmit}>
-        <img
-          src="/static/logo.svg"
-          alt="baller profile logo"
-          className="logo"
-        />
+        <div className="logoWrapper">
+          <img
+            src="/static/logo.svg"
+            alt="baller profile logo"
+            className="logo"
+          />
+          <span>Stats for recreational sports made easy!</span>
+        </div>
         <div>
           <input
             type="email"
@@ -74,66 +77,57 @@ const Login = () => {
             justify-content: center;
             flex-direction: column;
 
+            .logoWrapper {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-direction: column;
+              margin-bottom: 10rem;
+
+              img {
+                width: 225px;
+                height: 90px;
+                margin-left: 10px;
+              }
+
+              span {
+                font-size: 12px;
+                color: #fff;
+              }
+            }
+
             div {
               width: 100%;
 
               input,
               button {
-                width: 80%;
+                width: 320px;
+                height: 40px;
+                border-radius: 5px;
+                outline: none;
+                font-family: Quicksand;
+              }
+
+              input {
+                border: none;
+                padding: 0 10px;
+                margin-bottom: 10px;
+                font-size: 15px;
+              }
+
+              button {
+                border: 1px solid #fff;
+                background: #000;
+                color: #fff;
+                font-size: 20px;
+                cursor: pointer;
               }
             }
-          }
-
-          img.logo {
-            width: 8rem;
-            margin-bottom: 4rem;
-          }
-
-          input::-webkit-input-placeholder {
-            /* Edge */
-            color: black;
-            opacity: 1;
-          }
-
-          input:-ms-input-placeholder {
-            /* Internet Explorer 10-11 */
-            color: black;
-            opacity: 1;
           }
 
           input::placeholder {
             color: black;
             opacity: 1;
-          }
-
-          input {
-            border: none;
-            border-bottom: 1px solid #cacaca;
-            height: 35px;
-            padding: 0 15px;
-            color: white;
-            margin-bottom: 30px;
-            font-size: 18px;
-            line-height: 22px;
-            width: 246px;
-            background: black;
-            outline: none;
-          }
-
-          button {
-            margin-top: 1.5rem;
-            border-radius: 20px;
-            border: none;
-            background-color: #0d2461;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 19px;
-            font-family: Quicksand;
-            line-height: 24px;
-            text-align: center;
-            color: #ffffff;
-            padding: 9px 15px 9px 15px;
-            width: 246px;
           }
 
           h1 {

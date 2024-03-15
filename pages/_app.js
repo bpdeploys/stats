@@ -8,7 +8,7 @@ import DynamicProvider from '../provider';
 import HeadApp from '../components/Head';
 
 const AuthContent = ({ db, Component, pageProps }) => {
-  const { userInfo, isLoading, refreshAuth } = useAuth(); // Moved inside a component that's a child of AuthProvider
+  const { userInfo, isLoading, refreshAuth } = useAuth();
 
   if (!db) {
     return <ScreenLoading />;
@@ -16,6 +16,10 @@ const AuthContent = ({ db, Component, pageProps }) => {
 
   if (!userInfo) {
     return <Login refreshAuth={refreshAuth} />;
+  }
+
+  if (userInfo) {
+    return <div></div>;
   }
 
   return (

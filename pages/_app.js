@@ -18,10 +18,6 @@ const AuthContent = ({ db, Component, pageProps }) => {
     return <Login refreshAuth={refreshAuth} />;
   }
 
-  if (userInfo) {
-    return <div></div>;
-  }
-
   return (
     <DynamicProvider db={db}>
       <Component userInfo={userInfo} refreshAuth={refreshAuth} {...pageProps} />

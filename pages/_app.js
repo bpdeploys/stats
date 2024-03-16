@@ -10,7 +10,7 @@ import HeadApp from '../components/Head';
 const AuthContent = ({ db, Component, pageProps }) => {
   const { userInfo, isLoading, refreshAuth } = useAuth();
 
-  if (!db) {
+  if (!db || isLoading) {
     return <ScreenLoading />;
   }
 

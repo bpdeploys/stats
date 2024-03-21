@@ -76,7 +76,7 @@ const LineUp = () => {
       }
     };
     fetchData();
-  }, [idMatch, showToast]);
+  }, [idMatch]);
 
   return (
     <div className="LineUp">

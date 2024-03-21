@@ -234,20 +234,28 @@ export const fetchGetMatchActiveInfo = (idMatch) => {
     .catch((err) => err);
 };
 
-export const fetchGetStartingLineUp = (idMatch) => {
+export const fetchGetStartingLineUp = async (idMatch) => {
   if (!idMatch) {
-    throw Error('Please set the idMatch to find the starting lineup correctly');
+    throw new Error(
+      'Please set the idMatch to find the starting lineup correctly'
+    );
   }
-  return window
-    .fetch(`${BASE_URL}/starting-lineups/${idMatch}`, {
-      headers: {
-        Authorization: `Token ${window.localStorage.getItem('TOKEN')}`,
-        Accept: 'application/json',
-      },
-    })
-    .then((res) => res.json())
-    .then((res) => res)
-    .catch((err) => err);
+  const response = await fetch(`${BASE_URL}/starting-lineups/${idMatch}`, {
+    headers: {
+      Authorization: `Token ${window.localStorage.getItem('TOKEN')}`,
+      Accept: 'application/json',
+    },
+  });
+
+  if (response.status === 404) {
+    throw new Error('NotFound');
+  }
+
+  if (!response.ok) {
+    throw new Error('An error occurred');
+  }
+
+  return response.json();
 };
 
 export const fetchStartClock = (idMatch) => {

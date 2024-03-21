@@ -9,35 +9,37 @@ import { useAuth } from '../context/useAuth';
 import ItineraryItem from '../components/Itinerary/ItineraryItem';
 
 const setActiveMatchAndRedirect = async (
-  setActiveMatch,
+  setActiveMatchFunction, 
   id,
   code,
   team_1_name,
-  team_2_name,
-  url,
-  startingLineUp,
-  matchsEnteredCode
+  team_2_name
 ) => {
-  // If there is a starting lineup, go to match; otherwise, go to lineup or enter code
-  if ('id' in startingLineUp) {
-    url = '/match';
-  } else if (matchsEnteredCode.includes(id)) {
-    url = '/lineup';
-  } else {
-    url = '/enter_match_code';
+  try {
+    const startingLineUp = await fetchGetStartingLineUp(id);
+    if (startingLineUp && startingLineUp.id) {
+      await setActiveMatchFunction({
+        [MATCH_ACTIVE_KEY]: { id, code, team_1_name, team_2_name },
+      });
+      Router.push('/match');
+    }
+  } catch (error) {
+    if (error.message === 'NotFound') {
+      setActiveMatchFunction({
+        [MATCH_ACTIVE_KEY]: { id, code, team_1_name, team_2_name },
+      });
+      Router.push('/lineup');
+    } else {
+      console.error('Failed to fetch starting lineup:', error);
+    }
   }
-  setActiveMatch(
-    { [MATCH_ACTIVE_KEY]: { id, code, team_1_name, team_2_name } },
-    () => Router.push(url)
-  );
 };
 
 const Itinerary = () => {
   const { userInfo } = useAuth();
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [matchesEnteredCode, setMatchesEnteredCode] = useState([]);
-  const { setActiveMatch, storage } = useContext(Context);
+  const { setActiveMatch } = useContext(Context);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,16 +48,8 @@ const Itinerary = () => {
       setLoading(false);
     };
 
-    const getMatchWasEnteredCodeIdsFromIndexDB = async () => {
-      const matchWasEnteredCode = await storage?.getAll(
-        'MATCH_WAS_ENTERED_CODE'
-      );
-      setMatchesEnteredCode(matchWasEnteredCode.map((m) => m.idMatch));
-    };
-
     fetchData();
-    getMatchWasEnteredCodeIdsFromIndexDB();
-  }, [userInfo.id, storage]);
+  }, [userInfo.id]);
 
   return (
     <div>
@@ -75,12 +69,7 @@ const Itinerary = () => {
         {loading ? (
           <LoadingSection />
         ) : (
-          <MatchesSection
-            matches={matches}
-            setMatchActive={setActiveMatchAndRedirect}
-            setActiveMatch={setActiveMatch}
-            matchesEnteredCode={matchesEnteredCode}
-          />
+          <MatchesSection matches={matches} setActiveMatch={setActiveMatch} />
         )}
       </div>
       <style jsx>{`
@@ -158,12 +147,7 @@ const LoadingSection = () => (
   </>
 );
 
-const MatchesSection = ({
-  matches,
-  setMatchActive,
-  setActiveMatch,
-  matchesEnteredCode,
-}) => (
+const MatchesSection = ({ matches, setActiveMatch }) => (
   <>
     <h1>{`${matches.length} ${matches.length === 1 ? 'Match' : 'Matches'}`}</h1>
     <div className="hr" />
@@ -177,19 +161,15 @@ const MatchesSection = ({
           pitch_format={m.pitch.format_pitch}
           pitch_name={m.pitch.name}
           code={m.match_code}
-          setMatchActive={async () => {
-            const startingLineUp = await fetchGetStartingLineUp(m.id);
-            setMatchActive(
+          setMatchActive={() =>
+            setActiveMatchAndRedirect(
               setActiveMatch,
               m.id,
               m.match_code,
               m.team1.team_name,
-              m.team2.team_name,
-              '',
-              startingLineUp,
-              matchesEnteredCode
-            );
-          }}
+              m.team2.team_name
+            )
+          }
         />
       </div>
     ))}

@@ -7,8 +7,8 @@ const Login = () => {
   const { login } = useAuth();
   const router = useRouter();
   const isDev = process.env.NODE_ENV === 'development';
-  const [email, setEmail] = useState(isDev ? 'pandastats825@bp.com' : '');
-  const [password, setPassword] = useState(isDev ? 'tv79qwpx' : '');
+  const [email, setEmail] = useState(isDev ? 'pandalast89@bp.com' : '');
+  const [password, setPassword] = useState(isDev ? 'O68DrnM8' : '');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 

@@ -1,10 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
-import {
-  matchsOfficiatedCounted,
-  fetchMatchsForOfficiateCounted,
-} from '../services';
+import { matchsOfficiatedCounted, fetchMatchsForOfficiate } from '../services';
 import userInfoPropTypes from '../proptypes/userInfo';
 import ScreenLoading from '../components/ScreenLoading';
 import { useAuth } from '../context/useAuth';
@@ -17,10 +14,10 @@ const RealProfile = () => {
   useEffect(() => {
     if (userInfo && userInfo.id) {
       const fetchData = async () => {
+        const matchesCount = await fetchMatchsForOfficiate(userInfo.id);
+
         setMatchesOfficiated(await matchsOfficiatedCounted(userInfo.id));
-        setMatchesForOfficiate(
-          await fetchMatchsForOfficiateCounted(userInfo.id)
-        );
+        setMatchesForOfficiate(matchesCount.length);
       };
 
       fetchData();

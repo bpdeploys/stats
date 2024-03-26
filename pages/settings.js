@@ -88,7 +88,7 @@ const Settings = () => {
         />
         <SlotValueInput
           title="Gender"
-          value={gender}
+          value={gender || 'Male'}
           options={['Male', 'Female']}
           fetchFunction={(value) => fetchUpdateUserAttrs(id, { gender: value })}
         />

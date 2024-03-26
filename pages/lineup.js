@@ -33,7 +33,8 @@ const LineUp = () => {
   };
 
   const handleSubmit = async () => {
-    const maxStarPlayers = Number(teamList.match_id.match_format[0]);
+    // const maxStarPlayers = Number(teamList.match_id.match_format[0]);
+    const maxStarPlayers = 7;
     if (team1.length === maxStarPlayers && team2.length === maxStarPlayers) {
       setLoading(true);
       const responseCreation = await fetchCreateStartingLineUp({
@@ -116,27 +117,6 @@ const LineUp = () => {
             background-position: center center;
             background-size: cover;
           }
-
-          .button {
-            text-align: center;
-            background-color: black;
-            color: white;
-            font-size: 20px;
-            font-weight: 200;
-            display: block;
-            width: 85%;
-            margin: 30px auto;
-            border-radius: 4px;
-            text-decoration: none;
-            padding: 6px 0 1px;
-
-            > svg {
-              width: 40px;
-              height: 40px;
-              position: relative;
-              top: -2px;
-            }
-          }
         `}
       </style>
     </div>
@@ -155,6 +135,30 @@ const SubmitButton = ({ loading, handleSubmit }) => (
       <path fill="none" d="M0 0h24v24H0z" />
       <path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z" />
     </svg>
+    <style jsx>
+      {`
+        .button {
+          text-align: center;
+          background-color: black;
+          color: white;
+          font-size: 20px;
+          font-weight: 200;
+          display: block;
+          width: 85%;
+          margin: 30px auto;
+          border-radius: 4px;
+          text-decoration: none;
+          padding: 6px 0 1px;
+
+          > svg {
+            width: 40px;
+            height: 40px;
+            position: relative;
+            top: -2px;
+          }
+        }
+      `}
+    </style>
   </button>
 );
 

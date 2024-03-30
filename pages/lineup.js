@@ -33,8 +33,7 @@ const LineUp = () => {
   };
 
   const handleSubmit = async () => {
-    // const maxStarPlayers = Number(teamList.match_id.match_format[0]);
-    const maxStarPlayers = 7;
+    const maxStarPlayers = Number(teamList.match_id.match_format[0]);
     if (team1.length === maxStarPlayers && team2.length === maxStarPlayers) {
       setLoading(true);
       const responseCreation = await fetchCreateStartingLineUp({

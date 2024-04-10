@@ -7,9 +7,10 @@ import { Context, MATCH_ACTIVE_KEY } from '../provider';
 import SmallLoading from '../components/SmallLoading';
 import { useAuth } from '../context/useAuth';
 import ItineraryItem from '../components/Itinerary/ItineraryItem';
+import StartMatchConfirmationModal from '../components/Itinerary/StartMatchConfirmation';
 
 const setActiveMatchAndRedirect = async (
-  setActiveMatchFunction, 
+  setActiveMatchFunction,
   id,
   code,
   team_1_name,
@@ -40,6 +41,8 @@ const Itinerary = () => {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const { setActiveMatch } = useContext(Context);
+  const [selectedMatch, setSelectedMatch] = useState(null);
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,6 +53,30 @@ const Itinerary = () => {
 
     fetchData();
   }, [userInfo.id]);
+
+  // Function to handle starting match and open modal
+  const handleStartMatch = (match) => {
+    console.log('RUNNING', match);
+    setSelectedMatch(match);
+    setIsConfirmationModalOpen(true);
+  };
+
+  // Function to confirm starting match
+  const confirmStartMatch = () => {
+    setActiveMatchAndRedirect(
+      setActiveMatch,
+      selectedMatch.id,
+      selectedMatch.match_code,
+      selectedMatch.team1.team_name,
+      selectedMatch.team2.team_name
+    );
+    setIsConfirmationModalOpen(false);
+  };
+
+  // Function to close confirmation modal
+  const closeModal = () => {
+    setIsConfirmationModalOpen(false);
+  };
 
   return (
     <div>
@@ -69,9 +96,16 @@ const Itinerary = () => {
         {loading ? (
           <LoadingSection />
         ) : (
-          <MatchesSection matches={matches} setActiveMatch={setActiveMatch} />
+          <MatchesSection matches={matches} onMatchSelect={handleStartMatch} />
         )}
       </div>
+      {isConfirmationModalOpen && (
+        <StartMatchConfirmationModal
+          startMatch={confirmStartMatch}
+          closeModal={closeModal}
+          match={selectedMatch}
+        />
+      )}
       <style jsx>{`
         .loading-wrapper {
           display: flex;
@@ -147,7 +181,7 @@ const LoadingSection = () => (
   </>
 );
 
-const MatchesSection = ({ matches, setActiveMatch }) => (
+const MatchesSection = ({ matches, onMatchSelect }) => (
   <>
     <h1>{`${matches.length} ${matches.length === 1 ? 'Match' : 'Matches'}`}</h1>
     <div className="hr" />
@@ -161,15 +195,7 @@ const MatchesSection = ({ matches, setActiveMatch }) => (
           pitch_format={m.pitch.format_pitch}
           pitch_name={m.pitch.name}
           code={m.match_code}
-          setMatchActive={() =>
-            setActiveMatchAndRedirect(
-              setActiveMatch,
-              m.id,
-              m.match_code,
-              m.team1.team_name,
-              m.team2.team_name
-            )
-          }
+          setMatchActive={() => onMatchSelect(m)} // Pass the selected match to the handler
         />
       </div>
     ))}

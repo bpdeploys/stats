@@ -2,7 +2,11 @@ import React, { useState, useEffect, useContext } from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
 import Header from '../components/Header';
-import { fetchMatchsForOfficiate, fetchGetStartingLineUp } from '../services';
+import {
+  fetchMatchsForOfficiate,
+  fetchGetStartingLineUp,
+  setMatchReferee,
+} from '../services';
 import { Context, MATCH_ACTIVE_KEY } from '../provider';
 import SmallLoading from '../components/SmallLoading';
 import { useAuth } from '../context/useAuth';
@@ -51,18 +55,19 @@ const Itinerary = () => {
       setLoading(false);
     };
 
+    console.log(userInfo);
     fetchData();
   }, [userInfo.id]);
 
   // Function to handle starting match and open modal
   const handleStartMatch = (match) => {
-    console.log('RUNNING', match);
     setSelectedMatch(match);
     setIsConfirmationModalOpen(true);
   };
 
   // Function to confirm starting match
   const confirmStartMatch = () => {
+    setMatchReferee(userInfo?.id, selectedMatch.id);
     setActiveMatchAndRedirect(
       setActiveMatch,
       selectedMatch.id,

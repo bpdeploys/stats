@@ -382,45 +382,59 @@ export const fetchCreateSubstitution = ({
     .catch((err) => err);
 };
 
-export const fetchCreateGoal = async (params) => {
-  const requiredParams = [
-    'scorer',
-    'team',
-    'half',
-    'time',
-    'goal_type',
-    'location',
-    'game',
-    'day_time',
-    'team_op',
-  ];
-  for (let param of requiredParams) {
-    if (!params[param]) {
-      throw new Error(`Missing parameter: ${param}`);
-    }
+export const fetchCreateGoal = ({
+  scorer,
+  assist,
+  team,
+  half,
+  time,
+  goal_type,
+  location,
+  game,
+  day_time,
+  team_op,
+}) => {
+  if (
+    !(
+      scorer &&
+      team &&
+      half &&
+      time &&
+      goal_type &&
+      location &&
+      game &&
+      day_time &&
+      team_op
+    )
+  ) {
+    throw Error('Please send all parameters');
   }
-
-  try {
-    const response = await fetch(`${BASE_URL}/goals/`, {
-      method: 'POST',
+  return window
+    .fetch(`${BASE_URL}/goals/`, {
       headers: {
-        Authorization: `Token ${localStorage.getItem('TOKEN')}`,
+        Authorization: `Token ${window.localStorage.getItem('TOKEN')}`,
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(params),
-    });
-
-    if (!response.ok) {
-      const errorInfo = await response.json();
-      throw new Error(errorInfo.message || 'Failed to create goal');
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('Error creating goal:', error);
-    throw error; // Rethrow error to be handled by caller
-  }
+      method: 'POST',
+      body: JSON.stringify({
+        scorer,
+        assist,
+        team,
+        half,
+        time,
+        goal_type,
+        location,
+        game,
+        day_time,
+        team_op,
+      }),
+    })
+    .then((res) => res.json())
+    .then((res) => {
+      return res;
+    })
+    .catch((err) => err);
 };
 
 export const fetchCreateFoul = ({

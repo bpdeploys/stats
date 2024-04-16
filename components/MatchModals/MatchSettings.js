@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Header from '../Header';
-import Switch from '../Switch';
 import ConfirmEndMatch from './ConfirmEndMatch';
 import POTM from './POTM';
 import { fetchEndMatch } from '../../services';
+import Toggle from '../Toggle';
+import BeginSecondHalfModal from './BeginSecondHalf';
+import { useRouter } from 'next/router';
 
 const formatMatchTimeStart = (date) => {
   return `${date.getFullYear().toString().padStart(4, '0')}-${(
@@ -28,6 +30,22 @@ const MatchSettings = ({ onClose, match, getStartMatchDate }) => {
   const [half, setHalf] = useState(false);
   const [fullTime, setFullTime] = useState(false);
   const [openPOM, setOpenPOM] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const router = useRouter();
+
+  const toggleHalf = () => {
+    setOpenModal(true);
+  };
+
+  const beginSecondHalf = () => {
+    setHalf(true);
+    setOpenModal(false);
+  };
+
+  const closeModal = () => {
+    setOpenModal(false);
+  };
+
   const endMatch = () => {
     const dataForEndMatch = {
       game_id: match.id,
@@ -63,15 +81,35 @@ const MatchSettings = ({ onClose, match, getStartMatchDate }) => {
           <div className="back-icon">
             <button type="button" onClick={onClose}>
               <svg
+                width="34"
+                height="27"
+                viewBox="0 0 34 27"
+                fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
               >
-                <path d="M0 0h24v24H0z" fill="none" />
-                <path
-                  fill="white"
-                  d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+                <line
+                  y1="-1"
+                  x2="32.2445"
+                  y2="-1"
+                  transform="matrix(-1 0 0 1 33.0255 14.7482)"
+                  stroke="white"
+                  strokeWidth="2"
+                />
+                <line
+                  y1="-1"
+                  x2="17.1971"
+                  y2="-1"
+                  transform="matrix(-0.707107 0.707107 0.707107 0.707107 14.2163 2)"
+                  stroke="white"
+                  strokeWidth="2"
+                />
+                <line
+                  y1="-1"
+                  x2="17.1971"
+                  y2="-1"
+                  transform="matrix(-0.707107 -0.707107 -0.707107 0.707107 12.1857 26.4215)"
+                  stroke="white"
+                  strokeWidth="2"
                 />
               </svg>
             </button>
@@ -83,12 +121,11 @@ const MatchSettings = ({ onClose, match, getStartMatchDate }) => {
             <span>Half</span>
           </div>
           <div className="switch-setting">
-            <Switch
-              on={half}
-              textLeft="1st"
-              textRight="2nd"
-              onClick={() => setHalf(!half)}
-              color="#1362D9"
+            <Toggle
+              checked={half}
+              yesText="2nd"
+              noText="1st"
+              onChange={() => toggleHalf()}
             />
           </div>
         </div>
@@ -97,44 +134,58 @@ const MatchSettings = ({ onClose, match, getStartMatchDate }) => {
             <span>Full Time</span>
           </div>
           <div className="switch-setting">
-            <Switch
-              on={fullTime}
-              textLeft="Start"
-              textRight="End"
-              onClick={() => setFullTime(!fullTime)}
-              color="#1362D9"
+            <Toggle
+              checked={fullTime}
+              yesText="End"
+              noText="Start"
+              onChange={() => setFullTime(!fullTime)}
             />
           </div>
         </div>
-        <div className="item-setting --with-margin-top">
+        <div
+          className="item-setting --with-margin-top"
+          onClick={() => router.push('/edit_events')}
+        >
           <div>
-            <span>Match Events</span>
+            <span>Edit Match Events</span>
           </div>
           <div className="back-icon">
             <button type="button">
               <svg
+                width="40"
+                height="22"
+                viewBox="0 0 40 22"
+                fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
               >
-                <path d="M0 0h24v24H0z" fill="none" />
-                <path
-                  d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
-                  fill="white"
+                <line
+                  x1="-0.00622559"
+                  y1="2"
+                  x2="39.9938"
+                  y2="2"
+                  stroke="white"
+                  strokeWidth="3"
+                />
+                <line
+                  x1="-0.00622559"
+                  y1="11"
+                  x2="39.9938"
+                  y2="11"
+                  stroke="white"
+                  strokeWidth="3"
+                />
+                <line
+                  x1="-0.00622559"
+                  y1="20"
+                  x2="39.9938"
+                  y2="20"
+                  stroke="white"
+                  strokeWidth="3"
                 />
               </svg>
             </button>
           </div>
         </div>
-        <button
-          className="item-setting --danger --with-margin-top"
-          type="button"
-        >
-          <div>
-            <span>Shoot-Out</span>
-          </div>
-        </button>
       </div>
       <div className={`modalView ${fullTime ? '--show' : ''}`}>
         <ConfirmEndMatch
@@ -146,6 +197,13 @@ const MatchSettings = ({ onClose, match, getStartMatchDate }) => {
         <div className={`modalView --right ${openPOM ? '--show' : ''}`}>
           <POTM match={match} active={openPOM} />
         </div>
+      )}
+      {openModal && (
+        <BeginSecondHalfModal
+          beginHalf={beginSecondHalf}
+          closeModal={closeModal}
+          isOpen={openModal}
+        />
       )}
 
       <style jsx>{`
@@ -179,12 +237,13 @@ const MatchSettings = ({ onClose, match, getStartMatchDate }) => {
           }
 
           .item-setting {
-            background-color: #06159b;
+            background-color: #1447c7;
             padding: 10px 20px;
             display: flex;
+            justify-content: space-between;
             width: 100%;
             align-items: center;
-            min-height: 72px;
+            min-height: 62px;
             border: none;
 
             &.--with-margin-top {
@@ -217,8 +276,8 @@ const MatchSettings = ({ onClose, match, getStartMatchDate }) => {
                 }
 
                 svg {
-                  height: 50px;
-                  width: 50px;
+                  height: 40px;
+                  width: 40px;
                 }
               }
 

@@ -18,9 +18,9 @@ const ItineraryItem = ({
       onClick={setMatchActive}
     >
       {score && <span className="score">{score}</span>}
-      <span className="icon">
+      {/* <span className="icon">
         <img src="/static/fball.png" alt="football" />
-      </span>
+      </span> */}
       <div>
         <p>{team_1_name}</p>
         <p>VS</p>
@@ -51,10 +51,8 @@ const ItineraryItem = ({
           height: 120px;
 
           &.--bg {
-            background-image: url('/static/tinybg.png');
-            background-position: center center;
-            background-size: cover;
-            border: #e4e4e4 1px solid;
+            background: #fff;
+            border: none;
           }
 
           &.--margin-top {
@@ -87,7 +85,7 @@ const ItineraryItem = ({
               > p {
                 font-size: 14px;
                 line-height: 18px;
-                color: #c4c4c4;
+                color: #000;
 
                 &:not(:first-child) {
                   margin-top: 4px;

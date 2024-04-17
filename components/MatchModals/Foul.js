@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Header from '../Header';
 import PlayerPolygons from '../PlayerPolygons';
@@ -21,12 +21,12 @@ const Foul = ({
   const OUTCOME_TYPE_FREE_KICK = 'Free Kick';
   const OUTCOME_TYPE_PENALTY = 'Penalty';
 
-  const [playerFoul, setPlayerFoul] = React.useState(null);
-  const [team, setTeam] = React.useState(null);
-  const [playerFouled, setPlayerFouled] = React.useState(null);
-  const [outCome, setOutCome] = React.useState(OUTCOME_TYPE_FREE_KICK);
-  const [caution, setCation] = React.useState(CAUTION_TYPE_NONE);
-  const context = React.useContext(Context);
+  const [playerFoulId, setPlayerFoulId] = useState(null);
+  const [team, setTeam] = useState(null);
+  const [playerFouled, setPlayerFouled] = useState(null);
+  const [outCome, setOutCome] = useState(OUTCOME_TYPE_FREE_KICK);
+  const [caution, setCation] = useState(CAUTION_TYPE_NONE);
+  const context = useContext(Context);
   // For localStorage
   const KEY_TIMER_STORAGE = `MATCH_TIMER_${match.id}`;
 
@@ -36,7 +36,7 @@ const Foul = ({
     try {
       const parameters = {
         fouled: playerFouled,
-        fouler: playerFoul.id,
+        fouler: playerFoulId,
         half: 'First Half', // TODO: Hacerlo dynamic
         time: window.localStorage.getItem(KEY_TIMER_STORAGE),
         team: match[`team${String(team)}`].id,
@@ -65,7 +65,12 @@ const Foul = ({
     }
   };
 
-  React.useEffect(() => {
+  // Function to handle the change of fouler in the dropdown
+  const handleFoulerChange = (e) => {
+    setPlayerFoulId(parseInt(e.target.value));
+  };
+
+  useEffect(() => {
     // eslint-disable-next-line no-console
     console.log(idPlayerToFoul, match, fetchFunction);
 
@@ -76,11 +81,11 @@ const Foul = ({
       let player = match.playingteam1.find((p) => p.id === idPlayerToFoul);
 
       if (player) {
-        setPlayerFoul(player);
+        setPlayerFoulId(player.id);
         setTeam(1);
       } else {
         player = match.playingteam2.find((p) => p.id === idPlayerToFoul);
-        setPlayerFoul(player);
+        setPlayerFoulId(player.id);
         setTeam(2);
       }
 
@@ -89,9 +94,15 @@ const Foul = ({
     }
   }, [idPlayerToFoul]);
 
+  const playerOptions = match[`playingteam${team}`]?.map((player) => (
+    <option key={player.id} value={player.id}>
+      {getName(player)}
+    </option>
+  ));
+
   let playersPolygon = [];
 
-  if (playerFoul && team) {
+  if (playerFoulId && team) {
     playersPolygon = match[`playingteam${String(team === 1 ? 2 : 1)}`].map(
       (p) => ({
         number: p.squad_number.length ? p.squad_number[0].number : 0,
@@ -122,15 +133,10 @@ const Foul = ({
         <div className="box">
           <div>
             <p>Fouler</p>
-            {playerFoul && (
-              <p>
-                {getName(playerFoul)}
-                <span>
-                  {playerFoul.squad_number.length
-                    ? playerFoul.squad_number[0].number
-                    : null}
-                </span>
-              </p>
+            {playerFoulId && (
+              <select value={playerFoulId} onChange={handleFoulerChange}>
+                {playerOptions}
+              </select>
             )}
           </div>
           <div>

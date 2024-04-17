@@ -9,6 +9,7 @@ const ItineraryItem = ({
   score,
   code,
   setMatchActive,
+  live,
 }) => {
   return (
     <div
@@ -18,15 +19,17 @@ const ItineraryItem = ({
       onClick={setMatchActive}
     >
       {score && <span className="score">{score}</span>}
-      {/* <span className="icon">
-        <img src="/static/fball.png" alt="football" />
-      </span> */}
-      <div>
+      {live && (
+        <div className="icon">
+          <img src="/static/live.gif" alt="football" />
+        </div>
+      )}
+      <div className="teams">
         <p>{team_1_name}</p>
         <p>VS</p>
         <p>{team_2_name}</p>
       </div>
-      <div>
+      <div className="details">
         <div className="table">
           <p>
             KO: <span>{ko}</span>
@@ -67,13 +70,22 @@ const ItineraryItem = ({
 
           .icon {
             position: absolute;
-            right: 6px;
-            top: 15px;
-            font-size: 14px;
+            top: 5px;
+            right: 5px;
+            img {
+              width: 20px;
+            }
+          }
+
+          .teams {
+            width: 45%;
+          }
+
+          .details {
+            width: 55%;
           }
 
           > div {
-            width: 50%;
             display: flex;
             justify-content: center;
             align-items: center;

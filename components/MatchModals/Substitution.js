@@ -24,7 +24,7 @@ const Substitution = ({
   refreshMatch,
 }) => {
   const [loading, setLoading] = useState(false);
-  const [playerOff, setPlayerOff] = useState(null);
+  const [playerOffId, setPlayerOffId] = useState(null);
   const [playerOn, setPlayerOn] = useState(null);
   const [team, setTeam] = useState(null);
   const context = useContext(Context);
@@ -36,7 +36,7 @@ const Substitution = ({
     setLoading(true);
     try {
       const parameters = {
-        playerOutId: playerOff.id,
+        playerOutId: playerOffId,
         playerInId: playerOn,
         teamId: match[`team${String(team)}`].id,
         // Por ahora esta logica setea que el out jugo todo lo que va de tiempo
@@ -50,7 +50,7 @@ const Substitution = ({
             ? [
                 ...match.playingteam1
                   .map((p) => p.id)
-                  .filter((id) => id !== playerOff.id),
+                  .filter((id) => id !== playerOffId),
                 playerOn,
               ]
             : match.playingteam1.map((p) => p.id),
@@ -60,7 +60,7 @@ const Substitution = ({
                 ...match.substeam1
                   .map((p) => p.id)
                   .filter((id) => id !== playerOn),
-                playerOff.id,
+                playerOffId,
               ]
             : match.substeam1.map((p) => p.id),
         team2:
@@ -68,7 +68,7 @@ const Substitution = ({
             ? [
                 ...match.playingteam2
                   .map((p) => p.id)
-                  .filter((id) => id !== playerOff.id),
+                  .filter((id) => id !== playerOffId),
                 playerOn,
               ]
             : match.playingteam2.map((p) => p.id),
@@ -78,7 +78,7 @@ const Substitution = ({
                 ...match.substeam2
                   .map((p) => p.id)
                   .filter((id) => id !== playerOn),
-                playerOff.id,
+                playerOffId,
               ]
             : match.substeam2.map((p) => p.id),
       };
@@ -99,6 +99,10 @@ const Substitution = ({
     setLoading(false);
   };
 
+  const handlePlayerOffChange = (e) => {
+    setPlayerOffId(parseInt(e.target.value));
+  };
+
   useEffect(() => {
     // eslint-disable-next-line no-console
     console.log(idPlayerOffToSubs, match, fetchFunction);
@@ -110,11 +114,11 @@ const Substitution = ({
       let player = match.playingteam1.find((p) => p.id === idPlayerOffToSubs);
 
       if (player) {
-        setPlayerOff(player);
+        setPlayerOffId(player.id);
         setTeam(1);
       } else {
         player = match.playingteam2.find((p) => p.id === idPlayerOffToSubs);
-        setPlayerOff(player);
+        setPlayerOffId(player.id);
         setTeam(2);
       }
 
@@ -125,12 +129,18 @@ const Substitution = ({
 
   let playersPolygon = [];
 
-  if (playerOff && team) {
+  if (playerOffId && team) {
     playersPolygon = match[`substeam${String(team)}`].map((p) => ({
       number: p.squad_number.length ? p.squad_number[0].number : 0,
       id: p.id,
     }));
   }
+
+  const playerOptions = match[`playingteam${team}`]?.map((player) => (
+    <option key={player.id} value={player.id}>
+      {getName(player)}
+    </option>
+  ));
 
   return (
     <div>
@@ -152,15 +162,10 @@ const Substitution = ({
         <div className="box">
           <div>
             <p>Player Off</p>
-            {playerOff && (
-              <p>
-                {getName(playerOff)}
-                <span>
-                  {playerOff.squad_number.length
-                    ? playerOff.squad_number[0].number
-                    : null}
-                </span>
-              </p>
+            {playerOffId && (
+              <select value={playerOffId} onChange={handlePlayerOffChange}>
+                {playerOptions}
+              </select>
             )}
           </div>
           <div>

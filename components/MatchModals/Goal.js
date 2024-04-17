@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Header from '../Header';
 import PlayerPolygons from '../PlayerPolygons';
@@ -19,18 +19,18 @@ const Goal = ({
   const GOAL_TYPE_FREE_KICK = 'Free Kick';
   const GOAL_TYPE_PENALTY = 'Penalty';
 
-  const [playerGoal, setPlayerGoal] = React.useState(null);
-  const [team, setTeam] = React.useState(null);
-  const [assistedBy, setAssistedBy] = React.useState(null);
-  const [goalType, setGoalType] = React.useState(GOAL_TYPE_DEFAULT);
-  const context = React.useContext(Context);
+  const [playerGoalId, setPlayerGoalId] = useState(null);
+  const [team, setTeam] = useState(null);
+  const [assistedBy, setAssistedBy] = useState(null);
+  const [goalType, setGoalType] = useState(GOAL_TYPE_DEFAULT);
+  const context = useContext(Context);
   // For localStorage
   const KEY_TIMER_STORAGE = `MATCH_TIMER_${match.id}`;
 
   const onSave = async () => {
     try {
       const parameters = {
-        scorer: playerGoal.id,
+        scorer: playerGoalId,
         team: match[`team${String(team)}`].id,
         half: 'First Half', // TODO: Hacerlo dynamic
         time: window.localStorage.getItem(KEY_TIMER_STORAGE),
@@ -55,15 +55,16 @@ const Goal = ({
       }
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.log(error);
       context.showToast('Something went wrong, try again');
     }
   };
 
-  React.useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log(idPlayerToGoal, match, fetchFunction);
+  // Function to handle the change of scorer in the dropdown
+  const handleScorerChange = (e) => {
+    setPlayerGoalId(parseInt(e.target.value));
+  };
 
+  useEffect(() => {
     // Find the player in match.playingteam1 || playingteam2
     // To render data
     if (idPlayerToGoal) {
@@ -71,26 +72,31 @@ const Goal = ({
       let player = match.playingteam1.find((p) => p.id === idPlayerToGoal);
 
       if (player) {
-        setPlayerGoal(player);
+        setPlayerGoalId(player.id);
         setTeam(1);
       } else {
         player = match.playingteam2.find((p) => p.id === idPlayerToGoal);
-        setPlayerGoal(player);
+        setPlayerGoalId(player.id);
         setTeam(2);
       }
-
-      // eslint-disable-next-line no-console
-      console.log(player);
     }
   }, [idPlayerToGoal]);
 
-  let playersPolygon = [];
+  const playerOptions = match[`playingteam${team}`]?.map((player) => (
+    <option key={player.id} value={player.id}>
+      {getName(player)}
+    </option>
+  ));
 
-  if (playerGoal && team) {
-    playersPolygon = match[`playingteam${String(team)}`].map((p) => ({
-      number: p.squad_number.length ? p.squad_number[0].number : 0,
-      id: p.id,
-    }));
+  let assistPlayerList = [];
+
+  if (playerGoalId && team) {
+    assistPlayerList = match[`playingteam${String(team)}`]
+      .filter((p) => p.id !== playerGoalId) // Filter out the selected player
+      .map((p) => ({
+        number: p.squad_number.length ? p.squad_number[0].number : 0,
+        id: p.id,
+      }));
   }
 
   return (
@@ -113,16 +119,9 @@ const Goal = ({
         <div className="box">
           <div>
             <p>Scorer</p>
-            {playerGoal && (
-              <p>
-                {getName(playerGoal)}
-                <span>
-                  {playerGoal.squad_number.length
-                    ? playerGoal.squad_number[0].number
-                    : null}
-                </span>
-              </p>
-            )}
+            <select value={playerGoalId} onChange={handleScorerChange}>
+              {playerOptions}
+            </select>
           </div>
           <div>
             <div>
@@ -156,7 +155,7 @@ const Goal = ({
         </div>
         <p className="asis-by-text">Assisted By</p>
         <PlayerPolygons
-          players={playersPolygon}
+          players={assistPlayerList}
           onClick={setAssistedBy}
           activePlayer={assistedBy}
         />

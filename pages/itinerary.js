@@ -54,8 +54,6 @@ const Itinerary = () => {
       setMatches(fetchedMatches);
       setLoading(false);
     };
-
-    console.log(userInfo);
     fetchData();
   }, [userInfo.id]);
 

@@ -119,37 +119,41 @@ const Goal = ({
         <div className="box">
           <div>
             <p>Scorer</p>
-            <select value={playerGoalId} onChange={handleScorerChange}>
+            <select
+              value={playerGoalId}
+              onChange={handleScorerChange}
+              className="player-dropdown"
+            >
               {playerOptions}
             </select>
           </div>
-          <div>
-            <div>
-              <Circle
-                active={goalType === GOAL_TYPE_OWN_GOAL}
-                bgActive="#ff0606"
-                right
-                text="OG"
-                onClick={() => setGoalType(GOAL_TYPE_OWN_GOAL)}
-              />
-            </div>
-            <div>
-              <Circle
-                active={goalType === GOAL_TYPE_FREE_KICK}
-                bgActive="#21ac0b"
-                right
-                text="FK"
-                onClick={() => setGoalType(GOAL_TYPE_FREE_KICK)}
-              />
-            </div>
-            <div>
-              <Circle
-                active={goalType === GOAL_TYPE_PENALTY}
-                bgActive="#7705ad"
-                right
-                text="Pen"
-                onClick={() => setGoalType(GOAL_TYPE_PENALTY)}
-              />
+          <div className="goal-type">
+            <p>Goal Type</p>
+            <div className="circles-wrapper">
+              <div>
+                <Circle
+                  active={goalType === GOAL_TYPE_OWN_GOAL}
+                  bgActive="#ff0606"
+                  text="OG"
+                  onClick={() => setGoalType(GOAL_TYPE_OWN_GOAL)}
+                />
+              </div>
+              <div>
+                <Circle
+                  active={goalType === GOAL_TYPE_FREE_KICK}
+                  bgActive="#21ac0b"
+                  text="FK"
+                  onClick={() => setGoalType(GOAL_TYPE_FREE_KICK)}
+                />
+              </div>
+              <div>
+                <Circle
+                  active={goalType === GOAL_TYPE_PENALTY}
+                  bgActive="#7705ad"
+                  text="Pen"
+                  onClick={() => setGoalType(GOAL_TYPE_PENALTY)}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -185,6 +189,15 @@ const Goal = ({
           flex-direction: column;
         }
 
+        .player-dropdown {
+          margin-top: 1rem;
+          margin-bottom: 2rem;
+          padding: 0.5rem 1rem;
+          border: 1px solid rgba(191, 190, 190, 1);
+          border-radius: 5px;
+          font-size: 22px;
+        }
+
         .button {
           text-align: center;
           background-color: #1362d9;
@@ -199,14 +212,30 @@ const Goal = ({
           padding: 6px 0;
         }
 
+        .goal-type {
+          p {
+            margin-bottom: 1rem;
+          }
+        }
+
         .box {
           background: #ffffff;
-          border: 1px solid #e5e5e5;
+          border: 1px solid #000;
+          border-radius: 5px;
           box-sizing: border-box;
           border-radius: 8px;
           margin: 10px;
 
           > div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            .circles-wrapper {
+              display: flex;
+              justify-content: space-around;
+              width: 60%;
+            }
             &:nth-child(1) {
               text-align: center;
 
@@ -215,7 +244,7 @@ const Goal = ({
                 font-size: 18px;
                 line-height: 22px;
                 color: #616060;
-                margin-bottom: 15px;
+                margin-bottom: 30px;
                 margin-top: 15px;
                 position: relative;
 

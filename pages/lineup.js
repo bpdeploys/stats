@@ -9,6 +9,7 @@ import {
 } from '../services';
 import ScreenLoading from '../components/ScreenLoading';
 import TeamList from '../components/Lineup/TeamList';
+import ConfirmModal from '../components/Lineup/ConfirmModal';
 
 const LineUp = () => {
   const {
@@ -21,6 +22,8 @@ const LineUp = () => {
   const [team2, setTeam2] = useState([]);
   const [subTeam1, setSubTeam1] = useState([]);
   const [subTeam2, setSubTeam2] = useState([]);
+  const [userConfirmed, setUserConfirmed] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModa] = useState(false);
 
   const handleSwitchTeam = (team, setTeam, subTeam, setSubTeam, player) => {
     if (team.includes(player)) {
@@ -32,9 +35,16 @@ const LineUp = () => {
     }
   };
 
+  const maxStarPlayers = Number(teamList?.match_id?.match_format[0]);
+
   const handleSubmit = async () => {
-    const maxStarPlayers = Number(teamList.match_id.match_format[0]);
-    if (team1.length === maxStarPlayers && team2.length === maxStarPlayers) {
+    let minPlayers =
+      maxStarPlayers - (teamList.match_id.match_format === '5v5' ? 1 : 2);
+
+    if (
+      (team1.length === maxStarPlayers && team2.length === maxStarPlayers) ||
+      userConfirmed
+    ) {
       setLoading(true);
       const responseCreation = await fetchCreateStartingLineUp({
         team1,
@@ -56,10 +66,22 @@ const LineUp = () => {
       } else {
         showToast('Something went wrong');
       }
+    } else if (
+      team1.length >= minPlayers &&
+      team2.length >= minPlayers &&
+      Math.abs(team1.length - team2.length) <= 2
+    ) {
+      setShowConfirmationModa(true); // Show modal to get confirmation
     } else {
-      showToast(`You must choose ${maxStarPlayers} players in each team`);
+      showToast(
+        `You must choose at least ${minPlayers} players in each team and no more than ${maxStarPlayers}`
+      );
     }
   };
+
+  useEffect(() => {
+    setUserConfirmed(false);
+  }, [team1.length, team2.length]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,40 +106,63 @@ const LineUp = () => {
       {loading && !teamList ? (
         <ScreenLoading height="90vh" />
       ) : (
-        teamList && (
-          <>
-            <TeamList
-              name={teamList.team1.team_info.team_name}
-              color="red"
-              players={teamList.team1.players}
-              playersSubs={subTeam1}
-              onSwitch={(player) =>
-                handleSwitchTeam(team1, setTeam1, subTeam1, setSubTeam1, player)
-              }
+        <>
+          {showConfirmationModal && (
+            <ConfirmModal
+              open={showConfirmationModal}
+              onConfirm={() => {
+                setUserConfirmed(true);
+                setShowConfirmationModa(false);
+                handleSubmit(); // Re-call handleSubmit to proceed after confirmation
+              }}
+              onCancel={() => setShowConfirmationModa(false)}
+              team1Name={teamList.team1.team_info.team_name}
+              team2Name={teamList.team2.team_info.team_name}
+              team1Count={team1.length}
+              team2Count={team2.length}
             />
-            <TeamList
-              name={teamList.team2.team_info.team_name}
-              color="blue"
-              players={teamList.team2.players}
-              onSwitch={(player) =>
-                handleSwitchTeam(team2, setTeam2, subTeam2, setSubTeam2, player)
-              }
-              playersSubs={subTeam2}
-            />
-            <SubmitButton loading={loading} handleSubmit={handleSubmit} />
-          </>
-        )
+          )}
+          {teamList && (
+            <>
+              <TeamList
+                name={teamList.team1.team_info.team_name}
+                color="red"
+                players={teamList.team1.players}
+                playersSubs={subTeam1}
+                onSwitch={(player) =>
+                  handleSwitchTeam(
+                    team1,
+                    setTeam1,
+                    subTeam1,
+                    setSubTeam1,
+                    player
+                  )
+                }
+                count={team1.length}
+                maxCount={maxStarPlayers}
+              />
+              <TeamList
+                name={teamList.team2.team_info.team_name}
+                color="blue"
+                players={teamList.team2.players}
+                onSwitch={(player) =>
+                  handleSwitchTeam(
+                    team2,
+                    setTeam2,
+                    subTeam2,
+                    setSubTeam2,
+                    player
+                  )
+                }
+                playersSubs={subTeam2}
+                count={team2.length}
+                maxCount={maxStarPlayers}
+              />
+              <SubmitButton loading={loading} handleSubmit={handleSubmit} />
+            </>
+          )}
+        </>
       )}
-      <style jsx>
-        {`
-          .LineUp {
-            min-height: 100vh;
-            background-image: url('/static/default_bg.png');
-            background-position: center center;
-            background-size: cover;
-          }
-        `}
-      </style>
     </div>
   );
 };

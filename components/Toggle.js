@@ -23,8 +23,13 @@ const Toggle = ({
         checked={checked}
         onChange={onChange}
         aria-label={label}
+        onClick={handleSpanClick}
       />
-      <label htmlFor={id} className="toggleSwitch__label">
+      <label
+        htmlFor={id}
+        className="toggleSwitch__label"
+        onClick={handleSpanClick}
+      >
         {label}
       </label>
       {showText && (
@@ -38,6 +43,15 @@ const Toggle = ({
         </span>
       )}
       <style jsx>{`
+        .team-switch {
+          .toggleSwitch__label {
+            background: #e5e5e5;
+          }
+
+          .toggleSwitch__checkbox:checked + .toggleSwitch__label:after {
+            background: #125b9f;
+          }
+        }
         .toggleSwitch {
           position: relative;
           width: fit-content;

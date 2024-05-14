@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Switch from './Switch';
+import Toggle from './Toggle';
 
 const Item = ({
   img,
@@ -42,16 +43,15 @@ const Item = ({
           </button>
         </>
       ) : (
-        <Switch
-          width="105px"
-          on={start}
-          textLeft="SUB"
-          textRight="START"
-          color={start ? color : '#FFFFFF'}
-          onClick={() => {
-            onSwitch(id);
-          }}
-        />
+        <p>
+          <Toggle
+            checked={start}
+            yesText="Start"
+            noText="Sub"
+            onChange={() => onSwitch(id)}
+            className="team-switch"
+          />
+        </p>
       )}
     </div>
 

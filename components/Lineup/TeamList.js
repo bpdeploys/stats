@@ -9,10 +9,24 @@ import Item from '../Item';
  * @param {Array} props.players - List of players
  * @param {Function} props.onSwitch - Callback for switching players
  * @param {Array} props.playersSubs - List of substitute players
+ * @param {number} props.matchFormat - The format of the match
  */
-const TeamList = ({ name, color, players, onSwitch, playersSubs }) => (
+const TeamList = ({
+  name,
+  color,
+  players,
+  onSwitch,
+  playersSubs,
+  count,
+  maxCount,
+}) => (
   <div className="TeamList">
-    <span>{name}</span>
+    <div className="TeamDetails">
+      <span className="TeamName">{name}</span>
+      <span className="count">
+        {count}/{maxCount}
+      </span>
+    </div>
     <div className="content-wrapper">
       {Array.isArray(players) &&
         players.length > 0 &&
@@ -42,20 +56,25 @@ const TeamList = ({ name, color, players, onSwitch, playersSubs }) => (
             padding: 0 10px 0;
           }
 
-          > span {
-            width: 80%;
-            margin: auto;
-            padding-bottom: 10px;
+          .TeamDetails {
+            width: calc(100% - 20px);
+            margin: 0 10px;
             border-bottom: 1px solid #e5e5e5;
-            display: block;
-            text-align: center;
-            font-family: Quicksand;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 28px;
-            line-height: 35px;
-            text-align: center;
-            color: #616060;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px 10px 15px;
+
+            .TeamName,
+            .count {
+              display: block;
+              font-family: Quicksand;
+              font-style: normal;
+              font-weight: normal;
+              font-size: 28px;
+              line-height: 35px;
+              color: #000;
+            }
           }
         }
       `}

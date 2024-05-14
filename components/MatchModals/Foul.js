@@ -60,7 +60,6 @@ const Foul = ({
       }
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.log(error);
       context.showToast('Something went wrong, try again');
     }
   };
@@ -72,7 +71,6 @@ const Foul = ({
 
   useEffect(() => {
     // eslint-disable-next-line no-console
-    console.log(idPlayerToFoul, match, fetchFunction);
 
     // Find the player in match.playingteam1 || playingteam2
     // To render data
@@ -134,7 +132,11 @@ const Foul = ({
           <div>
             <p>Fouler</p>
             {playerFoulId && (
-              <select value={playerFoulId} onChange={handleFoulerChange}>
+              <select
+                value={playerFoulId}
+                onChange={handleFoulerChange}
+                className="player-dropdown"
+              >
                 {playerOptions}
               </select>
             )}
@@ -228,9 +230,18 @@ const Foul = ({
           padding: 6px 0;
         }
 
+        .player-dropdown {
+          margin-top: 1rem;
+          margin-bottom: 2rem;
+          padding: 0.5rem 1rem;
+          border: 1px solid rgba(191, 190, 190, 1);
+          border-radius: 5px;
+          font-size: 22px;
+        }
+
         .box {
           background: #ffffff;
-          border: 1px solid #e5e5e5;
+          border: 1px solid #000;
           box-sizing: border-box;
           border-radius: 8px;
           margin: 10px;

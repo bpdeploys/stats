@@ -69,6 +69,8 @@ const LineUp = () => {
     } else if (
       team1.length >= minPlayers &&
       team2.length >= minPlayers &&
+      team1.length <= maxStarPlayers &&
+      team2.length <= maxStarPlayers &&
       Math.abs(team1.length - team2.length) <= 2
     ) {
       setShowConfirmationModa(true); // Show modal to get confirmation

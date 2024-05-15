@@ -138,7 +138,7 @@ const Substitution = ({
 
   const playerOptions = match[`playingteam${team}`]?.map((player) => (
     <option key={player.id} value={player.id}>
-      {getName(player)}
+      {getName(player)} - {player.squad_number[0].number}
     </option>
   ));
 

@@ -5,6 +5,8 @@ import PlayerPolygons from '../PlayerPolygons';
 import { Context } from '../../provider';
 import getName from '../../getName';
 import Circle from '../Circle';
+import { useLoading } from '../../utils/hooks/useLoading';
+import SmallLoading from '../SmallLoading';
 
 const Goal = ({
   onClose,
@@ -26,8 +28,10 @@ const Goal = ({
   const context = useContext(Context);
   // For localStorage
   const KEY_TIMER_STORAGE = `MATCH_TIMER_${match.id}`;
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
   const onSave = async () => {
+    startLoading();
     try {
       const parameters = {
         scorer: playerGoalId,
@@ -56,6 +60,8 @@ const Goal = ({
     } catch (error) {
       // eslint-disable-next-line no-console
       context.showToast('Something went wrong, try again');
+    } finally {
+      stopLoading();
     }
   };
 
@@ -163,11 +169,24 @@ const Goal = ({
           onClick={setAssistedBy}
           activePlayer={assistedBy}
         />
-        <button type="button" className="button" onClick={onSave}>
-          DONE
-        </button>
+        {!isLoading ? (
+          <button type="button" className="button" onClick={onSave}>
+            DONE
+          </button>
+        ) : (
+          <div className="center-loading">
+            <SmallLoading height="80px" />
+          </div>
+        )}
       </div>
       <style jsx>{`
+        .center-loading {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+        }
+
         .button-bottom {
           flex: 1;
           display: flex;

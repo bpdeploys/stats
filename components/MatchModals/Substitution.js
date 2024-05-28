@@ -5,6 +5,7 @@ import SmallLoading from '../SmallLoading';
 import { Context } from '../../provider';
 import getName from '../../getName';
 import Circle from '../Circle';
+import { useLoading } from '../../utils/hooks/useLoading';
 
 /**
  * Substitution component for managing player substitutions.
@@ -23,17 +24,17 @@ const Substitution = ({
   idPlayerOffToSubs,
   refreshMatch,
 }) => {
-  const [loading, setLoading] = useState(false);
   const [playerOffId, setPlayerOffId] = useState(null);
   const [playerOn, setPlayerOn] = useState(null);
   const [team, setTeam] = useState(null);
   const context = useContext(Context);
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
   // For localStorage
   const KEY_TIMER_STORAGE = `MATCH_TIMER_${match.id}`;
 
   const onSave = async () => {
-    setLoading(true);
+    startLoading();
     try {
       const parameters = {
         playerOutId: playerOffId,
@@ -95,8 +96,9 @@ const Substitution = ({
       // eslint-disable-next-line no-console
       console.log(error);
       context.showToast('Something went wrong, try again');
+    } finally {
+      stopLoading();
     }
-    setLoading(false);
   };
 
   const handlePlayerOffChange = (e) => {
@@ -187,12 +189,12 @@ const Substitution = ({
           activePlayer={playerOn}
         />
         <div className="button-bottom">
-          {!loading ? (
+          {!isLoading ? (
             <button
               type="button"
               className="button"
               onClick={onSave}
-              disabled={!playerOn}
+              disabled={!playerOn || isLoading}
             >
               {playerOn ? 'Select a Player' : 'SET THE ON'}
             </button>

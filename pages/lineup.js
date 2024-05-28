@@ -10,13 +10,13 @@ import {
 import ScreenLoading from '../components/ScreenLoading';
 import TeamList from '../components/Lineup/TeamList';
 import ConfirmModal from '../components/Lineup/ConfirmModal';
+import { useLoading } from '../utils/hooks/useLoading';
 
 const LineUp = () => {
   const {
     [MATCH_ACTIVE_KEY]: { id: idMatch },
     showToast,
   } = useContext(Context);
-  const [loading, setLoading] = useState(true);
   const [teamList, setTeamList] = useState(null);
   const [team1, setTeam1] = useState([]);
   const [team2, setTeam2] = useState([]);
@@ -24,6 +24,7 @@ const LineUp = () => {
   const [subTeam2, setSubTeam2] = useState([]);
   const [userConfirmed, setUserConfirmed] = useState(false);
   const [showConfirmationModal, setShowConfirmationModa] = useState(false);
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
   const handleSwitchTeam = (team, setTeam, subTeam, setSubTeam, player) => {
     if (team.includes(player)) {
@@ -45,7 +46,7 @@ const LineUp = () => {
       (team1.length === maxStarPlayers && team2.length === maxStarPlayers) ||
       userConfirmed
     ) {
-      setLoading(true);
+      startLoading();
       const responseCreation = await fetchCreateStartingLineUp({
         team1,
         team2,
@@ -58,7 +59,7 @@ const LineUp = () => {
         [...team1, ...team2, ...subTeam1, ...subTeam2],
         idMatch
       );
-      setLoading(false);
+      stopLoading();
 
       if ('id' in responseCreation) {
         showToast('Starting Line created');
@@ -96,7 +97,7 @@ const LineUp = () => {
         showToast('Something went wrong');
         Router.push('/itinerary');
       } finally {
-        setLoading(false);
+        stopLoading();
       }
     };
     fetchData();
@@ -105,7 +106,7 @@ const LineUp = () => {
   return (
     <div className="LineUp">
       <Header name="Create Starting Lineups" />
-      {loading && !teamList ? (
+      {isLoading && !teamList ? (
         <ScreenLoading height="90vh" />
       ) : (
         <>
@@ -160,7 +161,7 @@ const LineUp = () => {
                 count={team2.length}
                 maxCount={maxStarPlayers}
               />
-              <SubmitButton loading={loading} handleSubmit={handleSubmit} />
+              <SubmitButton loading={isLoading} handleSubmit={handleSubmit} />
             </>
           )}
         </>
@@ -170,7 +171,12 @@ const LineUp = () => {
 };
 
 const SubmitButton = ({ loading, handleSubmit }) => (
-  <button className="button" onClick={handleSubmit} type="button">
+  <button
+    className="button"
+    onClick={handleSubmit}
+    type="button"
+    disabled={loading}
+  >
     {!loading ? 'Go to Match' : 'Creating...'}
     <svg
       xmlns="http://www.w3.org/2000/svg"

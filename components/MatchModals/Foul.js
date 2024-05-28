@@ -5,6 +5,8 @@ import PlayerPolygons from '../PlayerPolygons';
 import { Context } from '../../provider';
 import getName from '../../getName';
 import Circle from '../Circle';
+import { useLoading } from '../../utils/hooks/useLoading';
+import SmallLoading from '../SmallLoading';
 
 const Foul = ({
   onClose,
@@ -29,10 +31,12 @@ const Foul = ({
   const context = useContext(Context);
   // For localStorage
   const KEY_TIMER_STORAGE = `MATCH_TIMER_${match.id}`;
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
   // window.fetch("http://localhost:8000/api/fouls/6").then(res => res.json());
 
   const onSave = async () => {
+    startLoading();
     try {
       const parameters = {
         fouled: playerFouled,
@@ -61,6 +65,8 @@ const Foul = ({
     } catch (error) {
       // eslint-disable-next-line no-console
       context.showToast('Something went wrong, try again');
+    } finally {
+      stopLoading();
     }
   };
 
@@ -185,16 +191,29 @@ const Foul = ({
           onClick={setPlayerFouled}
           activePlayer={playerFouled}
         />
-        <button
-          type="button"
-          className="button"
-          onClick={onSave}
-          disabled={!playerFouled}
-        >
-          {playerFouled ? 'DONE' : 'WHO IS COMING ON?'}
-        </button>
+        {isLoading ? (
+          <div className="center-loading">
+            <SmallLoading height="80px" />
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="button"
+            onClick={onSave}
+            disabled={!playerFouled}
+          >
+            {playerFouled ? 'DONE' : 'WHO IS COMING ON?'}
+          </button>
+        )}
       </div>
       <style jsx>{`
+        .center-loading {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100%;
+        }
+
         .button-bottom {
           flex: 1;
           display: flex;

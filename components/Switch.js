@@ -1,7 +1,23 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-const Switch = ({ on, width, textLeft, textRight, color, ...props }) => {
+/**
+ * Switch component
+ *
+ * @param {boolean} on - Indicates if the switch is on
+ * @param {string} [width='90px'] - The width of the switch
+ * @param {string} [textLeft='Off'] - The text to display when the switch is off
+ * @param {string} [textRight='On'] - The text to display when the switch is on
+ * @param {string} [color='black'] - The color of the switch when it's on
+ * @param {...object} props - Other props passed to the button element
+ */
+const Switch = ({
+  on,
+  width = '90px',
+  textLeft = 'Off',
+  textRight = 'On',
+  color = 'black',
+  ...props
+}) => {
   return (
     <button
       type="button"
@@ -76,21 +92,6 @@ const Switch = ({ on, width, textLeft, textRight, color, ...props }) => {
       `}</style>
     </button>
   );
-};
-
-Switch.propTypes = {
-  on: PropTypes.bool.isRequired,
-  textLeft: PropTypes.string,
-  textRight: PropTypes.string,
-  color: PropTypes.string,
-  width: PropTypes.string,
-};
-
-Switch.defaultProps = {
-  color: 'black',
-  textLeft: 'Off',
-  textRight: 'On',
-  width: '90px',
 };
 
 export default Switch;

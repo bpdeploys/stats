@@ -17,6 +17,8 @@ import FootballLocation from '../components/MatchModals/FootballLocation';
 import Goal from '../components/MatchModals/Goal';
 import Foul from '../components/MatchModals/Foul';
 import ModalAreYouReadyToStart from '../components/MatchModals/ModalAreYouReadyToStart';
+import MissingPlayerItem from '../components/MissingPlayerItem';
+import UpdateLineUp from '../components/MatchModals/UpdateLineup';
 
 const Match = () => {
   const {
@@ -51,6 +53,13 @@ const Match = () => {
   const [showGoalScreen, setShowGoalScreen] = React.useState(null);
   // - Pantalla para crear una foul
   const [showFoulScreen, setShowFoulScreen] = React.useState(null);
+  // - Pantalla para agregar jugadores faltantes
+  const [showAddScreen, setShowAddScreen] = React.useState(null);
+  // - Para saber a que team se agregara el player
+  const [missingPlayerTeam, setMissingPlayerTeam] = React.useState(null);
+  // - Cantidad de jugadores faltantes
+  const [missingPlayerQuantity, setMissingPlayerQuantity] =
+    React.useState(null);
   // - Para el modal de sub, hay que hacer focus en el user
   const [idPlayerOffToSubs, setIdPlayerOffToSubs] = React.useState(null);
   // - Para el modal de goal, hay que hacer focus en el user
@@ -68,7 +77,6 @@ const Match = () => {
 
   const runClock = async () => {
     // Lanzar match play start request solo si matchWasRunning es falso
-    // eslint-disable-next-line no-console
     console.log(`[MATCH WAS RUNNING]: ${matchWasRunning}`);
 
     if (!matchWasRunning) {
@@ -77,7 +85,7 @@ const Match = () => {
       // el server 400 porque ya se creo el recurso de que el match esta running
       setMatchWasRunning(true);
       window.localStorage.setItem(KEY_DATETIME_FIRST_START_MATCH, new Date());
-      // eslint-disable-next-line no-console
+
       console.log(
         `[MATCH FIRST START RESPONSE (WHEN NO WAS STARTED)]: ${startClockResponse}`
       );
@@ -173,34 +181,55 @@ const Match = () => {
     setMatch(await fetchGetMatchActiveInfo(id));
   };
 
-  const mapRenderPlayers = (color, array) => {
-    return array.map(({ user, playing_position, ...rest }) => (
-      <Item
-        color={color}
-        number={rest.squad_number.length ? rest.squad_number[0].number : 0}
-        start
-        theme="white"
-        match
-        key={rest.id}
-        id={rest.id}
-        onClickProfilePicture={() => {
-          setIdPlayerOffToSubs(rest.id);
-          setShowSubsScreen(true);
-          tryStopTimer();
-        }}
-        onClickGoal={() => {
-          setIdPlayerToGoal(rest.id);
-          setShowGrid('goal');
-          tryStopTimer();
-        }}
-        onClickFoul={() => {
-          setIdPlayerToFoul(rest.id);
-          setShowGrid('foul');
-          tryStopTimer();
-        }}
-        {...(user && user.profile_pic ? { img: user.profile_pic } : null)}
-      />
-    ));
+  const mapRenderPlayers = (color, array, teamNumber) => {
+    // Get the required number of players from the match format
+    const requiredPlayers = parseInt(match.match_format[0]);
+
+    return (
+      <>
+        {array.map(({ user, playing_position, ...rest }) => (
+          <Item
+            color={color}
+            number={rest.squad_number.length ? rest.squad_number[0].number : 0}
+            start
+            theme="white"
+            match
+            key={rest.id}
+            id={rest.id}
+            onClickProfilePicture={() => {
+              setIdPlayerOffToSubs(rest.id);
+              setShowSubsScreen(true);
+              tryStopTimer();
+            }}
+            onClickGoal={() => {
+              setIdPlayerToGoal(rest.id);
+              setShowGrid('goal');
+              tryStopTimer();
+            }}
+            onClickFoul={() => {
+              setIdPlayerToFoul(rest.id);
+              setShowGrid('foul');
+              tryStopTimer();
+            }}
+            {...(user && user.profile_pic ? { img: user.profile_pic } : null)}
+          />
+        ))}
+        {/* Add buttons for missing players */}
+        {array.length < requiredPlayers &&
+          [...Array(requiredPlayers - array.length)].map((_, idx) => (
+            <MissingPlayerItem
+              color={color}
+              theme="white"
+              onClick={() => {
+                setMissingPlayerTeam(teamNumber);
+                setMissingPlayerQuantity(requiredPlayers - array.length);
+                setShowAddScreen(true);
+                tryStopTimer();
+              }}
+            />
+          ))}
+      </>
+    );
   };
 
   return (
@@ -288,7 +317,7 @@ const Match = () => {
             </span>
           </div>
           <div className="wrap-players">
-            {mapRenderPlayers('red', match.playingteam1)}
+            {mapRenderPlayers('red', match.playingteam1, 1)}
           </div>
           <div className="block team-block --with-margin-top">
             <div>
@@ -304,7 +333,7 @@ const Match = () => {
             </span>
           </div>
           <div className="wrap-players">
-            {mapRenderPlayers('blue', match.playingteam2)}
+            {mapRenderPlayers('blue', match.playingteam2, 2)}
           </div>
           <div className={`modalView ${showSettings ? '--show' : ''}`}>
             <MatchSettings
@@ -330,6 +359,20 @@ const Match = () => {
               refreshMatch={refreshMatch}
             />
           </div>
+          {showAddScreen && (
+            <div className={`modalView ${showAddScreen ? '--show' : ''}`}>
+              <UpdateLineUp
+                onClose={() => {
+                  setShowAddScreen(false);
+                  runClock();
+                }}
+                match={match}
+                refreshMatch={refreshMatch}
+                team={missingPlayerTeam}
+                quantity={missingPlayerQuantity}
+              />
+            </div>
+          )}
           <div className={`modalView ${showGrid ? '--show' : ''}`}>
             <FootballLocation
               onClose={() => {

@@ -1,18 +1,29 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import Switch from './Switch';
 import Toggle from './Toggle';
 
+/**
+ * @param {string} img - Image URL
+ * @param {number} number - Player number
+ * @param {boolean} start - Indicates if the player is a starter
+ * @param {string} color - Background color
+ * @param {'white' | 'default'} [theme='default'] - Theme color
+ * @param {boolean} [match=false] - Indicates if it's a match view
+ * @param {number} id - Player ID
+ * @param {function} onSwitch - Function to handle switch
+ * @param {function|boolean} [onClickProfilePicture=false] - Function to handle profile picture click
+ * @param {function} onClickGoal - Function to handle goal click
+ * @param {function} onClickFoul - Function to handle foul click
+ */
 const Item = ({
-  img,
+  img = '/static/pic.png',
   number,
   start,
   color,
-  theme,
-  match,
+  theme = 'default',
+  match = false,
   onSwitch,
   id,
-  onClickProfilePicture,
+  onClickProfilePicture = false,
   onClickGoal,
   onClickFoul,
 }) => (
@@ -171,27 +182,5 @@ const Item = ({
     `}</style>
   </div>
 );
-
-Item.propTypes = {
-  start: PropTypes.bool.isRequired,
-  number: PropTypes.number.isRequired,
-  img: PropTypes.string,
-  color: PropTypes.string.isRequired,
-  theme: PropTypes.oneOf(['white', 'default']),
-  match: PropTypes.bool,
-  id: PropTypes.number.isRequired,
-  onSwitch: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-  onClickProfilePicture: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-  onClickGoal: PropTypes.func.isRequired,
-  onClickFoul: PropTypes.func.isRequired,
-};
-
-Item.defaultProps = {
-  img: '/static/pic.png',
-  theme: 'default',
-  match: false,
-  onClickProfilePicture: false,
-  onSwitch: false,
-};
 
 export default Item;

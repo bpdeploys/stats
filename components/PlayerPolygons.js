@@ -1,10 +1,16 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
 
-const PlayerPolygons = ({ players, activePlayer, onClick }) => {
+/**
+ * PlayerPolygons component
+ *
+ * @param {Array<{id: string, number: string}>} players - List of player objects
+ * @param {number} [activePlayer=0] - The ID of the active player
+ * @param {function} onClick - Function to handle click event on a player
+ */
+const PlayerPolygons = ({ players = [], activePlayer = 0, onClick }) => {
   return (
     <div className="players">
-      {players.map(p => (
+      {players.map((p) => (
         <div
           key={p.id}
           onClick={() => onClick(p.id)}
@@ -69,22 +75,6 @@ const PlayerPolygons = ({ players, activePlayer, onClick }) => {
       `}</style>
     </div>
   );
-};
-
-PlayerPolygons.defaultProps = {
-  players: [],
-  activePlayer: 0
-};
-
-PlayerPolygons.propTypes = {
-  players: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired
-    }).isRequired
-  ),
-  onClick: PropTypes.func.isRequired,
-  activePlayer: PropTypes.number
 };
 
 export default PlayerPolygons;

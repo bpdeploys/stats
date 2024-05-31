@@ -1,10 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import Router from 'next/router';
 import Header from '../components/Header';
 import { MATCH_ACTIVE_KEY, Context } from '../provider';
 import { fetchMatchCode } from '../services';
 
+/**
+ * EnterMatchCode component
+ *
+ * @param {object} query - The query object from Next.js router
+ * @param {string} query.code - The match code from the query
+ * @param {boolean} query.noCode - Indicates if there is no match code
+ */
 const EnterMatchCode = ({ query }) => {
   const numInputs = 4;
   const inputRefs = useRef(
@@ -16,8 +22,7 @@ const EnterMatchCode = ({ query }) => {
   const [incorrect, setIncorrect] = useState(false);
 
   const {
-    [MATCH_ACTIVE_KEY]: { code, team_1_name, team_2_name, id },
-    storage,
+    [MATCH_ACTIVE_KEY]: { code, team_1_name, team_2_name },
   } = React.useContext(Context);
 
   useEffect(() => {
@@ -106,19 +111,6 @@ const EnterMatchCode = ({ query }) => {
 
 EnterMatchCode.getInitialProps = ({ query }) => {
   return { query };
-};
-
-EnterMatchCode.propTypes = {
-  query: PropTypes.shape({
-    code: PropTypes.string,
-    noCode: PropTypes.bool.isRequired,
-  }),
-};
-
-EnterMatchCode.defaultProps = {
-  query: {
-    code: '',
-  },
 };
 
 export default EnterMatchCode;

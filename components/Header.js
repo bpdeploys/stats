@@ -1,8 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Router from 'next/router';
 
-const Header = ({ name, buttonRight, white, onClick }) => {
+/**
+ * @param {string} name - The name to display in the header
+ * @param {React.ReactNode|boolean} [buttonRight=false] - The right element in the header, if any
+ * @param {boolean} [white=false] - Determines the color theme of the header
+ * @param {function} [onClick=() => Router.back()] - Function to handle click event on the left button
+ */
+const Header = ({
+  name,
+  buttonRight = false,
+  white = false,
+  onClick = () => Router.back(),
+}) => {
   return (
     <div className="Header">
       <span>
@@ -37,16 +47,16 @@ const Header = ({ name, buttonRight, white, onClick }) => {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          flex-wrap: wrap; /* so they do not overlap each other if space too short */
+          flex-wrap: wrap;
         }
 
         .Header > span {
-          flex: 2; /* 2 is minimum but plenty enough here  */
+          flex: 2;
 
           &:first-of-type:after,
           &:last-of-type:before {
             content: '';
-            display: inline-block; /* enough , no width needed , it will still generate a space between */
+            display: inline-block;
           }
         }
 
@@ -82,19 +92,6 @@ const Header = ({ name, buttonRight, white, onClick }) => {
       `}</style>
     </div>
   );
-};
-
-Header.propTypes = {
-  name: PropTypes.string.isRequired,
-  buttonRight: PropTypes.oneOfType([PropTypes.node, PropTypes.bool]),
-  white: PropTypes.bool,
-  onClick: PropTypes.func,
-};
-
-Header.defaultProps = {
-  buttonRight: false,
-  white: false,
-  onClick: () => Router.back(),
 };
 
 export default Header;

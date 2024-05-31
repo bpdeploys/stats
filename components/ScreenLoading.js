@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const ScreenLoading = ({ height }) => {
+/**
+ * ScreenLoading
+ * @param {string} height
+ * @return {JSX.Element}
+ **/
+const ScreenLoading = ({ height = '100vh' }) => {
   return (
     <div className="ScreenLoading">
       <img src="/static/logo.png" alt="baller profile logo" />
@@ -89,14 +94,6 @@ const ScreenLoading = ({ height }) => {
       </style>
     </div>
   );
-};
-
-ScreenLoading.defaultProps = {
-  height: '100vh',
-};
-
-ScreenLoading.propTypes = {
-  height: PropTypes.string,
 };
 
 export default ScreenLoading;

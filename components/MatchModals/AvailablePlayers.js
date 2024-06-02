@@ -18,7 +18,6 @@ const AvailablePlayers = ({
   const [selectedPlayers, setSelectedPlayers] = useState([]);
 
   useEffect(() => {
-    console.log('Component mounted 2');
     setSelectedPlayers([]);
   }, []);
 

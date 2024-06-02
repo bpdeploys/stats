@@ -214,6 +214,30 @@ export const fetchCreateStartingLineUp = (data) => {
     .catch((err) => err);
 };
 
+export const fetchUpdateLineupPlayers = (data) => {
+  if (!data) {
+    throw Error('You must send the data object as parameter');
+  }
+  if (!data.team1.length || !data.team2.length) {
+    throw Error('Attributes team1 and team2 must need items');
+  }
+  return window
+    .fetch(`${BASE_URL}/starting-lineups/add-extra`, {
+      headers: {
+        Authorization: `Token ${window.localStorage.getItem('TOKEN')}`,
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+      body: JSON.stringify(data),
+    })
+    .then((res) => res.json())
+    .then((res) => {
+      return res;
+    })
+    .catch((err) => err);
+};
+
 export const fetchCreatePlayersStartMatch = (arrayIdsPlayers, idMatch) => {
   if (Array.isArray(arrayIdsPlayers) && arrayIdsPlayers.length && idMatch) {
     return window

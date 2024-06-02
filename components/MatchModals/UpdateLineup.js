@@ -4,10 +4,12 @@ import SmallLoading from '../SmallLoading';
 import { useLoading } from '../../utils/hooks/useLoading';
 import AvailablePlayers from './AvailablePlayers';
 import { toast } from 'react-toastify';
+import { fetchUpdateLineupPlayers } from '../../services';
 
 const UpdateLineUp = ({ onClose, match, refreshMatch, team, quantity }) => {
   const { isLoading, startLoading, stopLoading } = useLoading();
   const [availablePlayers, setAvailablePlayers] = useState([]);
+  const [currentPlayers, setCurrentPlayers] = useState([]);
   const [newPlayers, setNewPlayers] = useState([]);
 
   useEffect(() => {
@@ -23,31 +25,57 @@ const UpdateLineUp = ({ onClose, match, refreshMatch, team, quantity }) => {
       setAvailablePlayers(available);
     };
 
-    setupAvailablePlayers();
-  }, [team, match]);
+    const setupCurrentPlayers = () => {
+      const current = match[`playingteam${team}`]?.map((p) => ({
+        number: p.squad_number.length ? p.squad_number[0].number : 0,
+        id: p.id,
+      }));
+      setCurrentPlayers(current);
+    };
 
-  // const addPlayerToTeam = (player) => {
-  //   if (newPlayers.length >= quantity) {
-  //     // If the maximum quantity is reached, remove the first player
-  //     setNewPlayers([...newPlayers.slice(1), player]);
-  //   } else {
-  //     // Otherwise, add the new player to the array
-  //     setNewPlayers([...newPlayers, player]);
-  //   }
-  // };
+    setupAvailablePlayers();
+    setupCurrentPlayers();
+  }, [team, match]);
 
   const onSave = async () => {
     if (newPlayers.length === 0) {
       toast.error('Please select at least one player');
+      return;
     }
-    // startLoading();
-    // // Perform save operation (not shown in your initial code)
-    // refreshMatch();
-    // stopLoading();
-    onClose();
-  };
 
-  console.log(newPlayers);
+    startLoading();
+
+    const updatedPlayers = [...currentPlayers.map((p) => p.id), ...newPlayers];
+
+    const data = {
+      game_id: match.id,
+      team1: team === 1 ? updatedPlayers : match.playingteam1.map((p) => p.id),
+      team2: team === 2 ? updatedPlayers : match.playingteam2.map((p) => p.id),
+      subs1:
+        team === 1
+          ? match.substeam1
+              .filter((p) => !newPlayers.includes(p.id))
+              .map((p) => p.id)
+          : match.substeam1.map((p) => p.id),
+      subs2:
+        team === 2
+          ? match.substeam2
+              .filter((p) => !newPlayers.includes(p.id))
+              .map((p) => p.id)
+          : match.substeam2.map((p) => p.id),
+    };
+
+    try {
+      await fetchUpdateLineupPlayers(data);
+      toast.success('Lineup updated successfully');
+      refreshMatch();
+      onClose();
+    } catch (error) {
+      toast.error('Failed to update lineup');
+    } finally {
+      stopLoading();
+    }
+  };
 
   return (
     <div>

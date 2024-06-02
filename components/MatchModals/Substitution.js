@@ -93,8 +93,6 @@ const Substitution = ({
         setPlayerOn(null); // Cuidado, esto es importante
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
       context.showToast('Something went wrong, try again');
     } finally {
       stopLoading();
@@ -106,9 +104,6 @@ const Substitution = ({
   };
 
   useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log(idPlayerOffToSubs, match, fetchFunction);
-
     // Find the player in match.playingteam1 || playingteam2
     // To render data
     if (idPlayerOffToSubs) {
@@ -123,9 +118,6 @@ const Substitution = ({
         setPlayerOffId(player.id);
         setTeam(2);
       }
-
-      // eslint-disable-next-line no-console
-      console.log(player);
     }
   }, [idPlayerOffToSubs]);
 

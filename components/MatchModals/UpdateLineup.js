@@ -9,7 +9,6 @@ import { fetchUpdateLineupPlayers } from '../../services';
 const UpdateLineUp = ({ onClose, match, refreshMatch, team, quantity }) => {
   const { isLoading, startLoading, stopLoading } = useLoading();
   const [availablePlayers, setAvailablePlayers] = useState([]);
-  const [currentPlayers, setCurrentPlayers] = useState([]);
   const [newPlayers, setNewPlayers] = useState([]);
 
   useEffect(() => {
@@ -25,16 +24,7 @@ const UpdateLineUp = ({ onClose, match, refreshMatch, team, quantity }) => {
       setAvailablePlayers(available);
     };
 
-    const setupCurrentPlayers = () => {
-      const current = match[`playingteam${team}`]?.map((p) => ({
-        number: p.squad_number.length ? p.squad_number[0].number : 0,
-        id: p.id,
-      }));
-      setCurrentPlayers(current);
-    };
-
     setupAvailablePlayers();
-    setupCurrentPlayers();
   }, [team, match]);
 
   const onSave = async () => {
@@ -45,28 +35,18 @@ const UpdateLineUp = ({ onClose, match, refreshMatch, team, quantity }) => {
 
     startLoading();
 
-    const updatedPlayers = [...currentPlayers.map((p) => p.id), ...newPlayers];
-
-    const data = {
-      game_id: match.id,
-      team1: team === 1 ? updatedPlayers : match.playingteam1.map((p) => p.id),
-      team2: team === 2 ? updatedPlayers : match.playingteam2.map((p) => p.id),
-      subs1:
-        team === 1
-          ? match.substeam1
-              .filter((p) => !newPlayers.includes(p.id))
-              .map((p) => p.id)
-          : match.substeam1.map((p) => p.id),
-      subs2:
-        team === 2
-          ? match.substeam2
-              .filter((p) => !newPlayers.includes(p.id))
-              .map((p) => p.id)
-          : match.substeam2.map((p) => p.id),
-    };
+    const teamId = match[`team${team}`]?.id;
 
     try {
-      await fetchUpdateLineupPlayers(data);
+      for (const playerId of newPlayers) {
+        const data = {
+          game_id: match.id,
+          team_id: teamId,
+          player_id: playerId,
+        };
+
+        const response = await fetchUpdateLineupPlayers(data);
+      }
       toast.success('Lineup updated successfully');
       refreshMatch();
       onClose();
@@ -105,7 +85,7 @@ const UpdateLineUp = ({ onClose, match, refreshMatch, team, quantity }) => {
             <button
               type="button"
               className="button"
-              onClick={() => onSave()}
+              onClick={onSave}
               disabled={isLoading}
             >
               SAVE

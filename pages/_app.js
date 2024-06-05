@@ -51,6 +51,11 @@ const MyApp = ({ Component, pageProps }) => {
   return (
     <div>
       <HeadApp />
+      <Script
+        src="https://cloud.umami.is/script.js"
+        data-website-id="85eaba2e-7560-4bda-bd6e-ecded2f744ef"
+        strategy="afterInteractive"
+      />
       <AuthProvider>
         <AuthContent db={db} Component={Component} pageProps={pageProps} />
       </AuthProvider>

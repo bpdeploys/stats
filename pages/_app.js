@@ -6,6 +6,7 @@ import { BASE_URL } from '../http';
 import ScreenLoading from '../components/ScreenLoading';
 import DynamicProvider from '../provider';
 import HeadApp from '../components/Head';
+import Script from 'next/script';
 
 const AuthContent = ({ db, Component, pageProps }) => {
   const { userInfo, isLoading, refreshAuth } = useAuth();

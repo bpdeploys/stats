@@ -1,13 +1,20 @@
-import React from "react";
-import PropTypes from "prop-types";
-import Grid from "../FootballGrid/Grid";
-import Header from "../Header";
+import React from 'react';
+import Header from '../Header';
+import Grid from '../FootballGrid/Grid';
+import styled from 'styled-components';
 
+/**
+ * FootballLocation component
+ * @param {function} onNext - Function to handle next action
+ * @param {function} onClose - Function to handle close action
+ * @param {string} headerName - Header name to display
+ * @returns {JSX.Element}
+ */
 const FootballLocation = ({ onNext, onClose, headerName }) => {
   const [grid, setGrid] = React.useState(null);
 
   return (
-    <div style={{ backgroundColor: "#408C34", minHeight: "100vh" }}>
+    <div style={{ backgroundColor: '#408C34', minHeight: '100vh' }}>
       <Header
         name={headerName}
         onClick={() => {
@@ -15,9 +22,8 @@ const FootballLocation = ({ onNext, onClose, headerName }) => {
           setGrid(null);
         }}
         buttonRight={
-          <button
+          <ButtonHeader
             type="button"
-            className="button-header"
             disabled={!grid}
             onClick={() => {
               const gridFocus = grid;
@@ -25,41 +31,30 @@ const FootballLocation = ({ onNext, onClose, headerName }) => {
               setGrid(null);
             }}
           >
-            {grid ? "Done" : "Select a Grid"}
-            <style jsx>{`
-              .button-header {
-                border: none;
-                padding: 5px 0 0 12px;
-                border-radius: 4px;
-
-                cursor: pointer;
-                font-size: 14px;
-                background: black;
-                color: white;
-
-                &.--done {
-                  background: white;
-                  color: black;
-                }
-              }
-            `}</style>
-          </button>
+            {grid ? 'Done' : 'Select a Grid'}
+          </ButtonHeader>
         }
       />
-      <div
-        className="wrapper"
-        style={{ padding: "10px 0px", backgroundColor: "rgb(64, 140, 52)" }}
-      >
+      <Wrapper>
         <Grid setGrid={setGrid} />
-      </div>
+      </Wrapper>
     </div>
   );
 };
 
-FootballLocation.propTypes = {
-  onNext: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired,
-  headerName: PropTypes.func.isRequired
-};
+const ButtonHeader = styled.button`
+  border: none;
+  padding: 5px 0 0 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  background: black;
+  color: white;
+`;
+
+const Wrapper = styled.div`
+  padding: 10px 0;
+  background-color: rgb(64, 140, 52);
+`;
 
 export default FootballLocation;

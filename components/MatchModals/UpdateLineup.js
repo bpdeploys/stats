@@ -5,6 +5,7 @@ import { useLoading } from '../../utils/hooks/useLoading';
 import AvailablePlayers from './AvailablePlayers';
 import { toast } from 'react-toastify';
 import { fetchUpdateLineupPlayers } from '../../services';
+import styled from 'styled-components';
 
 const UpdateLineUp = ({ onClose, match, refreshMatch, team, quantity }) => {
   const { isLoading, startLoading, stopLoading } = useLoading();
@@ -58,7 +59,7 @@ const UpdateLineUp = ({ onClose, match, refreshMatch, team, quantity }) => {
   };
 
   return (
-    <div>
+    <Wrapper>
       <Header
         name="Update Lineup"
         buttonRight={
@@ -97,48 +98,47 @@ const UpdateLineUp = ({ onClose, match, refreshMatch, team, quantity }) => {
           )}
         </div>
       </div>
-      <style jsx>{`
-        .center-loading {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 100%;
-        }
-
-        .button-bottom {
-          flex: 1;
-          display: flex;
-          align-items: flex-end;
-        }
-
-        .wrapper-content {
-          min-height: calc(100vh - 45px);
-          display: flex;
-          flex-direction: column;
-        }
-
-        .button {
-          border: none;
-          text-align: center;
-          background-color: #1362d9;
-          color: white;
-          font-size: 20px;
-          font-weight: 200;
-          display: block;
-          width: 85%;
-          margin: 30px auto;
-          border-radius: 4px;
-          text-decoration: none;
-          padding: 6px 0;
-          transition: background-color 1s;
-
-          &:disabled {
-            background-color: #1362d9c2;
-          }
-        }
-      `}</style>
-    </div>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.div`
+  min-height: calc(100vh - 45px);
+  display: flex;
+  flex-direction: column;
+
+  .center-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .button-bottom {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .button {
+    border: none;
+    text-align: center;
+    background-color: #1362d9;
+    color: white;
+    font-size: 20px;
+    font-weight: 200;
+    display: block;
+    width: 85%;
+    margin: 30px auto;
+    border-radius: 4px;
+    text-decoration: none;
+    padding: 6px 0;
+    transition: background-color 1s;
+
+    &:disabled {
+      background-color: #1362d9c2;
+    }
+  }
+`;
 
 export default UpdateLineUp;

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 
 /**
  * SlotValueInput component for editing and displaying a value.
  *
- * @param {Object} props - Component props
- * @param {boolean} props.noInput - If true, no input will be shown
- * @param {string} props.title - The title of the input
- * @param {string} props.value - The current value of the input
- * @param {Function} props.fetchFunction - Function to call when a new value is submitted
- * @param {Array<string> | boolean} props.options - Options for the select input, or false if not used
+ * @param {boolean} [noInput=false] - If true, no input will be shown
+ * @param {string} title - The title of the input
+ * @param {string} value - The current value of the input
+ * @param {Function} fetchFunction - Function to call when a new value is submitted
+ * @param {Array<string> | boolean} [options=false] - Options for the select input, or false if not used
  */
 const SlotValueInput = ({
   noInput = false,
@@ -30,9 +30,9 @@ const SlotValueInput = ({
   };
 
   return (
-    <div className="SlotValueInput">
+    <SlotValueInputContainer>
       <span>{title}</span>
-      <div className="item-content">
+      <ItemContent>
         {!noInput && (
           <button type="button" onClick={toggleInputMode}>
             {inputMode ? (
@@ -88,55 +88,48 @@ const SlotValueInput = ({
             {valueInput}
           </span>
         )}
-      </div>
-      <style jsx>
-        {`
-          .SlotValueInput {
-            padding: 10px 30px;
-
-            svg {
-              float: right;
-            }
-
-            input,
-            select {
-              padding-bottom: 7px;
-              background: #c4c4c4;
-              border: none;
-              border-bottom: 1px solid black;
-              color: black;
-              font-weight: 400;
-              font-size: 18px;
-              font-family: Quicksand;
-            }
-
-            .item-content {
-              margin-top: 10px;
-              padding: 10px;
-              background: #c4c4c4;
-              border-radius: 3px;
-
-              button {
-                float: right;
-                border: none;
-                height: 33px;
-                padding: 0 20px;
-                background: unset;
-              }
-
-              > span {
-                color: black;
-                font-weight: 400;
-                font-size: 18px;
-                display: block;
-                margin-bottom: 5px;
-              }
-            }
-          }
-        `}
-      </style>
-    </div>
+      </ItemContent>
+    </SlotValueInputContainer>
   );
 };
+
+const SlotValueInputContainer = styled.div`
+  padding: 10px 30px;
+
+  span {
+    color: black;
+    font-weight: 400;
+    font-size: 18px;
+    display: block;
+    margin-bottom: 5px;
+  }
+`;
+
+const ItemContent = styled.div`
+  margin-top: 10px;
+  padding: 10px;
+  background: #c4c4c4;
+  border-radius: 3px;
+
+  button {
+    float: right;
+    border: none;
+    height: 33px;
+    padding: 0 20px;
+    background: unset;
+  }
+
+  input,
+  select {
+    padding-bottom: 7px;
+    background: #c4c4c4;
+    border: none;
+    border-bottom: 1px solid black;
+    color: black;
+    font-weight: 400;
+    font-size: 18px;
+    font-family: Quicksand;
+  }
+`;
 
 export default SlotValueInput;

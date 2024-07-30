@@ -7,17 +7,32 @@ import BasicEvent from '../components/Events/Basic';
 import GoalEvent from '../components/Events/Goal';
 import SubstitutionEvent from '../components/Events/Substitution';
 import FoulEvent from '../components/Events/Foul';
+import styled from 'styled-components';
 
 const EditEvents = () => {
   const [loading, setLoading] = useState(false);
 
+  const EventsWrapper = styled.div`
+    min-height: 100vh;
+    background: #fff;
+
+    .events {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+  `;
+
   return (
-    <div className="events">
+    <EventsWrapper>
       <Header name="Edit Match Events" />
       {loading ? (
         <ScreenLoading height="90vh" />
       ) : (
-        <div className="eventsWrapper">
+        <div className="events">
           <BasicEvent name="Full Time" value="14:17" />
           <BasicEvent
             name="2nd Half Kick Off"
@@ -48,24 +63,7 @@ const EditEvents = () => {
           <BasicEvent name="Kick Off" detail="Kick Off Time" value="19:46" />
         </div>
       )}
-      <style jsx>
-        {`
-          .events {
-            min-height: 100vh;
-            background: #fff;
-
-            .eventsWrapper {
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              align-items: center;
-              gap: 10px;
-              margin-top: 10px;
-            }
-          }
-        `}
-      </style>
-    </div>
+    </EventsWrapper>
   );
 };
 

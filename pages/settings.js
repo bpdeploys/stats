@@ -1,11 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Header from '../components/Header';
-import userInfoPropTypes from '../proptypes/userInfo';
 import { fetchUpdateUserImage, fetchUpdateUserAttrs } from '../services';
 import SlotValueInput from '../components/SlotValueInput';
 import ScreenLoading from '../components/ScreenLoading';
 import { useAuth } from '../context/useAuth';
+import styled from 'styled-components';
 
 const Settings = () => {
   const { userInfo, logout } = useAuth();
@@ -29,7 +28,7 @@ const Settings = () => {
   };
 
   return (
-    <div className="Settings">
+    <StyledSettings>
       <Header name="Settings" />
       <div className="wrapper-content">
         <div className="image-upload">
@@ -107,61 +106,62 @@ const Settings = () => {
           </button>
         </div>
       </div>
-      <style jsx>{`
-        .Settings {
-          background-color: lightblue;
-          height: 100%;
-          background-image: url('/static/default_bg.png');
-          background-position: center center;
-          background-size: cover;
-
-          .logout-div {
-            text-align: center;
-
-            .logout {
-              text-align: center;
-              margin: 0;
-              padding: 0;
-              border: none;
-              background: transparent;
-              margin-top: 20px;
-
-              svg {
-                width: 48px;
-                height: 48px;
-              }
-            }
-          }
-
-          .wrapper-content {
-            .image-upload {
-              margin: 30px auto 15px;
-              display: flex;
-              justify-content: center;
-              flex-direction: column;
-              align-items: center;
-
-              > button {
-                border: none;
-                background-color: transparent;
-
-                img {
-                  cursor: pointer;
-                  width: 80px;
-                  height: 80px;
-                  border-radius: 70px;
-                }
-              }
-
-              svg {
-                margin-top: 10px;
-              }
-            }
-          }
-        }
-      `}</style>
-    </div>
+    </StyledSettings>
   );
 };
+
+const StyledSettings = styled.div`
+  background-color: lightblue;
+  height: 100%;
+  background-image: url('/static/default_bg.png');
+  background-position: center center;
+  background-size: cover;
+
+  .logout-div {
+    text-align: center;
+
+    .logout {
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      border: none;
+      background: transparent;
+      margin-top: 20px;
+
+      svg {
+        width: 48px;
+        height: 48px;
+      }
+    }
+  }
+
+  .wrapper-content {
+    height: 100vh;
+
+    .image-upload {
+      margin: 30px auto 15px;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+
+      > button {
+        border: none;
+        background-color: transparent;
+
+        img {
+          cursor: pointer;
+          width: 80px;
+          height: 80px;
+          border-radius: 70px;
+        }
+      }
+
+      svg {
+        margin-top: 10px;
+      }
+    }
+  }
+`;
 
 export default Settings;

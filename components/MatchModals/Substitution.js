@@ -6,16 +6,16 @@ import { Context } from '../../provider';
 import getName from '../../getName';
 import Circle from '../Circle';
 import { useLoading } from '../../utils/hooks/useLoading';
+import styled from 'styled-components';
 
 /**
  * Substitution component for managing player substitutions.
  *
- * @param {Object} props - Component props
- * @param {Function} props.onClose - Function to close the substitution modal
- * @param {Function} props.fetchFunction - Function to fetch data
- * @param {Object} props.match - Match data
- * @param {number} props.idPlayerOffToSubs - ID of the player to substitute
- * @param {Function} props.refreshMatch - Function to refresh match data
+ * @param {Function} onClose - Function to close the substitution modal
+ * @param {Function} fetchFunction - Function to fetch data
+ * @param {Object} match - Match data
+ * @param {number} idPlayerOffToSubs - ID of the player to substitute
+ * @param {Function} refreshMatch - Function to refresh match data
  */
 const Substitution = ({
   onClose,
@@ -137,7 +137,7 @@ const Substitution = ({
   ));
 
   return (
-    <div>
+    <Wrapper>
       <Header
         name="Substitution"
         buttonRight={
@@ -197,121 +197,120 @@ const Substitution = ({
           )}
         </div>
       </div>
-      <style jsx>{`
-        .center-loading {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 100%;
-        }
-
-        .button-bottom {
-          flex: 1;
-          display: flex;
-          align-items: flex-end;
-        }
-
-        .wrapper-content {
-          min-height: calc(100vh - 45px);
-          display: flex;
-          flex-direction: column;
-        }
-
-        .player-dropdown {
-          margin-top: 1rem;
-          margin-bottom: 2rem;
-          padding: 0.5rem 1rem;
-          border: 1px solid rgba(191, 190, 190, 1);
-          border-radius: 5px;
-          font-size: 22px;
-        }
-
-        .button {
-          border: none;
-          text-align: center;
-          background-color: #1362d9;
-          color: white;
-          font-size: 20px;
-          font-weight: 200;
-          display: block;
-          width: 85%;
-          margin: 30px auto;
-          border-radius: 4px;
-          text-decoration: none;
-          padding: 6px 0;
-          transition: background-color 1s;
-
-          &:disabled {
-            background-color: #1362d9c2;
-          }
-        }
-
-        .box {
-          background: #ffffff;
-          border: 1px solid #000;
-          box-sizing: border-box;
-          border-radius: 8px;
-          margin: 10px;
-
-          > div {
-            &:nth-child(1) {
-              text-align: center;
-
-              > p {
-                font-weight: normal;
-                font-size: 18px;
-                line-height: 22px;
-                color: #616060;
-                margin-bottom: 15px;
-                margin-top: 15px;
-                position: relative;
-
-                > span {
-                  float: right;
-                  font-weight: 400;
-                  font-size: 32px;
-                  position: absolute;
-                  right: 20px;
-                }
-              }
-            }
-
-            &:nth-child(2) {
-              display: flex;
-              border-top: 1px solid #e5e5e5;
-              padding: 10px 0;
-              justify-content: center;
-
-              > div {
-                button {
-                  height: 40px;
-                  width: 40px;
-                  border-radius: 50%;
-                  background: none;
-                }
-
-                &:nth-child(1) {
-                  > button {
-                    margin-right: 10px;
-                    border: 1px solid #ff0606;
-                    color: #ff0606;
-                  }
-                }
-
-                &:nth-child(2) {
-                  > button {
-                    margin-left: 10px;
-                    border: 1px solid #7705ad;
-                    color: #7705ad;
-                  }
-                }
-              }
-            }
-          }
-        }
-      `}</style>
-    </div>
+    </Wrapper>
   );
 };
+
+const Wrapper = styled.div`
+  min-height: calc(100vh - 45px);
+  display: flex;
+  flex-direction: column;
+
+  .center-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .button-bottom {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .player-dropdown {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(191, 190, 190, 1);
+    border-radius: 5px;
+    font-size: 22px;
+  }
+
+  .button {
+    border: none;
+    text-align: center;
+    background-color: #1362d9;
+    color: white;
+    font-size: 20px;
+    font-weight: 200;
+    display: block;
+    width: 85%;
+    margin: 30px auto;
+    border-radius: 4px;
+    text-decoration: none;
+    padding: 6px 0;
+    transition: background-color 1s;
+
+    &:disabled {
+      background-color: #1362d9c2;
+    }
+  }
+
+  .box {
+    background: #ffffff;
+    border: 1px solid #000;
+    box-sizing: border-box;
+    border-radius: 8px;
+    margin: 10px;
+
+    > div {
+      &:nth-child(1) {
+        text-align: center;
+
+        > p {
+          font-weight: normal;
+          font-size: 18px;
+          line-height: 22px;
+          color: #616060;
+          margin-bottom: 15px;
+          margin-top: 15px;
+          position: relative;
+
+          > span {
+            float: right;
+            font-weight: 400;
+            font-size: 32px;
+            position: absolute;
+            right: 20px;
+          }
+        }
+      }
+
+      &:nth-child(2) {
+        display: flex;
+        border-top: 1px solid #e5e5e5;
+        padding: 10px 0;
+        justify-content: center;
+
+        > div {
+          button {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            background: none;
+          }
+
+          &:nth-child(1) {
+            > button {
+              margin-right: 10px;
+              border: 1px solid #ff0606;
+              color: #ff0606;
+            }
+          }
+
+          &:nth-child(2) {
+            > button {
+              margin-left: 10px;
+              border: 1px solid #7705ad;
+              color: #7705ad;
+            }
+          }
+        }
+      }
+    }
+  }
+`;
 
 export default Substitution;

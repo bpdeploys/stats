@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Item from '../Item';
+import styled from 'styled-components';
 
 /**
  * Represents a list of available players to add to the lineup
@@ -32,14 +33,14 @@ const AvailablePlayers = ({
   };
 
   return (
-    <div className="AvailablePlayers">
-      <div className="TeamDetails">
-        <span className="TeamName">{name} Available Players</span>
-        <span className="count">
+    <AvailablePlayersContainer>
+      <TeamDetails>
+        <TeamName>{name} Available Players</TeamName>
+        <Count>
           {selectedPlayers.length}/{limit}
-        </span>
-      </div>
-      <div className="content-wrapper">
+        </Count>
+      </TeamDetails>
+      <ContentWrapper>
         {Array.isArray(availablePlayers) &&
           availablePlayers.length > 0 &&
           availablePlayers.map((p) => {
@@ -54,40 +55,39 @@ const AvailablePlayers = ({
 
             return <Item {...propsToItem} />;
           })}
-      </div>
-      <style jsx>
-        {`
-          .AvailablePlayers {
-            margin-top: 10px;
-
-            .content-wrapper {
-              padding: 0 10px 0;
-            }
-
-            .TeamDetails {
-              width: calc(100% - 20px);
-              margin: 0 10px;
-              border-bottom: 1px solid #e5e5e5;
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              padding: 0 15px 10px 15px;
-
-              .TeamName {
-                display: block;
-                font-family: Quicksand;
-                font-style: normal;
-                font-weight: normal;
-                font-size: 18px;
-                line-height: 35px;
-                color: #000;
-              }
-            }
-          }
-        `}
-      </style>
-    </div>
+      </ContentWrapper>
+    </AvailablePlayersContainer>
   );
 };
+
+const AvailablePlayersContainer = styled.div`
+  margin-top: 10px;
+`;
+
+const ContentWrapper = styled.div`
+  padding: 0 10px 0;
+`;
+
+const TeamDetails = styled.div`
+  width: calc(100% - 20px);
+  margin: 0 10px;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 15px 10px 15px;
+`;
+
+const TeamName = styled.span`
+  display: block;
+  font-family: Quicksand;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 35px;
+  color: #000;
+`;
+
+const Count = styled.span``;
 
 export default AvailablePlayers;

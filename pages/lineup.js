@@ -11,6 +11,7 @@ import ScreenLoading from '../components/ScreenLoading';
 import TeamList from '../components/Lineup/TeamList';
 import ConfirmModal from '../components/Lineup/ConfirmModal';
 import { useLoading } from '../utils/hooks/useLoading';
+import styled from 'styled-components';
 
 const LineUp = () => {
   const {
@@ -170,8 +171,29 @@ const LineUp = () => {
   );
 };
 
+const StyledSubmitButton = styled.button`
+  text-align: center;
+  background-color: black;
+  color: white;
+  font-size: 20px;
+  font-weight: 200;
+  display: block;
+  width: 85%;
+  margin: 30px auto;
+  border-radius: 4px;
+  text-decoration: none;
+  padding: 6px 0 1px;
+
+  > svg {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    top: -2px;
+  }
+`;
+
 const SubmitButton = ({ loading, handleSubmit }) => (
-  <button
+  <StyledSubmitButton
     className="button"
     onClick={handleSubmit}
     type="button"
@@ -187,31 +209,7 @@ const SubmitButton = ({ loading, handleSubmit }) => (
       <path fill="none" d="M0 0h24v24H0z" />
       <path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z" />
     </svg>
-    <style jsx>
-      {`
-        .button {
-          text-align: center;
-          background-color: black;
-          color: white;
-          font-size: 20px;
-          font-weight: 200;
-          display: block;
-          width: 85%;
-          margin: 30px auto;
-          border-radius: 4px;
-          text-decoration: none;
-          padding: 6px 0 1px;
-
-          > svg {
-            width: 40px;
-            height: 40px;
-            position: relative;
-            top: -2px;
-          }
-        }
-      `}
-    </style>
-  </button>
+  </StyledSubmitButton>
 );
 
 export default LineUp;

@@ -7,6 +7,7 @@ import { fetchEndMatch } from '../../services';
 import Toggle from '../Toggle';
 import BeginSecondHalfModal from './BeginSecondHalf';
 import { useRouter } from 'next/router';
+import styled from 'styled-components';
 
 const formatMatchTimeStart = (date) => {
   return `${date.getFullYear().toString().padStart(4, '0')}-${(
@@ -71,15 +72,15 @@ const MatchSettings = ({ onClose, match, getStartMatchDate }) => {
     setOpenPOM(true);
   };
   return (
-    <div className="MatchSettings">
+    <StyledMatchSettings>
       <Header name="Match Paused" onClick={onClose} />
       <div className="content-wrapper">
-        <div className="item-setting">
+        <div className="item-setting" onClick={onClose}>
           <div>
             <span>Resume Match</span>
           </div>
           <div className="back-icon">
-            <button type="button" onClick={onClose}>
+            <button type="button">
               <svg
                 width="34"
                 height="27"
@@ -205,93 +206,91 @@ const MatchSettings = ({ onClose, match, getStartMatchDate }) => {
           isOpen={openModal}
         />
       )}
-
-      <style jsx>{`
-        .modalView {
-          position: fixed;
-          top: 0;
-          width: 100%;
-          left: 0;
-          min-height: 100vh;
-          background: white;
-          transform: translateX(-100%);
-          transition: all 0.2s ease-out;
-          opacity: 0;
-
-          &.--right {
-            transition: all 0.4s ease-out;
-            transform: translateX(200%);
-          }
-
-          &.--show {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-
-        .MatchSettings {
-          min-height: 100vh;
-
-          .content-wrapper {
-            padding: 10px;
-          }
-
-          .item-setting {
-            background-color: #1447c7;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            align-items: center;
-            min-height: 62px;
-            border: none;
-
-            &.--with-margin-top {
-              margin-top: 10px;
-            }
-
-            &.--danger {
-              background-color: #e5e5e5;
-            }
-
-            > div {
-              &:nth-child(1) {
-                width: 70%;
-                display: flex;
-                align-items: center;
-
-                > span {
-                  font-style: normal;
-                  font-weight: normal;
-                  font-size: 25px;
-                  color: white;
-                }
-              }
-
-              &:nth-child(2) {
-                button {
-                  border: none;
-                  background: transparent;
-                  height: 100%;
-                }
-
-                svg {
-                  height: 40px;
-                  width: 40px;
-                }
-              }
-
-              &.switch-setting {
-                display: flex;
-                align-items: center;
-              }
-            }
-          }
-        }
-      `}</style>
-    </div>
+    </StyledMatchSettings>
   );
 };
+
+const StyledMatchSettings = styled.div`
+  min-height: 100vh;
+
+  .content-wrapper {
+    padding: 10px;
+  }
+
+  .item-setting {
+    background-color: #1447c7;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    min-height: 62px;
+    border: none;
+
+    &.--with-margin-top {
+      margin-top: 10px;
+    }
+
+    &.--danger {
+      background-color: #e5e5e5;
+    }
+
+    > div {
+      &:nth-child(1) {
+        width: 70%;
+        display: flex;
+        align-items: center;
+
+        > span {
+          font-style: normal;
+          font-weight: normal;
+          font-size: 25px;
+          color: white;
+        }
+      }
+
+      &:nth-child(2) {
+        button {
+          border: none;
+          background: transparent;
+          height: 100%;
+        }
+
+        svg {
+          height: 40px;
+          width: 40px;
+        }
+      }
+
+      &.switch-setting {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+  .modalView {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    left: 0;
+    min-height: 100vh;
+    background: white;
+    transform: translateX(-100%);
+    transition: all 0.2s ease-out;
+    opacity: 0;
+
+    &.--right {
+      transition: all 0.4s ease-out;
+      transform: translateX(200%);
+    }
+
+    &.--show {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+`;
 
 MatchSettings.propTypes = {
   onClose: PropTypes.func.isRequired,

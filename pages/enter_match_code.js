@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import Router from 'next/router';
 import Header from '../components/Header';
 import { MATCH_ACTIVE_KEY, Context } from '../provider';
 import { fetchMatchCode } from '../services';
+import styled from 'styled-components';
 
 /**
  * EnterMatchCode component
@@ -23,7 +24,8 @@ const EnterMatchCode = ({ query }) => {
 
   const {
     [MATCH_ACTIVE_KEY]: { code, team_1_name, team_2_name },
-  } = React.useContext(Context);
+    showToast,
+  } = useContext(Context);
 
   useEffect(() => {
     if (!query.noCode && code) {
@@ -57,12 +59,16 @@ const EnterMatchCode = ({ query }) => {
       if (isCorrectCode(success)) {
         // Perform desired actions here
         return Router.push('/lineup');
+      } else {
+        setIncorrect(true);
+        showToast('Please enter a valid match code');
       }
-      setIncorrect(true);
     } catch (error) {
       setIncorrect(true);
     }
   };
+
+  console.log(incorrect);
 
   const isValid = inputs.every((input) => input);
   const aMatchIsActive = team_1_name && team_2_name && !query.noCode;
@@ -81,8 +87,8 @@ const EnterMatchCode = ({ query }) => {
       )}
 
       <div className={`content-wrapper ${!aMatchIsActive ? '--full' : ''}`}>
-        <div>
-          <div className="code-inputs">
+        <ContentWrapper>
+          <InputsWrapper>
             {inputs.map((value, index) => (
               <input
                 key={index}
@@ -93,21 +99,76 @@ const EnterMatchCode = ({ query }) => {
                 onChange={(event) => handleChange(index, event.target.value)}
               />
             ))}
-          </div>
+          </InputsWrapper>
           <div>
-            {isValid && (
-              <button type="button" onClick={handleSubmit}>
-                {incorrect ? 'CODE INVALID' : 'GO TO LINE-UPS'}
-              </button>
-            )}
-
-            {!isValid && <span className="write-code">Write the Code</span>}
+            <SubmitButton
+              handleSubmit={handleSubmit}
+              isValid={isValid}
+              incorrect={incorrect}
+            />
           </div>
-        </div>
+        </ContentWrapper>
       </div>
     </div>
   );
 };
+
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  min-height: calc(100vh - 45px);
+`;
+
+const InputsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: 15px;
+
+  input {
+    height: 60px;
+    width: 55px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+`;
+
+const StyledSubmitButton = styled.button`
+  text-align: center;
+  background-color: black;
+  color: white;
+  font-size: 20px;
+  font-weight: 200;
+  display: block;
+  width: 300px;
+  height: 40px;
+  margin: 30px auto;
+  border-radius: 4px;
+  text-decoration: none;
+  padding: 6px 0 1px;
+  transition: all 0.3s ease-out;
+
+  &:disabled {
+    background-color: lightgray;
+    color: black;
+  }
+`;
+
+const SubmitButton = ({ handleSubmit, isValid, incorrect }) => (
+  <StyledSubmitButton
+    className="button"
+    onClick={handleSubmit}
+    type="button"
+    disabled={!isValid}
+  >
+    {!isValid ? 'Enter code' : 'Go to Lineups'}
+  </StyledSubmitButton>
+);
 
 EnterMatchCode.getInitialProps = ({ query }) => {
   return { query };

@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import Header from '../Header';
 import PlayerPolygons from '../PlayerPolygons';
 import { Context } from '../../provider';
@@ -7,7 +6,18 @@ import getName from '../../getName';
 import Circle from '../Circle';
 import { useLoading } from '../../utils/hooks/useLoading';
 import SmallLoading from '../SmallLoading';
+import styled from 'styled-components';
 
+/**
+ * Foul component
+ * @param {function} onClose - Function to handle close action
+ * @param {function} fetchFunction - Function to fetch data
+ * @param {Object} match - Match data
+ * @param {number} idPlayerToFoul - ID of the player to foul
+ * @param {function} refreshMatch - Function to refresh match data
+ * @param {string} gridFocus - Grid focus information
+ * @returns {JSX.Element}
+ */
 const Foul = ({
   onClose,
   fetchFunction,
@@ -27,13 +37,10 @@ const Foul = ({
   const [team, setTeam] = useState(null);
   const [playerFouled, setPlayerFouled] = useState(null);
   const [outCome, setOutCome] = useState(OUTCOME_TYPE_FREE_KICK);
-  const [caution, setCation] = useState(CAUTION_TYPE_NONE);
+  const [caution, setCaution] = useState(CAUTION_TYPE_NONE);
   const context = useContext(Context);
-  // For localStorage
   const KEY_TIMER_STORAGE = `MATCH_TIMER_${match.id}`;
   const { isLoading, startLoading, stopLoading } = useLoading();
-
-  // window.fetch("http://localhost:8000/api/fouls/6").then(res => res.json());
 
   const onSave = async () => {
     startLoading();
@@ -41,7 +48,7 @@ const Foul = ({
       const parameters = {
         fouled: playerFouled,
         fouler: playerFoulId,
-        half: 'First Half', // TODO: Hacerlo dynamic
+        half: 'First Half', // TODO: Make it dynamic
         time: window.localStorage.getItem(KEY_TIMER_STORAGE),
         team: match[`team${String(team)}`].id,
         team_op: match[`team${String(team === 1 ? 2 : 1)}`].id,
@@ -58,30 +65,23 @@ const Foul = ({
         context.showToast('Foul recorded');
         refreshMatch();
         onClose();
-        setOutCome(OUTCOME_TYPE_FREE_KICK); // Cuidado, esto es importante
-        setCation(CAUTION_TYPE_NONE); // Cuidado, esto es importante
-        setPlayerFouled(null); // Cuidado, esto es importante
+        setOutCome(OUTCOME_TYPE_FREE_KICK);
+        setCaution(CAUTION_TYPE_NONE);
+        setPlayerFouled(null);
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
       context.showToast('Something went wrong, try again');
     } finally {
       stopLoading();
     }
   };
 
-  // Function to handle the change of fouler in the dropdown
   const handleFoulerChange = (e) => {
     setPlayerFoulId(parseInt(e.target.value));
   };
 
   useEffect(() => {
-    // eslint-disable-next-line no-console
-
-    // Find the player in match.playingteam1 || playingteam2
-    // To render data
     if (idPlayerToFoul) {
-      // Buscar player setearlo y setear su team si es 1 o 2
       let player = match.playingteam1.find((p) => p.id === idPlayerToFoul);
 
       if (player) {
@@ -92,9 +92,6 @@ const Foul = ({
         setPlayerFoulId(player.id);
         setTeam(2);
       }
-
-      // eslint-disable-next-line no-console
-      console.log(player);
     }
   }, [idPlayerToFoul]);
 
@@ -116,7 +113,7 @@ const Foul = ({
   }
 
   return (
-    <div>
+    <FoulContainer>
       <Header
         name="Foul"
         buttonRight={
@@ -128,9 +125,9 @@ const Foul = ({
         }
         onClick={() => {
           onClose();
-          setOutCome(OUTCOME_TYPE_FREE_KICK); // Cuidado, esto es importante
-          setCation(CAUTION_TYPE_NONE); // Cuidado, esto es importante
-          setPlayerFouled(null); // Cuidado, esto es importante
+          setOutCome(OUTCOME_TYPE_FREE_KICK);
+          setCaution(CAUTION_TYPE_NONE);
+          setPlayerFouled(null);
         }}
       />
       <div className="wrapper-content">
@@ -172,7 +169,7 @@ const Foul = ({
                 bgActive="#ffc107"
                 right
                 text="0"
-                onClick={() => setCation(CAUTION_TYPE_YELLOW_CARD)}
+                onClick={() => setCaution(CAUTION_TYPE_YELLOW_CARD)}
               />
             </div>
             <div>
@@ -180,7 +177,7 @@ const Foul = ({
                 active={caution === CAUTION_TYPE_RED_CARD}
                 bgActive="#f44336"
                 text="0"
-                onClick={() => setCation(CAUTION_TYPE_RED_CARD)}
+                onClick={() => setCaution(CAUTION_TYPE_RED_CARD)}
               />
             </div>
           </div>
@@ -206,155 +203,141 @@ const Foul = ({
           </button>
         )}
       </div>
-      <style jsx>{`
-        .center-loading {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 100%;
-        }
-
-        .button-bottom {
-          flex: 1;
-          display: flex;
-          align-items: flex-end;
-        }
-
-        .asis-by-text {
-          font-size: 18px;
-          line-height: 22px;
-          text-align: center;
-          color: #616060;
-          margin-bottom: 30px;
-        }
-
-        .wrapper-content {
-          height: ${window.innerHeight - 40}px;
-          overflow-y: scroll;
-          display: flex;
-          flex-direction: column;
-        }
-
-        .button {
-          text-align: center;
-          background-color: #1362d9;
-          color: white;
-          font-size: 20px;
-          font-weight: 200;
-          display: block;
-          width: 85%;
-          margin: 30px auto;
-          border-radius: 4px;
-          text-decoration: none;
-          padding: 6px 0;
-        }
-
-        .player-dropdown {
-          margin-top: 1rem;
-          margin-bottom: 2rem;
-          padding: 0.5rem 1rem;
-          border: 1px solid rgba(191, 190, 190, 1);
-          border-radius: 5px;
-          font-size: 22px;
-        }
-
-        .box {
-          background: #ffffff;
-          border: 1px solid #000;
-          box-sizing: border-box;
-          border-radius: 8px;
-          margin: 10px;
-
-          > div {
-            &:nth-child(1) {
-              text-align: center;
-
-              > p {
-                font-weight: normal;
-                font-size: 18px;
-                line-height: 22px;
-                color: #616060;
-                margin-bottom: 15px;
-                margin-top: 15px;
-                position: relative;
-
-                > span {
-                  float: right;
-                  font-weight: 400;
-                  font-size: 32px;
-                  position: absolute;
-                  right: 20px;
-                }
-              }
-            }
-
-            &:nth-child(2) {
-              display: flex;
-              border-top: 1px solid #e5e5e5;
-              padding: 10px 0;
-              justify-content: center;
-
-              > div {
-                button {
-                  height: 40px;
-                  width: 40px;
-                  border-radius: 50%;
-                  background: none;
-                }
-
-                &:nth-child(1) {
-                  > button {
-                    margin-right: 10px;
-                    border: 1px solid #21ac0b;
-                    color: #21ac0b;
-                  }
-                }
-
-                &:nth-child(2) {
-                  > button {
-                    margin-left: 10px;
-                    border: 1px solid #7705ad;
-                    color: #7705ad;
-                  }
-                }
-
-                &:nth-child(3) {
-                  > button {
-                    margin-left: 20px;
-                    border: 1px solid #f6fb15;
-                    color: #f6fb15;
-                  }
-                }
-
-                &:nth-child(4) {
-                  > button {
-                    margin-left: 20px;
-                    border: 1px solid #ff0606;
-                    color: #ff0606;
-                  }
-                }
-              }
-            }
-          }
-        }
-      `}</style>
-    </div>
+    </FoulContainer>
   );
 };
 
-Foul.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  fetchFunction: PropTypes.func.isRequired,
-  match: PropTypes.shape({
-    playingteam1: PropTypes.any,
-    playingteam2: PropTypes.any,
-    substeam1: PropTypes.any,
-    substeam2: PropTypes.any,
-    id: PropTypes.number.isRequired,
-  }).isRequired,
-  idPlayerToFoul: PropTypes.number.isRequired,
-  refreshMatch: PropTypes.func.isRequired,
-  gridFocus: PropTypes.string.isRequired,
-};
+const FoulContainer = styled.div`
+  .center-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .button-bottom {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .asis-by-text {
+    font-size: 18px;
+    line-height: 22px;
+    text-align: center;
+    color: #616060;
+    margin-bottom: 30px;
+  }
+
+  .wrapper-content {
+    height: calc(100% - 40px);
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .button {
+    text-align: center;
+    background-color: #1362d9;
+    color: white;
+    font-size: 20px;
+    font-weight: 200;
+    display: block;
+    width: 85%;
+    margin: 30px auto;
+    border-radius: 4px;
+    text-decoration: none;
+    padding: 6px 0;
+  }
+
+  .player-dropdown {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(191, 190, 190, 1);
+    border-radius: 5px;
+    font-size: 22px;
+  }
+
+  .box {
+    background: #ffffff;
+    border: 1px solid #000;
+    box-sizing: border-box;
+    border-radius: 8px;
+    margin: 10px;
+
+    > div {
+      &:nth-child(1) {
+        text-align: center;
+
+        > p {
+          font-weight: normal;
+          font-size: 18px;
+          line-height: 22px;
+          color: #616060;
+          margin-bottom: 15px;
+          margin-top: 15px;
+          position: relative;
+
+          > span {
+            float: right;
+            font-weight: 400;
+            font-size: 32px;
+            position: absolute;
+            right: 20px;
+          }
+        }
+      }
+
+      &:nth-child(2) {
+        display: flex;
+        border-top: 1px solid #e5e5e5;
+        padding: 10px 0;
+        justify-content: center;
+
+        > div {
+          button {
+            height: 40px;
+            width: 40px;
+            border-radius: 50%;
+            background: none;
+          }
+
+          &:nth-child(1) {
+            > button {
+              margin-right: 10px;
+              border: 1px solid #21ac0b;
+              color: #21ac0b;
+            }
+          }
+
+          &:nth-child(2) {
+            > button {
+              margin-left: 10px;
+              border: 1px solid #7705ad;
+              color: #7705ad;
+            }
+          }
+
+          &:nth-child(3) {
+            > button {
+              margin-left: 20px;
+              border: 1px solid #f6fb15;
+              color: #f6fb15;
+            }
+          }
+
+          &:nth-child(4) {
+            > button {
+              margin-left: 20px;
+              border: 1px solid #ff0606;
+              color: #ff0606;
+            }
+          }
+        }
+      }
+    }
+  }
+`;
 
 export default Foul;

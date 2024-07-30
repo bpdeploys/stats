@@ -449,6 +449,7 @@ const Match = () => {
           &.--show {
             transform: translateX(0);
             opacity: 1;
+            overflow: auto;
           }
         }
 

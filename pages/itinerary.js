@@ -12,6 +12,8 @@ import SmallLoading from '../components/SmallLoading';
 import { useAuth } from '../context/useAuth';
 import ItineraryItem from '../components/Itinerary/ItineraryItem';
 import StartMatchConfirmationModal from '../components/Itinerary/StartMatchConfirmation';
+import styled, { keyframes } from 'styled-components';
+import { getTodayDateString } from '../utils/functions';
 
 const setActiveMatchAndRedirect = async (
   setActiveMatchFunction,
@@ -40,6 +42,67 @@ const setActiveMatchAndRedirect = async (
   }
 };
 
+const LoadingWrapper = styled.div`
+  display: flex;
+  height: calc(100vh - 150px);
+  justify-content: center;
+  align-items: center;
+`;
+
+const WinJSUpdateBadge = keyframes`
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+`;
+
+const ItemMatch = styled.div`
+  animation: ${WinJSUpdateBadge} 0.4s forwards;
+`;
+
+const ContentWrapper = styled.div`
+  padding: 10px;
+  min-height: calc(100vh - 45px);
+  background: black;
+
+  h1 {
+    text-align: center;
+    font-weight: 400;
+    font-size: 24px;
+    display: block;
+    margin: 10px 0;
+    color: white;
+  }
+
+  .hr {
+    border-top: 1px solid white;
+    max-width: 100%;
+    margin: 0 auto;
+    margin-bottom: 10px;
+  }
+`;
+
+const ButtonHeader = styled.button`
+  display: flex;
+  justify-content: center;
+  background: black;
+  align-items: center;
+  font-size: 12px;
+  width: 63px;
+  height: 28px;
+  border-radius: 5px;
+  border: 2px solid white;
+
+  a {
+    text-decoration: none;
+    color: white;
+  }
+`;
+
 const Itinerary = () => {
   const { userInfo } = useAuth();
   const [matches, setMatches] = useState([]);
@@ -51,19 +114,21 @@ const Itinerary = () => {
   useEffect(() => {
     const fetchData = async () => {
       const fetchedMatches = await fetchMatchsForOfficiate(userInfo.id);
-      setMatches(fetchedMatches);
+      const todayDate = getTodayDateString();
+      const todaysMatches = fetchedMatches.filter(
+        (match) => match.date === todayDate
+      );
+      setMatches(todaysMatches);
       setLoading(false);
     };
     fetchData();
   }, [userInfo.id]);
 
-  // Function to handle starting match and open modal
   const handleStartMatch = (match) => {
     setSelectedMatch(match);
     setIsConfirmationModalOpen(true);
   };
 
-  // Function to confirm starting match
   const confirmStartMatch = () => {
     setMatchReferee(userInfo?.id, selectedMatch.id);
     setActiveMatchAndRedirect(
@@ -76,7 +141,6 @@ const Itinerary = () => {
     setIsConfirmationModalOpen(false);
   };
 
-  // Function to close confirmation modal
   const closeModal = () => {
     setIsConfirmationModalOpen(false);
   };
@@ -86,22 +150,22 @@ const Itinerary = () => {
       <Header
         onClick={() => Router.replace('/real_profile')}
         buttonRight={
-          <button type="button" className="button-header">
+          <ButtonHeader type="button">
             <Link
               href={{ pathname: '/enter_match_code', query: { noCode: true } }}
             >
               CODE
             </Link>
-          </button>
+          </ButtonHeader>
         }
       />
-      <div className="content-wrapper">
+      <ContentWrapper>
         {loading ? (
           <LoadingSection />
         ) : (
           <MatchesSection matches={matches} onMatchSelect={handleStartMatch} />
         )}
-      </div>
+      </ContentWrapper>
       {isConfirmationModalOpen && (
         <StartMatchConfirmationModal
           startMatch={confirmStartMatch}
@@ -109,67 +173,6 @@ const Itinerary = () => {
           match={selectedMatch}
         />
       )}
-      <style jsx>{`
-        .loading-wrapper {
-          display: flex;
-          height: calc(100vh - 150px);
-          justify-content: center;
-          align-items: center;
-        }
-
-        @keyframes WinJS-updateBadge {
-          from {
-            transform: translateY(24px);
-            opacity: 0;
-          }
-          to {
-            transform: none;
-            opacity: 1;
-          }
-        }
-
-        .item-match {
-          animation: WinJS-updateBadge 0.4s forwards;
-        }
-
-        .content-wrapper {
-          padding: 10px;
-          min-height: 100vh;
-          background: black;
-
-          h1 {
-            text-align: center;
-            font-weight: 400;
-            font-size: 24px;
-            display: block;
-            margin: 10px 0;
-            color: white;
-          }
-
-          .hr {
-            border-top: 1px solid white;
-            max-width: 100%;
-            margin: 0 auto;
-            margin-bottom: 10px;
-          }
-        }
-
-        .button-header {
-          display: flex;
-          justify-content: center;
-          background: black;
-          align-items: center;
-          font-size: 12px;
-          width: 63px;
-          height: 28px;
-          border-radius: 5px;
-          border: 2px solid white;
-          a {
-            text-decoration: none;
-            color: white;
-          }
-        }
-      `}</style>
     </div>
   );
 };
@@ -178,9 +181,9 @@ const LoadingSection = () => (
   <>
     <h1>Getting matches...</h1>
     <div className="hr" />
-    <div className="loading-wrapper">
+    <LoadingWrapper>
       <SmallLoading />
-    </div>
+    </LoadingWrapper>
   </>
 );
 
@@ -189,7 +192,7 @@ const MatchesSection = ({ matches, onMatchSelect }) => (
     <h1>{`${matches.length} ${matches.length === 1 ? 'Match' : 'Matches'}`}</h1>
     <div className="hr" />
     {matches.map((m) => (
-      <div className="item-match" key={m.id}>
+      <ItemMatch key={m.id}>
         <ItineraryItem
           id={m.id}
           team_1_name={m.team1.team_name}
@@ -198,9 +201,9 @@ const MatchesSection = ({ matches, onMatchSelect }) => (
           pitch_format={m.pitch.format_pitch}
           pitch_name={m.pitch.name}
           code={m.match_code}
-          setMatchActive={() => onMatchSelect(m)} // Pass the selected match to the handler
+          setMatchActive={() => onMatchSelect(m)}
         />
-      </div>
+      </ItemMatch>
     ))}
   </>
 );

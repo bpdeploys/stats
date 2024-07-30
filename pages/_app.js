@@ -12,7 +12,7 @@ const AuthContent = ({ db, Component, pageProps }) => {
   const { userInfo, isLoading, refreshAuth } = useAuth();
 
   if (!db || isLoading) {
-    return <ScreenLoading />;
+    return;
   }
 
   if (!userInfo) {

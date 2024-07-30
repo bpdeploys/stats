@@ -1,5 +1,22 @@
 import React from 'react';
+import styled from 'styled-components';
 
+/**
+ * @typedef {Object} ItineraryItemProps
+ * @property {string} team_1_name
+ * @property {string} team_2_name
+ * @property {string} ko
+ * @property {string} pitch_format
+ * @property {string} pitch_name
+ * @property {string} score
+ * @property {string} code
+ * @property {function} setMatchActive
+ * @property {boolean} live
+ */
+
+/**
+ * @param {ItineraryItemProps} props
+ */
 const ItineraryItem = ({
   team_1_name,
   team_2_name,
@@ -12,8 +29,8 @@ const ItineraryItem = ({
   live,
 }) => {
   return (
-    <div
-      className="match-item --margin-top --bg"
+    <StyledMatchItem
+      className="--margin-top --bg"
       tabIndex={0}
       onKeyDown={setMatchActive}
       onClick={setMatchActive}
@@ -45,84 +62,83 @@ const ItineraryItem = ({
           </p>
         </div>
       </div>
-      <style jsx>{`
-        .match-item {
-          position: relative;
-          background: #c4c4c4;
-          border-radius: 4px;
-          display: flex;
-          height: 120px;
-
-          &.--bg {
-            background: #fff;
-            border: none;
-          }
-
-          &.--margin-top {
-            margin-top: 10px;
-          }
-
-          .score {
-            position: absolute;
-            right: 5px;
-            font-size: 14px;
-          }
-
-          .icon {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            img {
-              width: 20px;
-            }
-          }
-
-          .teams {
-            width: 45%;
-          }
-
-          .details {
-            width: 55%;
-          }
-
-          > div {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-
-            .table {
-              text-align: left;
-
-              > p {
-                font-size: 14px;
-                line-height: 18px;
-                color: #000;
-
-                &:not(:first-child) {
-                  margin-top: 4px;
-                }
-
-                > span {
-                  color: black;
-                  font-weight: 400;
-                  margin-left: 10px;
-                }
-              }
-            }
-
-            p {
-              font-size: 14px;
-
-              &.match-complete {
-                font-weight: 600;
-              }
-            }
-          }
-        }
-      `}</style>
-    </div>
+    </StyledMatchItem>
   );
 };
+
+const StyledMatchItem = styled.div`
+  position: relative;
+  background: #c4c4c4;
+  border-radius: 4px;
+  display: flex;
+  height: 120px;
+
+  &.--bg {
+    background: #fff;
+    border: none;
+  }
+
+  &.--margin-top {
+    margin-top: 10px;
+  }
+
+  .score {
+    position: absolute;
+    right: 5px;
+    font-size: 14px;
+  }
+
+  .icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    img {
+      width: 20px;
+    }
+  }
+
+  .teams {
+    width: 45%;
+  }
+
+  .details {
+    width: 55%;
+  }
+
+  > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    .table {
+      text-align: left;
+
+      > p {
+        font-size: 14px;
+        line-height: 18px;
+        color: #000;
+
+        &:not(:first-child) {
+          margin-top: 4px;
+        }
+
+        > span {
+          color: black;
+          font-weight: 400;
+          margin-left: 10px;
+        }
+      }
+    }
+
+    p {
+      font-size: 14px;
+
+      &.match-complete {
+        font-weight: 600;
+      }
+    }
+  }
+`;
 
 export default ItineraryItem;

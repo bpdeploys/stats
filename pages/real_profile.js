@@ -1,36 +1,47 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import { matchsOfficiatedCounted, fetchMatchsForOfficiate } from '../services';
 import userInfoPropTypes from '../proptypes/userInfo';
 import ScreenLoading from '../components/ScreenLoading';
 import { useAuth } from '../context/useAuth';
+import styled from 'styled-components';
+import { getTodayDateString } from '../utils/functions';
+import { useLoading } from '../utils/hooks/useLoading';
 
 const RealProfile = () => {
   const { userInfo } = useAuth();
-  const [matchesOfficiated, setMatchesOfficiated] = React.useState(0);
-  const [matchesForOfficiate, setMatchesForOfficiate] = React.useState(0);
+  const [matchesOfficiated, setMatchesOfficiated] = useState(0);
+  const [matchesForOfficiate, setMatchesForOfficiate] = useState(0);
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
   useEffect(() => {
+    startLoading();
     if (userInfo && userInfo.id) {
       const fetchData = async () => {
         const matchesCount = await fetchMatchsForOfficiate(userInfo.id);
 
+        const todayDate = getTodayDateString();
+        const todaysMatches = matchesCount.filter(
+          (match) => match.date === todayDate
+        );
+
         setMatchesOfficiated(await matchsOfficiatedCounted(userInfo.id));
-        setMatchesForOfficiate(matchesCount.length);
+        setMatchesForOfficiate(todaysMatches.length);
+
+        stopLoading();
       };
 
       fetchData();
     }
   }, [userInfo]);
 
-  // Check if userInfo and userInfo.user are defined
-  if (!userInfo || !userInfo.user) {
+  if (!userInfo || isLoading) {
     return <ScreenLoading />;
   }
 
   return (
-    <div className="RealProfile">
+    <StyledRealProfile>
       <div className="header">
         <Link href="/settings">
           <svg
@@ -68,132 +79,135 @@ const RealProfile = () => {
         </div>
       </div>
       <div className="bottom-component">
-        <Link href="/itinerary">{matchesForOfficiate} matches</Link>
+        <Link href="/itinerary">
+          {matchesForOfficiate}{' '}
+          {matchesForOfficiate === 1 ? 'match' : 'matches'}
+        </Link>
       </div>
-      <style jsx>{`
-        .RealProfile {
-          svg {
-            position: absolute;
-            right: 8px;
-            top: 8px;
-            height: 25px;
-            width: 25px;
-          }
-          height: 100vh;
-          background-position: center center;
-          background-size: cover;
-          background: black;
-
-          .bottom-component {
-            margin: 50px 0;
-            text-align: center;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            a {
-              border-radius: 25px;
-              border: none;
-              background-color: #0d2461;
-              font-style: normal;
-              font-weight: bold;
-              font-size: 20px;
-              font-family: Quicksand;
-              line-height: 24px;
-              text-align: center;
-              color: #ffffff;
-              padding: 12px 17px 12px 17px;
-              width: 80%;
-              text-decoration: none;
-            }
-          }
-
-          .center-component {
-            text-align: center;
-            margin-top: 5vh;
-
-            .marketplace {
-              a {
-                border-radius: 25px;
-                border: 1px solid white;
-                font-style: normal;
-                font-weight: normal;
-                font-size: 12px;
-                font-family: Quicksand;
-                line-height: 24px;
-                text-align: center;
-                color: #ffffff;
-                padding: 3px 8px;
-                width: 80%;
-                text-decoration: none;
-              }
-            }
-
-            .block {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              span,
-              p {
-                color: white;
-              }
-              div {
-                display: flex;
-                flex-direction: column;
-                align-items: baseline;
-                margin-left: 0.5rem;
-              }
-              margin-top: 50px;
-              &:first-child {
-                font-size: 60px;
-              }
-              p {
-                font-size: 14px;
-              }
-            }
-          }
-
-          .top-component {
-            text-align: center;
-            padding-top: 30px;
-            width: 100vw;
-
-            img {
-              width: 100px;
-              margin-bottom: 10px;
-            }
-
-            h1 {
-              font-size: 22px;
-            }
-
-            p {
-              font-size: 11px;
-            }
-
-            h1,
-            p {
-              color: white;
-              font-weight: 200;
-            }
-          }
-        }
-
-        .top-component::after {
-          content: '';
-          display: block;
-          color: white;
-          height: 245px;
-          width: 100%;
-          background-image: url(/static/profile-divider.svg);
-          background-repeat: no-repeat;
-          background-size: auto;
-        }
-      `}</style>
-    </div>
+    </StyledRealProfile>
   );
 };
+
+const StyledRealProfile = styled.div`
+  svg {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    height: 25px;
+    width: 25px;
+  }
+
+  height: 100vh;
+  background-position: center center;
+  background-size: cover;
+  background: black;
+
+  .bottom-component {
+    margin: 50px 0;
+    text-align: center;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    a {
+      border-radius: 25px;
+      border: none;
+      background-color: #0d2461;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 20px;
+      font-family: Quicksand;
+      line-height: 24px;
+      text-align: center;
+      color: #ffffff;
+      padding: 12px 17px 12px 17px;
+      width: 80%;
+      text-decoration: none;
+    }
+  }
+
+  .center-component {
+    text-align: center;
+    margin-top: 5vh;
+
+    .marketplace {
+      a {
+        border-radius: 25px;
+        border: 1px solid white;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 12px;
+        font-family: Quicksand;
+        line-height: 24px;
+        text-align: center;
+        color: #ffffff;
+        padding: 3px 8px;
+        width: 80%;
+        text-decoration: none;
+      }
+    }
+
+    .block {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      span,
+      p {
+        color: white;
+      }
+      div {
+        display: flex;
+        flex-direction: column;
+        align-items: baseline;
+        margin-left: 0.5rem;
+      }
+      margin-top: 50px;
+      &:first-child {
+        font-size: 60px;
+      }
+      p {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .top-component {
+    text-align: center;
+    padding-top: 30px;
+    width: 100vw;
+
+    img {
+      width: 100px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 22px;
+    }
+
+    p {
+      font-size: 11px;
+    }
+
+    h1,
+    p {
+      color: white;
+      font-weight: 200;
+    }
+  }
+
+  .top-component::after {
+    content: '';
+    display: block;
+    color: white;
+    height: 245px;
+    width: 100%;
+    background-image: url(/static/profile-divider.svg);
+    background-repeat: no-repeat;
+    background-size: auto;
+  }
+`;
 
 RealProfile.propTypes = {
   userInfo: PropTypes.shape(userInfoPropTypes).isRequired,

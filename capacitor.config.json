@@ -1,6 +1,6 @@
 {
-  "appId": "com.ballerprofile.app",
-  "appName": "Baller",
+  "appId": "com.ballerstats.app",
+  "appName": "StatsApp",
   "webDir": "out",
   "server": {
     "androidScheme": "https"

@@ -79,3 +79,12 @@ export function pickTextColorBasedOnBgColorAdvanced(
   var L = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
   return L > 0.179 ? darkColor : lightColor;
 }
+
+// Get today date in string format
+export function getTodayDateString(separator = '-') {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  return [year, month, day].join(separator);
+}

@@ -7,6 +7,7 @@ import getName from '../../getName';
 import Circle from '../Circle';
 import { useLoading } from '../../utils/hooks/useLoading';
 import SmallLoading from '../SmallLoading';
+import styled from 'styled-components';
 
 const Goal = ({
   onClose,
@@ -106,7 +107,7 @@ const Goal = ({
   }
 
   return (
-    <div>
+    <GoalStyled>
       <Header
         name="Goal"
         buttonRight={
@@ -179,116 +180,117 @@ const Goal = ({
           </div>
         )}
       </div>
-      <style jsx>{`
-        .center-loading {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 100%;
-        }
-
-        .button-bottom {
-          flex: 1;
-          display: flex;
-          align-items: flex-end;
-        }
-
-        .asis-by-text {
-          font-size: 18px;
-          line-height: 22px;
-          text-align: center;
-          color: #616060;
-          margin-bottom: 30px;
-        }
-
-        .wrapper-content {
-          height: ${window.innerHeight - 40}px;
-          overflow-y: scroll;
-          display: flex;
-          flex-direction: column;
-        }
-
-        .player-dropdown {
-          margin-top: 1rem;
-          margin-bottom: 2rem;
-          padding: 0.5rem 1rem;
-          border: 1px solid rgba(191, 190, 190, 1);
-          border-radius: 5px;
-          font-size: 22px;
-        }
-
-        .button {
-          text-align: center;
-          background-color: #1362d9;
-          color: white;
-          font-size: 20px;
-          font-weight: 200;
-          display: block;
-          width: 85%;
-          margin: 30px auto;
-          border-radius: 4px;
-          text-decoration: none;
-          padding: 6px 0;
-        }
-
-        .goal-type {
-          p {
-            margin-bottom: 1rem;
-          }
-        }
-
-        .box {
-          background: #ffffff;
-          border: 1px solid #000;
-          border-radius: 5px;
-          box-sizing: border-box;
-          border-radius: 8px;
-          margin: 10px;
-
-          > div {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            .circles-wrapper {
-              display: flex;
-              justify-content: space-around;
-              width: 60%;
-            }
-            &:nth-child(1) {
-              text-align: center;
-
-              > p {
-                font-weight: normal;
-                font-size: 18px;
-                line-height: 22px;
-                color: #616060;
-                margin-bottom: 30px;
-                margin-top: 15px;
-                position: relative;
-
-                > span {
-                  float: right;
-                  font-weight: 400;
-                  font-size: 32px;
-                  position: absolute;
-                  right: 20px;
-                }
-              }
-            }
-
-            &:nth-child(2) {
-              display: flex;
-              border-top: 1px solid #e5e5e5;
-              padding: 10px 0;
-              justify-content: center;
-            }
-          }
-        }
-      `}</style>
-    </div>
+    </GoalStyled>
   );
 };
+
+const GoalStyled = styled.div`
+  .center-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .button-bottom {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .asis-by-text {
+    font-size: 18px;
+    line-height: 22px;
+    text-align: center;
+    color: #616060;
+    margin-bottom: 30px;
+  }
+
+  .wrapper-content {
+    height: calc(100% - 40px);
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .player-dropdown {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(191, 190, 190, 1);
+    border-radius: 5px;
+    font-size: 22px;
+  }
+
+  .button {
+    text-align: center;
+    background-color: #1362d9;
+    color: white;
+    font-size: 20px;
+    font-weight: 200;
+    display: block;
+    width: 85%;
+    margin: 30px auto;
+    border-radius: 4px;
+    text-decoration: none;
+    padding: 6px 0;
+  }
+
+  .goal-type {
+    p {
+      margin-bottom: 1rem;
+    }
+  }
+
+  .box {
+    background: #ffffff;
+    border: 1px solid #000;
+    border-radius: 5px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    margin: 10px;
+
+    > div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      .circles-wrapper {
+        display: flex;
+        justify-content: space-around;
+        width: 60%;
+      }
+      &:nth-child(1) {
+        text-align: center;
+
+        > p {
+          font-weight: normal;
+          font-size: 18px;
+          line-height: 22px;
+          color: #616060;
+          margin-bottom: 30px;
+          margin-top: 15px;
+          position: relative;
+
+          > span {
+            float: right;
+            font-weight: 400;
+            font-size: 32px;
+            position: absolute;
+            right: 20px;
+          }
+        }
+      }
+
+      &:nth-child(2) {
+        display: flex;
+        border-top: 1px solid #e5e5e5;
+        padding: 10px 0;
+        justify-content: center;
+      }
+    }
+  }
+`;
 
 Goal.propTypes = {
   onClose: PropTypes.func.isRequired,

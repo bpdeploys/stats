@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 
 /**
  * Circle component
@@ -19,25 +20,22 @@ const Circle = ({
   bgNoActive = 'transparent',
   ...rest
 }) => {
+  const CircleButton = styled.button`
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    background-color: ${active ? bgActive : bgNoActive};
+    margin-right: ${right ? '20px' : '0'};
+    border: 1px solid ${active ? '#FFFFFF' : bgActive};
+    color: ${active ? '#FFFFFF' : bgActive};
+    transition: all 0.2s;
+    ${active ? 'transform: scale(1.2, 1.2)' : ''}
+  `;
+
   return (
-    <button type="button" {...rest}>
-      <style jsx>
-        {`
-          button {
-            height: 40px;
-            width: 40px;
-            border-radius: 50%;
-            background-color: ${active ? bgActive : bgNoActive};
-            margin-right: ${right ? '20px' : '0'};
-            border: 1px solid ${active ? '#FFFFFF' : bgActive};
-            color: ${active ? '#FFFFFF' : bgActive};
-            transition: all 0.2s;
-            ${active ? 'transform: scale(1.2, 1.2)' : ''}
-          }
-        `}
-      </style>
+    <CircleButton type="button" {...rest}>
       {text}
-    </button>
+    </CircleButton>
   );
 };
 

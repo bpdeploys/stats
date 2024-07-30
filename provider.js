@@ -25,7 +25,7 @@ const DynamicProvider = ({ children, db }) => {
     setState({ ...state, toastText, Show: true, Showing: true });
     setTimeout(() => {
       setState({ ...state, Show: false, Showing: false });
-    }, 1000);
+    }, 2000);
   };
 
   useEffect(() => {

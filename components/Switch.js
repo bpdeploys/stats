@@ -1,7 +1,8 @@
 import React from 'react';
+import styled from 'styled-components';
 
 /**
- * Switch component
+ * Switch component for toggling between two states.
  *
  * @param {boolean} on - Indicates if the switch is on
  * @param {string} [width='90px'] - The width of the switch
@@ -9,6 +10,7 @@ import React from 'react';
  * @param {string} [textRight='On'] - The text to display when the switch is on
  * @param {string} [color='black'] - The color of the switch when it's on
  * @param {...object} props - Other props passed to the button element
+ * @return {JSX.Element} The rendered Switch component
  */
 const Switch = ({
   on,
@@ -19,7 +21,7 @@ const Switch = ({
   ...props
 }) => {
   return (
-    <button
+    <SwitchButton
       type="button"
       className={`Switch ${!on ? '--no-start' : ''}`}
       {...props}
@@ -51,47 +53,46 @@ const Switch = ({
           </svg>
         </div>
       )}
-      <style jsx>{`
-        .Switch {
-          background: #e5e5e5;
-          border: 1px solid #cbcbcb;
-          box-sizing: border-box;
-          border-radius: 55px;
-          height: 30px;
-          width: ${width};
-          padding: 0;
-          cursor: pointer;
-
-          .circle {
-            display: inline;
-            float: right;
-
-            > svg {
-              position: relative;
-              top: -1px;
-            }
-          }
-
-          &.--no-start {
-            .circle {
-              float: left;
-              margin-left: 1px;
-            }
-          }
-
-          span {
-            padding: 0 10px;
-            font-family: Quicksand;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 16px;
-            line-height: 28px;
-            color: #616060;
-          }
-        }
-      `}</style>
-    </button>
+    </SwitchButton>
   );
 };
+
+const SwitchButton = styled.button`
+  background: #e5e5e5;
+  border: 1px solid #cbcbcb;
+  box-sizing: border-box;
+  border-radius: 55px;
+  height: 30px;
+  width: ${(props) => props.width};
+  padding: 0;
+  cursor: pointer;
+
+  .circle {
+    display: inline;
+    float: right;
+
+    > svg {
+      position: relative;
+      top: -1px;
+    }
+  }
+
+  &.--no-start {
+    .circle {
+      float: left;
+      margin-left: 1px;
+    }
+  }
+
+  span {
+    padding: 0 10px;
+    font-family: Quicksand;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 28px;
+    color: #616060;
+  }
+`;
 
 export default Switch;

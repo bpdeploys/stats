@@ -1,3 +1,6 @@
+import React from 'react';
+import styled from 'styled-components';
+
 /**
  * Renders a Goal Event component with details of the goal.
  *
@@ -15,7 +18,7 @@ const GoalEvent = ({
   goalMinute,
   onClick,
 }) => (
-  <div className="goalEvent" onClick={onClick}>
+  <GoalEventWrapper team={team} onClick={onClick}>
     <div className="details">
       <div className="detail">
         <small>Scorer</small>
@@ -31,52 +34,49 @@ const GoalEvent = ({
       </div>
     </div>
     <img className="icon" src="/static/ball.svg" alt="football" />
-    <style jsx>
-      {`
-        .goalEvent {
-          height: 60px;
-          background-color: ${team === 1 ? '#1447C7' : '#C71414'};
-          border: none;
-          margin: none;
-          padding: 10px 15px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          width: 96%;
-
-          h4,
-          span {
-            font-size: 25px;
-            color: #fff;
-          }
-
-          small {
-            font-size: 12px;
-            color: #bfbebe;
-          }
-
-          .details {
-            width: 70%;
-            display: flex;
-            justify-content: space-between;
-
-            .detail {
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              text-align: center;
-              width: 70px;
-            }
-          }
-
-          .icon {
-            width: 30px;
-            height: 30px;
-          }
-        }
-      `}
-    </style>
-  </div>
+  </GoalEventWrapper>
 );
+
+const GoalEventWrapper = styled.div`
+  height: 60px;
+  background-color: ${({ team }) => (team === 1 ? '#1447C7' : '#C71414')};
+  border: none;
+  margin: none;
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 96%;
+
+  h4,
+  span {
+    font-size: 25px;
+    color: #fff;
+  }
+
+  small {
+    font-size: 12px;
+    color: #bfbebe;
+  }
+
+  .details {
+    width: 70%;
+    display: flex;
+    justify-content: space-between;
+
+    .detail {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      width: 70px;
+    }
+  }
+
+  .icon {
+    width: 30px;
+    height: 30px;
+  }
+`;
 
 export default GoalEvent;
